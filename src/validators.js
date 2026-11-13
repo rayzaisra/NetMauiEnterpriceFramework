@@ -102,9 +102,6 @@ function validateSpec(spec) {
   if (validateEmail(spec.adminEmail) !== true) {
     errors.push(`adminEmail: ${validateEmail(spec.adminEmail)}`);
   }
-  if (!spec.branchCode) {
-    errors.push('branchCode is required (login requires kode_cabang).');
-  }
   if (spec.authType !== 'sql') {
     errors.push('authType: only SQL authentication is supported in the MVP.');
   } else if (!spec.dbUser) {

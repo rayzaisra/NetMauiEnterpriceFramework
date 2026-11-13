@@ -1,6 +1,6 @@
-# NetMauiEnterpriceFramework
+# RyzCore
 
-Generator framework enterprise **.NET 10** untuk menghasilkan aplikasi siap pakai dengan:
+RyzCore adalah generator framework enterprise **.NET 10** untuk menghasilkan aplikasi siap pakai dengan:
 
 - ASP.NET Core Web API
 - Blazor WebAssembly
@@ -14,8 +14,8 @@ Generator framework enterprise **.NET 10** untuk menghasilkan aplikasi siap paka
 - Import Excel dan export Excel/PDF
 - Stored procedure + synonym deployment
 
-Nama paket npm: `create-enterprise-agentic-framework`  
-Repository: [rayzaisra/NetMauiEnterpriceFramework](https://github.com/rayzaisra/NetMauiEnterpriceFramework)
+Nama paket npm: `create-ryzcore`
+Repository: [rayzaisra/RyzCore](https://github.com/rayzaisra/RyzCore)
 
 Referensi arsitektur, aturan coding, database, dan guardrail untuk agent AI: **[FRAMEWORK-REFERENCE.md](FRAMEWORK-REFERENCE.md)**
 
@@ -31,22 +31,23 @@ Panduan lengkap: **[INSTALL.md](INSTALL.md)**
 
 ## Instalasi
 
-Dari GitHub:
+Instal global:
 
 ```bash
-npm install -g github:rayzaisra/NetMauiEnterpriceFramework
+npm install -g create-ryzcore
 ```
 
-Atau setelah dipublikasikan ke npm:
+Atau jalankan tanpa instalasi global:
 
 ```bash
-npm install -g create-enterprise-agentic-framework
+npx create-ryzcore
 ```
 
-Atau tanpa instalasi global:
+Alternatif dari source GitHub:
 
 ```bash
-npx github:rayzaisra/NetMauiEnterpriceFramework
+npm install -g github:rayzaisra/RyzCore
+npx github:rayzaisra/RyzCore
 ```
 
 ## Membuat aplikasi
@@ -54,19 +55,19 @@ npx github:rayzaisra/NetMauiEnterpriceFramework
 Mode interaktif:
 
 ```bash
-create-enterprise-agentic-framework
+create-ryzcore
 ```
 
 Mode config:
 
 ```bash
-create-enterprise-agentic-framework --config scaffold.example.json
+create-ryzcore --config scaffold.example.json
 ```
 
 Contoh non-interaktif:
 
 ```bash
-create-enterprise-agentic-framework \
+create-ryzcore \
   --name MitraPensiun \
   --db mitra_pensiun_db \
   --audit-db mitra_pensiun_log_audit \
@@ -88,7 +89,6 @@ create-enterprise-agentic-framework \
 | `--server` | SQL Server host/port |
 | `--user`, `--password` | Kredensial SQL Server |
 | `--admin-*` | Data admin awal |
-| `--branch` | Kode cabang admin |
 | `--logo` | Path logo PNG/JPG/SVG |
 | `--config` | Config JSON non-interaktif |
 | `--output` | Direktori output |

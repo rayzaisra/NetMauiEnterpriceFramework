@@ -37,7 +37,6 @@ function buildTokens(spec) {
     __ADMIN_PASSWORD__: spec.adminPassword || '',
     __ADMIN_NAME__: spec.adminName,
     __ADMIN_EMAIL__: spec.adminEmail,
-    __BRANCH_CODE__: spec.branchCode,
     __BRAND_NAME__: spec.projectName,
     __APP_ID__: `com.companyname.${appIdName}.app`,
   };
@@ -92,7 +91,6 @@ async function writeDevelopmentSettings(spec, outputDir) {
       AdminPassword: spec.adminPassword,
       AdminName: spec.adminName,
       AdminEmail: spec.adminEmail,
-      BranchCode: spec.branchCode,
     },
     Logging: {
       LogLevel: {

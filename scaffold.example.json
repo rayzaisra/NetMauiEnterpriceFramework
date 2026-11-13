@@ -11,7 +11,6 @@
   "adminPassword": "Admin#12345",
   "adminName": "Administrator",
   "adminEmail": "admin@example.com",
-  "branchCode": "001",
   "logoPath": "",
   "includeMaui": true,
   "includeTests": false,

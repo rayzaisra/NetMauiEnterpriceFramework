@@ -1,9 +1,9 @@
-# Framework Reference
+# RyzCore Framework Reference
 
 > **Read this before changing the framework or a generated application.**
 >
 > This document describes the actual architecture and conventions of
-> `NetMauiEnterpriceFramework`. Do not infer behavior from generic .NET
+> `RyzCore`. Do not infer behavior from generic .NET
 > templates; follow the patterns and constraints below.
 
 ## 1. Repository and generator
@@ -30,7 +30,7 @@ The generated application is produced by replacing tokens in the template:
 | `__API_URL__` | API public URL, normally `https://localhost:7143` |
 | `__WEB_URL__` | Web public URL, normally `https://localhost:44353` |
 | `__APP_ID__` | Android application ID |
-| `__ADMIN_*__`, `__BRANCH_CODE__` | Initial administrator seed |
+| `__ADMIN_*__` | Initial administrator seed |
 | `__BRAND_NAME__` | Display name |
 
 Rules for template edits:
@@ -139,7 +139,8 @@ selected through host abstractions/DI.
 There are two SQL Server databases per generated application:
 
 1. **Main database** — business/application data.
-2. **Audit/log database** — `tb_audit_trail`, `tb_audit_trail_detail`, `tb_log`.
+2. **Audit/log database** — `tb_audit_trail`, `tb_audit_trail_detail`, `tb_log`,
+   `tb_log_activity`.
 
 Two EF Core `DbContext` instances are used:
 
@@ -178,6 +179,7 @@ tb_password_reset_token     password reset
 rf_*                        reference data
 proc_seq                    sequence helper
 tb_log                      operational/error log (audit DB)
+tb_log_activity             automatic HTTP API activity log (audit DB)
 ```
 
 `BaseAuditEntity` fields include `isActive`, `isDeleted`, `createdBy`,
@@ -185,6 +187,10 @@ tb_log                      operational/error log (audit DB)
 `BaseEntity` adds approval/lock/default fields. Nullable audit fields are
 intentional; use `isDeleted != true` for active records unless the existing
 query explicitly does otherwise.
+
+`um_user_app` intentionally has no `kode_cabang`/`branch_code` field. Do not
+add it back to the entity, migrations, DTOs, seeders, installer prompts, or
+configuration. The generator must not ask for a branch code during installation.
 
 Schema changes must be made through a new EF migration. Do not edit an applied
 migration. Main and audit migrations live under:
@@ -279,6 +285,60 @@ Important limits:
   an audit row definitely exists when the audit DB is unavailable.
 - Do not manually add `tb_audit_trail` rows for normal entity CRUD; this would
   duplicate the centralized audit.
+
+### 6.3 Automatic API activity log (`tb_log_activity`)
+
+`tb_log_activity` records HTTP API calls in the audit database. It is written
+automatically by `ApiActivityMiddleware`; do **not** add logging code to each
+controller. A newly added controller is covered automatically when it is in the
+same API host and passes through the normal middleware pipeline.
+
+Pipeline placement:
+
+```text
+UseRouting
+  -> UseCors
+  -> UseAuthentication
+  -> ApiActivityMiddleware
+  -> rate limiting
+  -> ActiveSessionMiddleware
+  -> UseAuthorization
+  -> controller / endpoint
+```
+
+Recorded fields:
+
+```text
+id, user_id, ip_address, http_method, path, route_template,
+status_code, success, duration_ms, correlation_id, user_agent,
+client_type, error_code, created_date
+```
+
+Behavior:
+
+- `user_id` comes from `ClaimTypes.NameIdentifier` after authentication.
+- `success` is true for HTTP 2xx/3xx.
+- `path` is stored without the query string. Request/response bodies,
+  authorization headers, passwords, tokens, and secrets are never logged.
+- `client_type` is optional and comes from the `X-Client-Type` request header.
+- `/health`, `/swagger`, `/hangfire`, and `/favicon.ico` are excluded by default
+  through `AuditActivity:ExcludedPaths`.
+- Writes are queued in memory and persisted in batches by
+  `ApiActivityLogWriter`; a database write never delays or fails the business
+  request. Activity rows can be lost during an abrupt process shutdown or if
+  the queue/database is unavailable.
+- Unknown/non-existent API paths may also produce a 404 activity row unless
+  excluded. SignalR requests use the same middleware unless their path is
+  excluded.
+- For an authenticated user to be recorded, the middleware must remain after
+  `UseAuthentication`.
+- Behind a reverse proxy, configure forwarded headers so `ip_address` is the
+  client address rather than the proxy address.
+- The feature is configured by `AuditActivity:Enabled`, `QueueCapacity`,
+  `BatchSize`, `FlushIntervalSeconds`, and `ExcludedPaths`.
+
+Do not add manual `tb_log_activity` writes in controllers. If a request must be
+excluded, add a narrow path exclusion rather than disabling logging globally.
 
 ## 7. Repository, Unit of Work, and query services
 

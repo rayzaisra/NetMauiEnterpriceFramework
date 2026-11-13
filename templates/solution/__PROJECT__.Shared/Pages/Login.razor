@@ -530,7 +530,14 @@ else
         catch (Exception ex)
         {
             _resetTokenInvalid = true;
-            Snackbar.Add(ex.Message, Severity.Error);
+            if (IsMauiApp)
+            {
+                await ShowMauiErrorAsync("MobileValidateResetToken", ex);
+            }
+            else
+            {
+                Snackbar.Add(ex.Message, Severity.Error);
+            }
         }
 
         if (_resetTokenInvalid)
@@ -619,7 +626,14 @@ else
         }
         catch (Exception ex)
         {
-            Snackbar.Add(ex.Message, Severity.Error);
+            if (IsMauiApp)
+            {
+                await ShowMauiErrorAsync("MobileForgotPassword", ex, _forgotModel.UserIdOrEmail);
+            }
+            else
+            {
+                Snackbar.Add(ex.Message, Severity.Error);
+            }
         }
         finally
         {
@@ -651,7 +665,14 @@ else
         }
         catch (Exception ex)
         {
-            Snackbar.Add(ex.Message, Severity.Error);
+            if (IsMauiApp)
+            {
+                await ShowMauiErrorAsync("MobileResetPassword", ex);
+            }
+            else
+            {
+                Snackbar.Add(ex.Message, Severity.Error);
+            }
         }
         finally
         {
@@ -703,7 +724,14 @@ else
         }
         catch (Exception ex)
         {
-            _errorMessage = ex.Message;
+            if (IsMauiApp)
+            {
+                await ShowMauiErrorAsync("MobileLogin", ex, _loginModel.UserId);
+            }
+            else
+            {
+                _errorMessage = ex.Message;
+            }
         }
         finally
         {
@@ -740,12 +768,40 @@ else
         }
         catch (Exception ex)
         {
-            _errorMessage = ex.Message;
+            if (IsMauiApp)
+            {
+                await ShowMauiErrorAsync("MobileFirstLogin", ex, _firstLoginModel.UserId);
+            }
+            else
+            {
+                _errorMessage = ex.Message;
+            }
         }
         finally
         {
             _isLoading = false;
         }
+    }
+
+    private async Task ShowMauiErrorAsync(string source, Exception exception, string? userId = null)
+    {
+        _errorMessage = null;
+        Snackbar.Add(GetMauiErrorMessage(exception), Severity.Error);
+        await AuthService.LogClientErrorAsync(source, exception, userId);
+    }
+
+    private static string GetMauiErrorMessage(Exception exception)
+    {
+        if (exception is HttpRequestException or TaskCanceledException
+            || exception.Message.Contains('<')
+            || exception.Message.Contains("Bad Request", StringComparison.OrdinalIgnoreCase))
+        {
+            return "Unable to connect to the server. Please try again later.";
+        }
+
+        return string.IsNullOrWhiteSpace(exception.Message)
+            ? "Unable to process the request. Please try again later."
+            : exception.Message;
     }
 
     private void CancelFirstLogin()

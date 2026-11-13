@@ -22,6 +22,7 @@ using __PROJECT__.Application.Services;
 using __PROJECT__.Infrastructure;
 using __PROJECT__.Infrastructure.Data;
 using __PROJECT__.Infrastructure.Identity;
+using __PROJECT__.Infrastructure.Options;
 using __PROJECT__.Infrastructure.Queries;
 using __PROJECT__.Infrastructure.Repositories.Auth;
 using __PROJECT__.Infrastructure.Services;
@@ -85,6 +86,12 @@ builder.Services.AddScoped<IDynamicEngineService, DynamicEngineService>();
 builder.Services.AddScoped<IScreenMenuEditorService, ScreenMenuEditorService>();
 builder.Services.AddScoped<IUserSessionNotifier, UserSessionNotifier>();
 builder.Services.AddScoped<IErrorLogService, ErrorLogService>();
+builder.Services.Configure<ApiActivityLogOptions>(
+    builder.Configuration.GetSection(ApiActivityLogOptions.SectionName));
+builder.Services.AddSingleton<ApiActivityLogQueue>();
+builder.Services.AddSingleton<IApiActivityLogQueue>(
+    services => services.GetRequiredService<ApiActivityLogQueue>());
+builder.Services.AddHostedService<ApiActivityLogWriter>();
 builder.Services.AddScoped<IPasswordResetService, PasswordResetService>();
 builder.Services.AddScoped<IEmailProviderService, EmailProviderService>();
 builder.Services.AddScoped<EmailOutboxProcessor>();
@@ -200,8 +207,7 @@ if (app.Environment.IsDevelopment() || seedOnly)
             builder.Configuration["Seed:AdminUser"] ?? "admin",
             builder.Configuration["Seed:AdminPassword"] ?? "ChangeMe#12345",
             builder.Configuration["Seed:AdminName"] ?? "Administrator",
-            builder.Configuration["Seed:AdminEmail"] ?? "admin@example.com",
-            builder.Configuration["Seed:BranchCode"] ?? "001");
+            builder.Configuration["Seed:AdminEmail"] ?? "admin@example.com");
     }
 
     if (seedOnly)
@@ -221,8 +227,9 @@ app.UseMiddleware<ApiExceptionMiddleware>();
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseCors("AppClient");
-app.UseIpRateLimiting();
 app.UseAuthentication();
+app.UseMiddleware<ApiActivityMiddleware>();
+app.UseIpRateLimiting();
 app.UseMiddleware<ActiveSessionMiddleware>();
 app.UseAuthorization();
 app.UseWebSockets();

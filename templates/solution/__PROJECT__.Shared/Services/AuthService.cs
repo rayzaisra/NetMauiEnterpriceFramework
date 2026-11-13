@@ -131,6 +131,25 @@ public class AuthService
         }
     }
 
+    public async Task LogClientErrorAsync(string source, Exception exception, string? userId = null)
+    {
+        try
+        {
+            await _httpClient.PostAsJsonAsync("api/client-error", new ClientErrorLogDto
+            {
+                Source = source,
+                Message = exception.Message,
+                StackTrace = exception.ToString(),
+                UserId = userId,
+                Platform = OperatingSystem.IsBrowser() ? "Web" : "MAUI",
+            });
+        }
+        catch
+        {
+            // The original error must still be shown to the user when logging is unavailable.
+        }
+    }
+
     public async Task LogoutAsync(string? refreshToken)
     {
         try
@@ -172,6 +191,13 @@ public class AuthService
         if (string.IsNullOrWhiteSpace(content))
         {
             return response.ReasonPhrase ?? "Request failed.";
+        }
+
+        if (content.Contains("<html", StringComparison.OrdinalIgnoreCase)
+            || content.Contains("<!doctype", StringComparison.OrdinalIgnoreCase)
+            || content.Contains("Bad Request", StringComparison.OrdinalIgnoreCase))
+        {
+            return "Unable to connect to the server. Please try again later.";
         }
 
         try

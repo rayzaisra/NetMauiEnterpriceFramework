@@ -15,7 +15,6 @@ public static class DbInitializer
         string adminPassword,
         string adminName,
         string adminEmail,
-        string branchCode,
         CancellationToken cancellationToken = default)
     {
         if (await context.um_user_app.AnyAsync(e => e.user_id == adminUser, cancellationToken))

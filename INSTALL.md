@@ -1,6 +1,6 @@
-# Panduan Instalasi
+# Panduan Instalasi RyzCore
 
-Panduan ini menjelaskan cara memasang generator dan menjalankan aplikasi hasil generate.
+Panduan ini menjelaskan cara memasang generator RyzCore dan menjalankan aplikasi hasil generate.
 
 ## 1. Prasyarat
 
@@ -32,42 +32,49 @@ Login SQL harus memiliki izin membuat database (`dbcreator` atau setara), membua
 
 ## 2. Instalasi generator
 
+### Dari npm (global)
+
+```bash
+npm install -g create-ryzcore
+create-ryzcore --help
+```
+
+### Tanpa instalasi global
+
+```bash
+npx create-ryzcore --help
+```
+
 ### Dari GitHub (global)
 
 ```bash
-npm install -g github:rayzaisra/NetMauiEnterpriceFramework
-create-enterprise-agentic-framework --help
+npm install -g github:rayzaisra/RyzCore
+create-ryzcore --help
 ```
 
 ### Dari tarball
 
 ```bash
 npm pack
-npm install -g ./create-enterprise-agentic-framework-0.1.0.tgz
+npm install -g ./create-ryzcore-0.1.0.tgz
 ```
 
 Jika PowerShell tidak menemukan command setelah install global, jalankan binary langsung:
 
 ```powershell
-& "$env:APPDATA\npm\create-enterprise-agentic-framework.cmd"
+& "$env:APPDATA\npm\create-ryzcore.cmd"
 ```
 
 Atau tambahkan `%APPDATA%\npm` ke `PATH` lalu buka terminal baru.
 
-### Tanpa instalasi global
-
-```bash
-npx github:rayzaisra/NetMauiEnterpriceFramework --help
-```
-
 ### Dari source lokal
 
 ```bash
-git clone https://github.com/rayzaisra/NetMauiEnterpriceFramework.git
-cd NetMauiEnterpriceFramework
+git clone https://github.com/rayzaisra/RyzCore.git
+cd RyzCore
 npm install
 npm link
-create-enterprise-agentic-framework --help
+create-ryzcore --help
 ```
 
 ## 3. Membuat aplikasi
@@ -75,7 +82,7 @@ create-enterprise-agentic-framework --help
 ### Mode interaktif
 
 ```bash
-create-enterprise-agentic-framework
+create-ryzcore
 ```
 
 Ikuti pertanyaan: nama project, database, kredensial SQL, admin awal, logo, MAUI, test, dan Docker.
@@ -85,7 +92,7 @@ Ikuti pertanyaan: nama project, database, kredensial SQL, admin awal, logo, MAUI
 Salin `scaffold.example.json`, sesuaikan nilainya, lalu:
 
 ```bash
-create-enterprise-agentic-framework --config scaffold.example.json
+create-ryzcore --config scaffold.example.json
 ```
 
 Contoh isi config:
@@ -104,7 +111,6 @@ Contoh isi config:
   "adminPassword": "Admin#12345",
   "adminName": "Administrator",
   "adminEmail": "admin@example.com",
-  "branchCode": "001",
   "logoPath": "",
   "includeMaui": true,
   "includeTests": false,
@@ -116,7 +122,7 @@ Contoh isi config:
 ### Mode argumen
 
 ```bash
-create-enterprise-agentic-framework \
+create-ryzcore \
   --name MyApp \
   --db my_app_db \
   --audit-db my_app_log_audit \
@@ -125,7 +131,6 @@ create-enterprise-agentic-framework \
   --password "YourStrong!Passw0rd" \
   --admin-user admin \
   --admin-password "Admin#12345" \
-  --branch 001 \
   --no-maui \
   --tests
 ```
@@ -133,7 +138,7 @@ create-enterprise-agentic-framework \
 ### Dry-run
 
 ```bash
-create-enterprise-agentic-framework --config scaffold.example.json --dry-run
+create-ryzcore --config scaffold.example.json --dry-run
 ```
 
 Dry-run hanya menampilkan rencana; tidak menulis file atau database.
@@ -264,9 +269,9 @@ Generator menggunakan nama database dari config. Gunakan nama berbeda atau hapus
 ## 9. Upgrade
 
 ```bash
-npm update -g create-enterprise-agentic-framework
+npm update -g create-ryzcore
 # atau
-npm install -g github:rayzaisra/NetMauiEnterpriceFramework
+npm install -g github:rayzaisra/RyzCore
 ```
 
 Aplikasi yang sudah digenerate tidak otomatis ter-upgrade. Untuk template terbaru, generate project baru lalu port perubahan bisnis secara terkontrol.
@@ -274,5 +279,5 @@ Aplikasi yang sudah digenerate tidak otomatis ter-upgrade. Untuk template terbar
 ## 10. Uninstall
 
 ```bash
-npm uninstall -g create-enterprise-agentic-framework
+npm uninstall -g create-ryzcore
 ```

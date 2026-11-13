@@ -13,7 +13,7 @@ function parseArgs(argv) {
   const takesValue = new Set([
     '--name', '--db', '--audit-db', '--server', '--user', '--password',
     '--admin-user', '--admin-password', '--admin-name', '--admin-email',
-    '--branch', '--logo', '--config', '--output',
+    '--logo', '--config', '--output',
   ]);
   const camel = {
     '--name': 'name',
@@ -26,7 +26,6 @@ function parseArgs(argv) {
     '--admin-password': 'adminPassword',
     '--admin-name': 'adminName',
     '--admin-email': 'adminEmail',
-    '--branch': 'branch',
     '--logo': 'logo',
     '--config': 'config',
     '--output': 'outputDir',
@@ -76,7 +75,6 @@ function normalizeSpec(raw, args) {
     adminPassword: raw.adminPassword || '',
     adminName: raw.adminName || DEFAULTS.adminName,
     adminEmail: raw.adminEmail || DEFAULTS.adminEmail,
-    branchCode: raw.branchCode || raw.branch || DEFAULTS.branchCode,
     logoPath: raw.logoPath || raw.logo || '',
     includeMaui: raw.includeMaui !== false && !args.noMaui,
     includeTests: Boolean(raw.includeTests || args.tests),
@@ -88,14 +86,17 @@ function normalizeSpec(raw, args) {
 
 function printHelp() {
   console.log(`
-${pc.bold('create-enterprise-agentic-framework')} ${pkg.version}
+${pc.bold('RyzCore')} ${pkg.version}
 
-Generate an enterprise .NET 10 framework with Blazor WASM, MAUI Blazor Hybrid,
-MudBlazor, dynamic menus, parameter management, and a separate audit database.
+RyzCore generates an enterprise .NET 10 framework with Blazor WASM, MAUI Blazor
+Hybrid, MudBlazor, dynamic menus, parameter management, and a separate audit
+database.
 
 ${pc.bold('Usage')}
-  npm create enterprise-agentic-framework@latest
-  npx create-enterprise-agentic-framework [options]
+  npm create ryzcore@latest
+  npx create-ryzcore [options]
+  npm install -g create-ryzcore
+  create-ryzcore [options]
 
 ${pc.bold('Options')}
   --name <name>              Project name
@@ -108,7 +109,6 @@ ${pc.bold('Options')}
   --admin-password <pass>    Admin password
   --admin-name <name>        Admin full name
   --admin-email <email>      Admin email
-  --branch <code>            Admin branch code
   --logo <path>              Logo PNG/JPG/SVG
   --config <file>            JSON config (non-interactive)
   --output <dir>             Output directory (default: project name)
@@ -127,7 +127,7 @@ ${pc.bold('Options')}
 
 function printPlan(spec, args) {
   const output = path.resolve(process.cwd(), args.outputDir || spec.projectName);
-  console.log(pc.bold('\nScaffold plan\n'));
+  console.log(pc.bold('\nRyzCore scaffold plan\n'));
   console.log(`  Project      : ${spec.projectName}`);
   console.log(`  Output       : ${output}`);
   console.log(`  Main DB      : ${spec.dbName}`);
@@ -135,7 +135,6 @@ function printPlan(spec, args) {
   console.log(`  SQL Server   : ${spec.server}`);
   console.log(`  Auth         : ${spec.authType}`);
   console.log(`  Admin user   : ${spec.adminUser}`);
-  console.log(`  Branch code  : ${spec.branchCode}`);
   console.log(`  MAUI         : ${spec.includeMaui ? 'yes' : 'no'}`);
   console.log(`  Tests        : ${spec.includeTests ? 'yes' : 'no'}`);
   console.log(`  Docker       : ${spec.includeDocker ? 'yes' : 'no'}`);

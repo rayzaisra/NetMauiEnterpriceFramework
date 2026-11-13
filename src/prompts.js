@@ -10,16 +10,15 @@ const {
 } = require('./validators');
 
 const DEFAULTS = {
-  projectName: 'EnterpriseFramework',
-  dbName: 'enterprise_framework_db',
-  auditDbName: 'enterprise_framework_log_audit',
+  projectName: 'RyzCore',
+  dbName: 'ryzcore_db',
+  auditDbName: 'ryzcore_log_audit',
   server: 'localhost,1433',
   authType: 'sql',
   dbUser: 'sa',
   adminUser: 'admin',
   adminName: 'Administrator',
   adminEmail: 'admin@example.com',
-  branchCode: '001',
 };
 
 async function askQuestions(args = {}) {
@@ -101,13 +100,6 @@ async function askQuestions(args = {}) {
         message: 'Admin email',
         initial: args.adminEmail || DEFAULTS.adminEmail,
         validate: validateEmail,
-      },
-      {
-        type: 'text',
-        name: 'branchCode',
-        message: 'Admin branch code (kode_cabang)',
-        initial: args.branch || DEFAULTS.branchCode,
-        validate: (value) => (value ? true : 'Branch code is required.'),
       },
       {
         type: 'text',

@@ -1,15 +1,15 @@
 {
-  "name": "create-enterprise-agentic-framework",
+  "name": "create-ryzcore",
   "version": "0.1.0",
-  "description": "Scaffolder for an enterprise .NET 10 framework with Blazor WASM, MAUI Blazor Hybrid, MudBlazor, dynamic menus, and audit DB.",
+  "description": "RyzCore: scaffolder for an enterprise .NET 10 framework with Blazor WASM, MAUI Blazor Hybrid, MudBlazor, dynamic menus, and audit DB.",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rayzaisra/NetMauiEnterpriceFramework.git"
+    "url": "git+https://github.com/rayzaisra/RyzCore.git"
   },
-  "homepage": "https://github.com/rayzaisra/NetMauiEnterpriceFramework#readme",
+  "homepage": "https://github.com/rayzaisra/RyzCore#readme",
   "bugs": {
-    "url": "https://github.com/rayzaisra/NetMauiEnterpriceFramework/issues"
+    "url": "https://github.com/rayzaisra/RyzCore/issues"
   },
   "keywords": [
     "dotnet",
@@ -18,10 +18,11 @@
     "mudblazor",
     "sqlserver",
     "scaffolder",
-    "enterprise"
+    "enterprise",
+    "ryzcore"
   ],
   "bin": {
-    "create-enterprise-agentic-framework": "bin/index.js"
+    "create-ryzcore": "bin/index.js"
   },
   "main": "src/cli.js",
   "files": [
