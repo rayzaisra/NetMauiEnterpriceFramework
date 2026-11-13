@@ -88,7 +88,7 @@ selected through host abstractions/DI.
   performs an explicit multi-step business transaction.
 - Do not introduce a public generic repository as the primary abstraction.
   Entity keys vary (`string`, `int`, `long`, `Guid`, composite), and not every
-  entity inherits `BaseEntity`.
+  entity inherits `BaseEntity`/`BaseAuditEntity`; follow the actual table role.
 - Keep audit capture centralized in `__PROJECT__DbContext`. Do not manually
   create `tb_audit_trail` rows for normal CRUD.
 - Never swallow an exception silently. If a service catches an exception and
@@ -191,6 +191,97 @@ query explicitly does otherwise.
 `um_user_app` intentionally has no `kode_cabang`/`branch_code` field. Do not
 add it back to the entity, migrations, DTOs, seeders, installer prompts, or
 configuration. The generator must not ask for a branch code during installation.
+
+### 5.1 Base entity contract
+
+Both base classes live in one file:
+`templates/solution/__PROJECT__.Domain/Entities/BaseEntity.cs`; in a generated
+application this is `<Project>.Domain/Entities/BaseEntity.cs`. There is no
+separate `BaseAuditEntity.cs`. Do not create a duplicate class or copy these
+properties into individual entities.
+
+```csharp
+public abstract class BaseAuditEntity
+{
+    [Column("is_active")]
+    public bool? isActive { get; set; }
+
+    [Column("is_deleted")]
+    public bool? isDeleted { get; set; }
+
+    [Column("created_by")]
+    [StringLength(100)]
+    public string? createdBy { get; set; }
+
+    [Column("created_date")]
+    public DateTime? createdDate { get; set; }
+
+    [Column("modified_by")]
+    [StringLength(100)]
+    public string? modifiedBy { get; set; }
+
+    [Column("modified_date")]
+    public DateTime? modifiedDate { get; set; }
+
+    [Column("deleted_by")]
+    [StringLength(100)]
+    public string? deletedBy { get; set; }
+
+    [Column("deleted_date")]
+    public DateTime? deletedDate { get; set; }
+}
+```
+
+`BaseEntity` extends it with the approval and locking fields:
+
+```csharp
+public abstract class BaseEntity : BaseAuditEntity
+{
+    [Column("status_approval")]
+    public int? statusApproval { get; set; }
+
+    [Column("is_locked")]
+    public bool? isLocked { get; set; }
+
+    [Column("is_default")]
+    public bool? isDefault { get; set; }
+
+    [Column("approved_by")]
+    [StringLength(100)]
+    public string? approvedBy { get; set; }
+
+    [Column("approved_date")]
+    public DateTime? approvedDate { get; set; }
+
+    [Column("approval_type_id")]
+    [StringLength(2)]
+    public string? approvalTypeId { get; set; }
+}
+```
+
+Rules for a new table/entity:
+
+- A new business/CRUD table that needs standard audit columns must inherit
+  `BaseAuditEntity`.
+- A new business table that also needs maker-checker/lock/default approval fields
+  must inherit `BaseEntity`. Do not inherit both; `BaseEntity` already includes
+  `BaseAuditEntity`.
+- Do not repeat `isActive`, `isDeleted`, `createdBy`, `createdDate`,
+  `modifiedBy`, `modifiedDate`, `deletedBy`, or `deletedDate` in the derived
+  entity.
+- Audit/log tables (`tb_audit_trail`, `tb_audit_trail_detail`, `tb_log`, and
+  `tb_log_activity`) intentionally do not inherit these classes because their
+  schemas are managed separately.
+- Custom staging/detail/join/projection tables follow the existing entity
+  pattern; do not force `BaseEntity` inheritance when the table does not use
+  those columns.
+- The base classes do not define the primary key. Each entity defines its own
+  key and table mapping.
+- The base columns are nullable by design. Do not change their nullability
+  without an explicit schema requirement.
+- When a new derived entity is mapped, EF creates the inherited columns in the
+  new table. For an existing table, add a new migration instead of editing an
+  applied migration.
 
 Schema changes must be made through a new EF migration. Do not edit an applied
 migration. Main and audit migrations live under:
