@@ -4,7 +4,7 @@ namespace __PROJECT__.Application.Interfaces.Repositories;
 
 public interface IEmailTemplateRepository
 {
-    Task<tb_email_template?> GetActiveByKeyAsync(
+    Task<rf_email_template?> GetActiveByKeyAsync(
         string templateKey,
         CancellationToken cancellationToken = default);
 }

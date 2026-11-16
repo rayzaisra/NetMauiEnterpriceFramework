@@ -320,10 +320,10 @@ public class EmailTemplateRepository : IEmailTemplateRepository
 
     public EmailTemplateRepository(__PROJECT__DbContext context) => _context = context;
 
-    public Task<tb_email_template?> GetActiveByKeyAsync(
+    public Task<rf_email_template?> GetActiveByKeyAsync(
         string templateKey,
         CancellationToken cancellationToken = default)
-        => _context.tb_email_template.FirstOrDefaultAsync(
+        => _context.rf_email_template.FirstOrDefaultAsync(
             e => e.template_key == templateKey && e.isActive != false,
             cancellationToken);
 }
@@ -356,30 +356,30 @@ public class EmailProviderRepository : IEmailProviderRepository
 
     public EmailProviderRepository(__PROJECT__DbContext context) => _context = context;
 
-    public Task<tb_email_provider?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
-        => _context.tb_email_provider.FirstOrDefaultAsync(
+    public Task<rf_email_provider?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+        => _context.rf_email_provider.FirstOrDefaultAsync(
             e => e.id == id && e.isDeleted != true,
             cancellationToken);
 
-    public Task<tb_email_provider?> GetActiveProviderAsync(CancellationToken cancellationToken = default)
-        => _context.tb_email_provider
+    public Task<rf_email_provider?> GetActiveProviderAsync(CancellationToken cancellationToken = default)
+        => _context.rf_email_provider
             .Where(e => e.isActive != false && e.isDeleted != true && e.provider_type != "NONE")
             .OrderBy(e => e.priority ?? 100)
             .FirstOrDefaultAsync(cancellationToken);
 
-    public Task<List<tb_email_provider>> GetActiveProvidersAsync(
+    public Task<List<rf_email_provider>> GetActiveProvidersAsync(
         CancellationToken cancellationToken = default)
-        => _context.tb_email_provider
+        => _context.rf_email_provider
             .Where(e => e.isActive != false && e.isDeleted != true && e.provider_type != "NONE")
             .OrderBy(e => e.priority ?? 100)
             .ToListAsync(cancellationToken);
 
-    public Task AddAsync(tb_email_provider entity, CancellationToken cancellationToken = default)
-        => _context.tb_email_provider.AddAsync(entity, cancellationToken).AsTask();
+    public Task AddAsync(rf_email_provider entity, CancellationToken cancellationToken = default)
+        => _context.rf_email_provider.AddAsync(entity, cancellationToken).AsTask();
 
-    public Task UpdateAsync(tb_email_provider entity)
+    public Task UpdateAsync(rf_email_provider entity)
     {
-        _context.tb_email_provider.Update(entity);
+        _context.rf_email_provider.Update(entity);
         return Task.CompletedTask;
     }
 }

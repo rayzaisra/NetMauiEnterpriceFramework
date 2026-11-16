@@ -11,7 +11,8 @@ BEGIN
     SET NOCOUNT ON;
     SET XACT_ABORT ON;
 
-    IF @tableName NOT IN (N'rf_default_value', N'rf_files_upload_type', N'rf_group_access_report_set',
+    IF @tableName NOT IN (N'rf_default_value', N'rf_email_provider', N'rf_email_template',
+                          N'rf_files_upload_type', N'rf_group_access_report_set',
                           N'rf_message', N'tb_parameter_system', N'tb_parameter_system_detail',
                           N'tb_report_set', N'tb_screen_menu')
         THROW 51000, N'Table is not registered as a parameter.', 1;

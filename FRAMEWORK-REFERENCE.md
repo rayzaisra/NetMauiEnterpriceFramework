@@ -174,7 +174,9 @@ tb_report_set               report configuration
 tb_parameter_*              parameter engine and approval staging
 temp_*_pending              maker-checker staging
 tb_notification*            notifications
-tb_email_*                  email provider/template/outbox
+rf_email_provider           email provider parameter (main DB)
+rf_email_template           email template parameter (main DB)
+tb_email_outbox             outbound email queue (main DB)
 tb_password_reset_token     password reset
 rf_*                        reference data
 proc_seq                    sequence helper
@@ -495,6 +497,10 @@ remain specific and intentional.
 - The API default development profile is `https` on port `7143`;
   Web uses `https://localhost:7143`; Android emulator uses
   `https://10.0.2.2:7143`.
+- Visual Studio IIS Express can expose the same API on `44333`. The Web client
+  probes `ApiFallbackUrls` in Development, which includes both `7143` and
+  `44333`; keep that fallback when changing launch profiles and rebuild Web so
+  `appsettings.Development.json` is regenerated.
 
 Typical controller structure:
 
@@ -706,6 +712,30 @@ approval pages use a different action position/toolbar, and some dialogs mix
 field/button variants. Treat those as legacy deviations: do not copy them into
 new pages; normalize them when the page is next modified.
 
+### 9.2 Email provider/template parameters
+
+`rf_email_provider` and `rf_email_template` are registered in
+`tb_parameter_system` and `tb_parameter_system_detail`. Their cards must remain
+available in both parameter maker and parameter approval.
+
+- `ParameterSeeder` must keep the card rows and field metadata for both tables.
+- `ParameterEngineService.AllowedTables` and the parameter stored procedures
+  must list both table names.
+- Provider SMTP/Gmail configuration is edited through the virtual fields
+  `smtp_*` and `gmail_*`; `configuration_json` is stored encrypted in the
+  temporary parameter payload but must never be exposed in the list, pending
+  summary, or approval payload.
+- Password/client-secret/refresh-token values are blank on read. Leaving them
+  blank during an edit preserves the existing encrypted value; entering a new
+  value re-encrypts it.
+- Template `body_html` and `body_text` use multi-line fields; do not collapse
+  them into a single-line text input.
+- `rf_email_provider.id` is an identity key. Parameter approval for a new
+  provider must insert without an explicit id.
+- The old `MNT-EMAIL` and `MNT-EMAIL-PRV` menus are removed. Email provider
+  configuration belongs under Parameter Maintenance; the legacy EmailProvider
+  page/API may remain as a technical fallback but must not be re-seeded as a menu.
+
 ## 10. Authentication and authorization
 
 - JWT access + refresh tokens; active sessions are checked by middleware.
@@ -798,6 +828,12 @@ IpRateLimiting:*
 Use generated tokens/configuration; never commit production secrets.
 Development settings may contain local SQL credentials in a generated test
 instance, but not in the framework source.
+
+`Jwt:Secret` must be at least 64 bytes because signing uses HMAC-SHA512. The
+generator supplies a random 64-byte Base64 secret. Do not leave
+`__JWT_SECRET__` or another short placeholder in a running app; it causes
+`IDX10653` during token generation. Generate a replacement with 64 random bytes
+and keep it only in environment/user secrets or local development settings.
 
 ## 13. Adding a feature: expected order
 

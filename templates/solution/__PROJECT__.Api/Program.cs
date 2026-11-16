@@ -109,6 +109,14 @@ builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
 var jwtSecret = builder.Configuration["Jwt:Secret"]
     ?? throw new InvalidOperationException("Jwt:Secret is not configured.");
+var jwtSecretBytes = Encoding.UTF8.GetByteCount(jwtSecret);
+if (jwtSecretBytes < 64)
+{
+    throw new InvalidOperationException(
+        $"Jwt:Secret must be at least 64 bytes (512 bits) for HS512; configured value is {jwtSecretBytes} bytes. "
+        + "Generate a new secret with at least 64 random bytes.");
+}
+
 var jwtKey = Encoding.UTF8.GetBytes(jwtSecret);
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

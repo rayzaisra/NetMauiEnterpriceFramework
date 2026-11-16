@@ -82,7 +82,7 @@ public class EmailOutboxProcessor
         await _unitOfWork.SaveChangesAsync();
     }
 
-    internal static async Task SendSmtpAsync(tb_email_provider provider, tb_email_outbox message, string? passPhrase = null)
+    internal static async Task SendSmtpAsync(rf_email_provider provider, tb_email_outbox message, string? passPhrase = null)
     {
         using var config = JsonDocument.Parse(provider.configuration_json ?? "{}");
         var root = config.RootElement;
@@ -115,7 +115,7 @@ public class EmailOutboxProcessor
         await client.SendMailAsync(mail);
     }
 
-    internal static async Task SendGmailAsync(tb_email_provider provider, tb_email_outbox message, string? passPhrase = null)
+    internal static async Task SendGmailAsync(rf_email_provider provider, tb_email_outbox message, string? passPhrase = null)
     {
         using var config = JsonDocument.Parse(provider.configuration_json ?? "{}");
         var root = config.RootElement;

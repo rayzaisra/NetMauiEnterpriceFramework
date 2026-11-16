@@ -63,8 +63,8 @@ public class __PROJECT__DbContext : DbContext
     public DbSet<rf_message> rf_message => Set<rf_message>();
 
     public DbSet<proc_seq> proc_seq => Set<proc_seq>();
-    public DbSet<tb_email_provider> tb_email_provider => Set<tb_email_provider>();
-    public DbSet<tb_email_template> tb_email_template => Set<tb_email_template>();
+    public DbSet<rf_email_provider> rf_email_provider => Set<rf_email_provider>();
+    public DbSet<rf_email_template> rf_email_template => Set<rf_email_template>();
     public DbSet<tb_email_outbox> tb_email_outbox => Set<tb_email_outbox>();
     public DbSet<tb_password_reset_token> tb_password_reset_token => Set<tb_password_reset_token>();
 
@@ -351,9 +351,9 @@ public class __PROJECT__DbContext : DbContext
 
     private static void ConfigureEmailAndReset(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<tb_email_provider>().HasKey(e => e.id);
-        modelBuilder.Entity<tb_email_provider>().HasIndex(e => e.priority);
-        modelBuilder.Entity<tb_email_template>().HasKey(e => e.template_key);
+        modelBuilder.Entity<rf_email_provider>().HasKey(e => e.id);
+        modelBuilder.Entity<rf_email_provider>().HasIndex(e => e.priority);
+        modelBuilder.Entity<rf_email_template>().HasKey(e => e.template_key);
         modelBuilder.Entity<tb_email_outbox>().HasKey(e => e.id);
         modelBuilder.Entity<tb_email_outbox>().HasIndex(e => new { e.status, e.next_attempt_at });
         modelBuilder.Entity<tb_password_reset_token>().HasKey(e => e.id);

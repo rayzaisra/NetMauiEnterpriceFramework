@@ -21,6 +21,15 @@ public class JwtTokenService : IJWTService
         _configuration = configuration;
         var secret = configuration["Jwt:Secret"]
             ?? throw new InvalidOperationException("Jwt:Secret is not configured.");
+
+        var secretBytes = Encoding.UTF8.GetByteCount(secret);
+        if (secretBytes < 64)
+        {
+            throw new InvalidOperationException(
+                $"Jwt:Secret must be at least 64 bytes (512 bits) for HS512; configured value is {secretBytes} bytes. "
+                + "Generate a new secret with at least 64 random bytes.");
+        }
+
         _key = Encoding.UTF8.GetBytes(secret);
     }
 

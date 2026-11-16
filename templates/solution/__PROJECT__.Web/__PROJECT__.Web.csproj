@@ -44,7 +44,7 @@
       <_ApiDebugBaseUrl Condition="'$(_ApiSslPort)' != ''">https://localhost:$(_ApiSslPort)</_ApiDebugBaseUrl>
     </PropertyGroup>
     <WriteLinesToFile File="$(ApiDebugSettingsPath)"
-                      Lines="{&quot;ApiBaseUrl&quot;:&quot;$(_ApiDebugBaseUrl)&quot;,&quot;ApiFallbackUrls&quot;:[&quot;https://localhost:7143&quot;,&quot;http://localhost:7142&quot;]}"
+                      Lines="{&quot;ApiBaseUrl&quot;:&quot;$(_ApiDebugBaseUrl)&quot;,&quot;ApiFallbackUrls&quot;:[&quot;https://localhost:7143&quot;,&quot;https://localhost:44333&quot;,&quot;http://localhost:7142&quot;]}"
                       Overwrite="true"
                       WriteOnlyWhenDifferent="true" />
   </Target>

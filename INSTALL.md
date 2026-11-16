@@ -173,6 +173,17 @@ dotnet run --project <ProjectName>.Web
 Web default: `https://localhost:44353`  
 API default: `https://localhost:7143`
 
+`Jwt:Secret` harus minimal 64 byte karena JWT memakai HMAC-SHA512. Generator
+sudah membuat secret random 64 byte; jangan biarkan placeholder
+`__JWT_SECRET__` atau secret pendek pada app yang berjalan. Jika mengisi manual,
+generate minimal 64 byte random dan simpan hanya di user-secrets atau
+`appsettings.Development.json` lokal.
+
+Visual Studio IIS Express dapat memakai API di `https://localhost:44333`.
+Web client sudah mencoba port `44333` sebagai fallback development; rebuild
+project Web setelah mengganti launch profile agar `appsettings.Development.json`
+diregenerasi.
+
 MAUI Windows:
 
 ```bash

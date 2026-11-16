@@ -20,7 +20,7 @@ public class EmailProviderQueryService : IEmailProviderQueryService
         DataTableRequestDto request,
         CancellationToken cancellationToken = default)
     {
-        var query = _context.tb_email_provider
+        var query = _context.rf_email_provider
             .Where(e => e.isDeleted != true);
 
         if (!string.IsNullOrWhiteSpace(request.SearchTerm))
@@ -53,7 +53,7 @@ public class EmailProviderQueryService : IEmailProviderQueryService
         return (entities.Select(ToDto).ToList(), total);
     }
 
-    private static EmailProviderDto ToDto(tb_email_provider entity)
+    private static EmailProviderDto ToDto(rf_email_provider entity)
     {
         var config = ReadConfig(entity.configuration_json);
         var dto = new EmailProviderDto

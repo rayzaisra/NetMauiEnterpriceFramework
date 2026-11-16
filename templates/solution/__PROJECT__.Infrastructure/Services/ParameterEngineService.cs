@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 using __PROJECT__.Application.DTOs.General;
 using __PROJECT__.Application.DTOs.Parameter;
@@ -18,9 +19,13 @@ namespace __PROJECT__.Infrastructure.Services;
 
 public class ParameterEngineService : IParameterEngineService
 {
+    private const string EmailProviderTable = "rf_email_provider";
+
     private static readonly HashSet<string> AllowedTables = new(StringComparer.OrdinalIgnoreCase)
     {
         "rf_default_value",
+        "rf_email_provider",
+        "rf_email_template",
         "rf_files_upload_type",
         "rf_group_access_report_set",
         "rf_message",
@@ -37,17 +42,20 @@ public class ParameterEngineService : IParameterEngineService
     private readonly AuditLogDbContext _audit;
     private readonly ICurrentUserService _currentUser;
     private readonly IErrorLogService _errorLog;
+    private readonly IConfiguration _configuration;
 
     public ParameterEngineService(
         __PROJECT__DbContext context,
         AuditLogDbContext audit,
         ICurrentUserService currentUser,
-        IErrorLogService errorLog)
+        IErrorLogService errorLog,
+        IConfiguration configuration)
     {
         _context = context;
         _audit = audit;
         _currentUser = currentUser;
         _errorLog = errorLog;
+        _configuration = configuration;
     }
 
     private string Actor => _currentUser.UserId ?? "system";
@@ -172,11 +180,20 @@ public class ParameterEngineService : IParameterEngineService
             .ToListAsync();
 
         var details = await LoadDetailsAsync(rows.Select(e => e.id));
-        var list = rows.Select(row => new ParameterApprovalRowDto
+        var list = rows.Select(row =>
         {
-            IdPending = row.id,
-            TypeParameter = row.type == Const.ApprovalType.ADD ? "Insert" : TypeLabel(row.type),
-            Fields = details.GetValueOrDefault(row.id) ?? new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase),
+            var fields = details.GetValueOrDefault(row.id) ?? new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase);
+            foreach (var key in fields.Keys.Where(IsSensitiveParameterColumn).ToList())
+            {
+                fields.Remove(key);
+            }
+
+            return new ParameterApprovalRowDto
+            {
+                IdPending = row.id,
+                TypeParameter = row.type == Const.ApprovalType.ADD ? "Insert" : TypeLabel(row.type),
+                Fields = fields,
+            };
         }).ToList();
 
         if (!string.IsNullOrWhiteSpace(request.SearchTerm))
@@ -211,6 +228,11 @@ public class ParameterEngineService : IParameterEngineService
     public async Task<ParameterListResponseDto> GetListAsync(string tableName, DataTableRequestDto request)
     {
         tableName = NormalizeTable(tableName);
+        if (string.Equals(tableName, EmailProviderTable, StringComparison.OrdinalIgnoreCase))
+        {
+            return await GetEmailProviderListAsync(tableName, request);
+        }
+
         var fields = await GetFieldsAsync(tableName);
         var keyFields = GetKeyFields(fields);
         var searchFields = fields.Where(e => !string.Equals(e.FieldType, "bit", StringComparison.OrdinalIgnoreCase)).Take(8).ToList();
@@ -289,6 +311,11 @@ public class ParameterEngineService : IParameterEngineService
     public async Task<Dictionary<string, string>?> GetAsync(string tableName, string? key)
     {
         tableName = NormalizeTable(tableName);
+        if (string.Equals(tableName, EmailProviderTable, StringComparison.OrdinalIgnoreCase))
+        {
+            return await GetEmailProviderAsync(key);
+        }
+
         var fields = await GetFieldsAsync(tableName);
         var keyFields = GetKeyFields(fields);
         var keyValues = DecodeKey(key);
@@ -329,11 +356,419 @@ public class ParameterEngineService : IParameterEngineService
         return row;
     }
 
+    private async Task<ParameterListResponseDto> GetEmailProviderListAsync(
+        string tableName,
+        DataTableRequestDto request)
+    {
+        var fields = await GetFieldsAsync(tableName);
+        var page = Math.Max(1, request.PageNumber);
+        var pageSize = request.PageSize <= 0 ? 10 : Math.Min(request.PageSize, 200);
+        var search = string.IsNullOrWhiteSpace(request.SearchTerm) ? null : request.SearchTerm.Trim();
+
+        var query = _context.rf_email_provider
+            .Where(e => e.isDeleted != true);
+
+        if (search != null)
+        {
+            query = query.Where(e =>
+                (e.provider_name != null && e.provider_name.Contains(search))
+                || e.provider_type.Contains(search)
+                || (e.from_email != null && e.from_email.Contains(search)));
+        }
+
+        var descending = string.Equals(request.SortDirection, "desc", StringComparison.OrdinalIgnoreCase);
+        query = (request.SortColumn ?? string.Empty).ToLowerInvariant() switch
+        {
+            "provider_type" => descending ? query.OrderByDescending(e => e.provider_type) : query.OrderBy(e => e.provider_type),
+            "provider_name" => descending ? query.OrderByDescending(e => e.provider_name) : query.OrderBy(e => e.provider_name),
+            "from_email" => descending ? query.OrderByDescending(e => e.from_email) : query.OrderBy(e => e.from_email),
+            "priority" => descending ? query.OrderByDescending(e => e.priority ?? 100) : query.OrderBy(e => e.priority ?? 100),
+            "is_active" or "isactive" => descending ? query.OrderByDescending(e => e.isActive) : query.OrderBy(e => e.isActive),
+            _ => query.OrderBy(e => e.priority ?? 100).ThenBy(e => e.id),
+        };
+
+        var total = await query.CountAsync();
+        var entities = await query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return new ParameterListResponseDto
+        {
+            Fields = fields,
+            Rows = entities.Select(e => MapEmailProviderRow(e)).ToList(),
+            KeyField = "id",
+            Pagination = new PaginationInfo
+            {
+                PageNumber = page,
+                PageSize = pageSize,
+                TotalCount = total,
+            },
+        };
+    }
+
+    private async Task<Dictionary<string, string>?> GetEmailProviderAsync(string? key)
+    {
+        var keyValues = DecodeKey(key);
+        if (keyValues.Count != 1 || !int.TryParse(keyValues[0], out var id))
+        {
+            return null;
+        }
+
+        var entity = await _context.rf_email_provider
+            .FirstOrDefaultAsync(e => e.id == id && e.isDeleted != true);
+        return entity == null ? null : MapEmailProviderRow(entity);
+    }
+
+    private async Task<BaseGeneralResponse> SaveEmailProviderAsync(ParameterSaveRequestDto request)
+    {
+        try
+        {
+            var values = new Dictionary<string, string>(
+                request.Values ?? new Dictionary<string, string>(),
+                StringComparer.OrdinalIgnoreCase);
+            var keyValues = DecodeKey(request.Key);
+            var id = keyValues.Count == 1 && int.TryParse(keyValues[0], out var keyId)
+                ? keyId
+                : ParseIntValue(values.GetValueOrDefault("id"), 0);
+
+            var existing = id > 0
+                ? await _context.rf_email_provider.FirstOrDefaultAsync(e => e.id == id && e.isDeleted != true)
+                : null;
+            if (id > 0 && existing == null)
+            {
+                return Fail("Email provider not found.");
+            }
+
+            var providerType = (values.GetValueOrDefault("provider_type") ?? string.Empty).Trim().ToUpperInvariant();
+            if (providerType is not ("SMTP" or "GMAIL"))
+            {
+                return Fail("Provider type must be SMTP or GMAIL.");
+            }
+
+            var fromEmail = values.GetValueOrDefault("from_email")?.Trim();
+            if (string.IsNullOrWhiteSpace(fromEmail))
+            {
+                return Fail("From email is required.");
+            }
+
+            var config = ReadEmailConfiguration(existing?.configuration_json);
+            if (existing != null
+                && !string.Equals(existing.provider_type, providerType, StringComparison.OrdinalIgnoreCase))
+            {
+                config.Clear();
+            }
+
+            var passPhrase = _configuration["Encryption:PassPhrase"];
+            if (providerType == "SMTP")
+            {
+                var host = values.GetValueOrDefault("smtp_host")?.Trim();
+                if (string.IsNullOrWhiteSpace(host))
+                {
+                    return Fail("SMTP host is required.");
+                }
+
+                var password = values.GetValueOrDefault("smtp_password");
+                if (string.IsNullOrWhiteSpace(password))
+                {
+                    password = GetEmailConfigValue(config, "password");
+                }
+                else
+                {
+                    password = SecretProtector.Protect(password, passPhrase);
+                }
+
+                if (string.IsNullOrWhiteSpace(password))
+                {
+                    return Fail("SMTP password is required.");
+                }
+
+                config["host"] = host;
+                config["port"] = ParseIntValue(values.GetValueOrDefault("smtp_port"), 587).ToString(CultureInfo.InvariantCulture);
+                config["enableSsl"] = ParseBooleanValue(values.GetValueOrDefault("smtp_ssl"), true).ToString().ToLowerInvariant();
+                config["username"] = values.GetValueOrDefault("smtp_username")?.Trim() ?? string.Empty;
+                config["password"] = password;
+            }
+            else
+            {
+                var clientId = values.GetValueOrDefault("gmail_client_id")?.Trim();
+                var clientSecret = values.GetValueOrDefault("gmail_client_secret");
+                var refreshToken = values.GetValueOrDefault("gmail_refresh_token");
+
+                if (string.IsNullOrWhiteSpace(clientSecret))
+                {
+                    clientSecret = GetEmailConfigValue(config, "clientSecret");
+                }
+                else
+                {
+                    clientSecret = SecretProtector.Protect(clientSecret, passPhrase);
+                }
+
+                if (string.IsNullOrWhiteSpace(refreshToken))
+                {
+                    refreshToken = GetEmailConfigValue(config, "refreshToken");
+                }
+                else
+                {
+                    refreshToken = SecretProtector.Protect(refreshToken, passPhrase);
+                }
+
+                if (string.IsNullOrWhiteSpace(clientId)
+                    || string.IsNullOrWhiteSpace(clientSecret)
+                    || string.IsNullOrWhiteSpace(refreshToken))
+                {
+                    return Fail("Gmail Client ID, Client Secret, and Refresh Token are required.");
+                }
+
+                config["clientId"] = clientId;
+                config["clientSecret"] = clientSecret;
+                config["refreshToken"] = refreshToken;
+            }
+
+            var actualValues = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+            {
+                ["provider_type"] = providerType,
+                ["provider_name"] = values.GetValueOrDefault("provider_name")?.Trim() ?? string.Empty,
+                ["from_email"] = fromEmail,
+                ["from_name"] = values.GetValueOrDefault("from_name")?.Trim() ?? string.Empty,
+                ["priority"] = ParseIntValue(values.GetValueOrDefault("priority"), 100).ToString(CultureInfo.InvariantCulture),
+                ["is_active"] = ParseBooleanValue(values.GetValueOrDefault("is_active"), true).ToString().ToLowerInvariant(),
+                ["configuration_json"] = JsonSerializer.Serialize(config),
+            };
+
+            if (existing != null)
+            {
+                actualValues["id"] = existing.id.ToString(CultureInfo.InvariantCulture);
+            }
+
+            var encodedKey = existing == null
+                ? string.Empty
+                : EncodeKey(new[] { existing.id.ToString(CultureInfo.InvariantCulture) });
+            if (existing != null && await HasPendingAsync(EmailProviderTable, encodedKey))
+            {
+                return Fail("This parameter already has a pending request.");
+            }
+
+            var temporary = new tb_parameter_sytem_temporary
+            {
+                id = Guid.NewGuid(),
+                table_name = EmailProviderTable,
+                type = existing == null ? Const.ApprovalType.ADD : Const.ApprovalType.MODIFIED,
+                created_by = Actor,
+                created_date = DateTime.Now,
+            };
+            await _context.tb_parameter_sytem_temporary.AddAsync(temporary);
+
+            foreach (var pair in actualValues)
+            {
+                await _context.tb_parameter_sytem_temporary_detail.AddAsync(new tb_parameter_sytem_temporary_detail
+                {
+                    tb_parameter_sytem_temporary_id = temporary.id,
+                    column_name = pair.Key,
+                    value = pair.Value,
+                    value_before = existing == null ? null : GetExistingEmailProviderValue(existing, pair.Key),
+                });
+            }
+
+            foreach (var field in new[]
+                     {
+                         "smtp_host", "smtp_port", "smtp_ssl", "smtp_username", "smtp_password",
+                         "gmail_client_id", "gmail_client_secret", "gmail_refresh_token",
+                     })
+            {
+                await _context.tb_parameter_sytem_temporary_detail.AddAsync(new tb_parameter_sytem_temporary_detail
+                {
+                    tb_parameter_sytem_temporary_id = temporary.id,
+                    column_name = field,
+                    value = IsSensitiveParameterColumn(field) ? null : values.GetValueOrDefault(field),
+                });
+            }
+
+            await _context.tb_parameter_sytem_temporary_detail.AddAsync(new tb_parameter_sytem_temporary_detail
+            {
+                tb_parameter_sytem_temporary_id = temporary.id,
+                column_name = "__key",
+                value = encodedKey,
+            });
+
+            await _context.SaveChangesAsync();
+            return Success("Parameter request sent for approval.");
+        }
+        catch (Exception ex)
+        {
+            await LogErrorAsync(ex);
+            return Fail(ex.Message);
+        }
+    }
+
+    private async Task<BaseGeneralResponse> ApproveEmailProviderAsync(
+        tb_parameter_sytem_temporary temporary,
+        Dictionary<string, string?> details)
+    {
+        try
+        {
+            var now = DateTime.Now;
+            var id = ParseIntValue(Get(details, "id"), 0);
+            var entity = id > 0
+                ? await _context.rf_email_provider.FirstOrDefaultAsync(e => e.id == id)
+                : null;
+
+            if (temporary.type == Const.ApprovalType.DELETE)
+            {
+                if (entity == null)
+                {
+                    return Fail("Email provider not found.");
+                }
+
+                entity.isDeleted = true;
+                entity.isActive = false;
+                entity.deletedBy = Actor;
+                entity.deletedDate = now;
+            }
+            else
+            {
+                if (temporary.type == Const.ApprovalType.MODIFIED && entity == null)
+                {
+                    return Fail("Email provider not found.");
+                }
+
+                var isNew = entity == null;
+                entity ??= new rf_email_provider();
+                if (isNew)
+                {
+                    await _context.rf_email_provider.AddAsync(entity);
+                }
+
+                entity.provider_type = Get(details, "provider_type") ?? "NONE";
+                entity.provider_name = Get(details, "provider_name");
+                entity.from_email = Get(details, "from_email");
+                entity.from_name = Get(details, "from_name");
+                entity.priority = ParseIntValue(Get(details, "priority"), 100);
+                entity.isActive = ParseBooleanValue(Get(details, "is_active"), true);
+                entity.isDeleted = false;
+                entity.configuration_json = Get(details, "configuration_json");
+
+                if (temporary.type == Const.ApprovalType.ADD)
+                {
+                    entity.createdBy = temporary.created_by ?? Actor;
+                    entity.createdDate = temporary.created_date;
+                }
+                else
+                {
+                    entity.modifiedBy = Actor;
+                    entity.modifiedDate = now;
+                }
+            }
+
+            await RemoveTemporaryAsync(temporary);
+            await _context.SaveChangesAsync();
+            await AuditAsync("ParameterApproval", "APPROVE",
+                $"{EmailProviderTable} approved ({TypeLabel(temporary.type)}).");
+            return Success("Parameter approval applied.");
+        }
+        catch (Exception ex)
+        {
+            await LogErrorAsync(ex);
+            return Fail(ex.Message);
+        }
+    }
+
+    private static Dictionary<string, string> MapEmailProviderRow(rf_email_provider entity)
+    {
+        var config = ReadEmailConfiguration(entity.configuration_json);
+        return new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["id"] = entity.id.ToString(CultureInfo.InvariantCulture),
+            ["provider_type"] = entity.provider_type,
+            ["provider_name"] = entity.provider_name ?? string.Empty,
+            ["from_email"] = entity.from_email ?? string.Empty,
+            ["from_name"] = entity.from_name ?? string.Empty,
+            ["priority"] = (entity.priority ?? 100).ToString(CultureInfo.InvariantCulture),
+            ["is_active"] = (entity.isActive != false).ToString().ToLowerInvariant(),
+            ["smtp_host"] = GetEmailConfigValue(config, "host") ?? string.Empty,
+            ["smtp_port"] = GetEmailConfigValue(config, "port") ?? "587",
+            ["smtp_ssl"] = (ParseBooleanValue(GetEmailConfigValue(config, "enableSsl"), true)).ToString().ToLowerInvariant(),
+            ["smtp_username"] = GetEmailConfigValue(config, "username") ?? string.Empty,
+            ["smtp_password"] = string.Empty,
+            ["gmail_client_id"] = GetEmailConfigValue(config, "clientId") ?? string.Empty,
+            ["gmail_client_secret"] = string.Empty,
+            ["gmail_refresh_token"] = string.Empty,
+            ["__key"] = EncodeKey(new[] { entity.id.ToString(CultureInfo.InvariantCulture) }),
+        };
+    }
+
+    private static string? GetExistingEmailProviderValue(rf_email_provider entity, string column)
+        => column switch
+        {
+            "provider_type" => entity.provider_type,
+            "provider_name" => entity.provider_name,
+            "from_email" => entity.from_email,
+            "from_name" => entity.from_name,
+            "priority" => (entity.priority ?? 100).ToString(CultureInfo.InvariantCulture),
+            "is_active" => (entity.isActive != false).ToString().ToLowerInvariant(),
+            "configuration_json" => entity.configuration_json,
+            _ => null,
+        };
+
+    private static Dictionary<string, string> ReadEmailConfiguration(string? json)
+    {
+        var config = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        if (string.IsNullOrWhiteSpace(json))
+        {
+            return config;
+        }
+
+        try
+        {
+            using var document = JsonDocument.Parse(json);
+            foreach (var property in document.RootElement.EnumerateObject())
+            {
+                config[property.Name] = property.Value.ValueKind == JsonValueKind.String
+                    ? property.Value.GetString() ?? string.Empty
+                    : property.Value.GetRawText();
+            }
+        }
+        catch
+        {
+            return config;
+        }
+
+        return config;
+    }
+
+    private static string? GetEmailConfigValue(Dictionary<string, string> config, string key)
+        => config.TryGetValue(key, out var value) ? value : null;
+
+    private static int ParseIntValue(string? value, int fallback)
+        => int.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out var result)
+            ? result
+            : fallback;
+
+    private static bool ParseBooleanValue(string? value, bool fallback)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return fallback;
+        }
+
+        if (value == "1")
+        {
+            return true;
+        }
+
+        return bool.TryParse(value, out var result) ? result : fallback;
+    }
+
     public async Task<BaseGeneralResponse> SaveAsync(ParameterSaveRequestDto request)
     {
         try
         {
             var tableName = NormalizeTable(request.TableName);
+            if (string.Equals(tableName, EmailProviderTable, StringComparison.OrdinalIgnoreCase))
+            {
+                return await SaveEmailProviderAsync(request);
+            }
+
             var fields = await GetFieldsAsync(tableName);
             var keyFields = GetKeyFields(fields);
             var keyValues = DecodeKey(request.Key);
@@ -499,7 +934,9 @@ public class ParameterEngineService : IParameterEngineService
             var summary = isImport
                 ? Get(values, "__summary")
                 : string.Join(", ", values
-                    .Where(e => !e.Key.Equals("__key", StringComparison.OrdinalIgnoreCase) && !IsAuditDetail(e.Key))
+                    .Where(e => !e.Key.Equals("__key", StringComparison.OrdinalIgnoreCase)
+                                && !IsAuditDetail(e.Key)
+                                && !IsSensitiveParameterColumn(e.Key))
                     .Take(3)
                     .Select(e => $"{e.Key}={e.Value}"));
             return new ParameterPendingListItemDto
@@ -552,6 +989,11 @@ public class ParameterEngineService : IParameterEngineService
 
         var tableName = NormalizeTable(temporary.table_name);
         var details = await LoadDetailsAsync(id);
+        if (string.Equals(tableName, EmailProviderTable, StringComparison.OrdinalIgnoreCase))
+        {
+            return await ApproveEmailProviderAsync(temporary, details);
+        }
+
         if (tableName == "__import__" && details.ContainsKey("__import"))
         {
             return await ApproveImportAsync(temporary, details);
@@ -1158,6 +1600,12 @@ public class ParameterEngineService : IParameterEngineService
         "approval_type_id" or "approved_by" or "approved_date"
         or "created_by" or "created_date" or "modified_by" or "modified_date"
         or "deleted_by" or "deleted_date" or "status_approval";
+
+    private static bool IsSensitiveParameterColumn(string column)
+        => column.Equals("configuration_json", StringComparison.OrdinalIgnoreCase)
+           || column.Contains("password", StringComparison.OrdinalIgnoreCase)
+           || column.Contains("secret", StringComparison.OrdinalIgnoreCase)
+           || column.Contains("refresh_token", StringComparison.OrdinalIgnoreCase);
 
     private static string TypeLabel(string? type) => type switch
     {

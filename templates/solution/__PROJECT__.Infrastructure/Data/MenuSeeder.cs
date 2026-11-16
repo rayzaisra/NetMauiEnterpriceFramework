@@ -34,7 +34,6 @@ public static class MenuSeeder
         ("MNT-MENU", "Menu Maintenance", null, "B", "MNT", "fa fa-pagelines", 4, null),
         ("MNT-PARAM", "Parameter Maintenance", null, "B", "MNT", "fa fa-cc-jcb", 5, null),
         ("MNT-DEMO", "Demo Screens", null, "B", "MNT", "fa fa-flask", 6, null),
-        ("MNT-EMAIL", "Email Settings", null, "B", "MNT", "fa fa-envelope", 7, null),
 
         ("MNT-USER-LST", "List", "/dashboard/maintenance/user-list", "D", "MNT-USER", "fa fa-list-ul", 1, "__PROJECT__.Shared.Pages.Maintenance.UserList, __PROJECT__.Shared"),
         ("MNT-USER-APR", "Approval", "/dashboard/maintenance/user-approval", "D", "MNT-USER", "fa fa-th-list", 2, "__PROJECT__.Shared.Pages.Maintenance.UserApproval, __PROJECT__.Shared"),
@@ -55,15 +54,13 @@ public static class MenuSeeder
 
         ("MNT-DEMO-VAL", "Default Value", "SM-DEFAULT-VALUE", "D", "MNT-DEMO", "fa fa-list-ul", 1, "DynamicScreen"),
         ("MNT-DEMO-URL", "URL Demo", "SM-URL-DEMO", "D", "MNT-DEMO", "fa fa-map-pin", 2, "DynamicScreen"),
-
-        ("MNT-EMAIL-PRV", "Email Provider", "/dashboard/maintenance/email-provider", "D", "MNT-EMAIL", "fa fa-envelope", 1, "__PROJECT__.Shared.Pages.Maintenance.EmailProvider, __PROJECT__.Shared"),
     };
 
     public static async Task SeedAsync(__PROJECT__DbContext context, CancellationToken cancellationToken = default)
     {
         if (await context.um_menu.AnyAsync(e => e.menu_unique == "MNT", cancellationToken))
         {
-            await EnsureEmailMenusAsync(context, cancellationToken);
+            await RemoveEmailMenusAsync(context, cancellationToken);
             return;
         }
 
@@ -129,89 +126,46 @@ public static class MenuSeeder
         await context.SaveChangesAsync(cancellationToken);
     }
 
-    private static async Task EnsureEmailMenusAsync(__PROJECT__DbContext context, CancellationToken cancellationToken)
+    private static async Task RemoveEmailMenusAsync(
+        __PROJECT__DbContext context,
+        CancellationToken cancellationToken)
     {
-        var now = DateTime.Now;
-        if (!await context.enum_menu_icon.AnyAsync(e => e.menu_icon_code == "fa fa-envelope", cancellationToken))
+        var root = await context.um_menu
+            .FirstOrDefaultAsync(e => e.menu_unique == "MNT-EMAIL", cancellationToken);
+        if (root == null)
         {
-            await context.enum_menu_icon.AddAsync(new enum_menu_icon
-            {
-                menu_icon_code = "fa fa-envelope",
-                menu_icon_name = "envelope",
-                menu_icon_name_alternate = "Email",
-            }, cancellationToken);
-            await context.SaveChangesAsync(cancellationToken);
+            return;
         }
 
-        var parent = await context.um_menu.FirstOrDefaultAsync(e => e.menu_unique == "MNT-EMAIL", cancellationToken);
-        if (parent == null)
-        {
-            parent = new um_menu
-            {
-                menu_unique = "MNT-EMAIL",
-                menu_name = "Email Settings",
-                parent_level_id = "B",
-                menu_unique_parent = "MNT",
-                menu_icon = "fa fa-envelope",
-                order_seq = 7,
-                statusApproval = Const.StatusApproval.APPROVED,
-                isActive = true,
-                isDeleted = false,
-                isLocked = false,
-                isDefault = false,
-                createdBy = "system",
-                createdDate = now,
-            };
-            await context.um_menu.AddAsync(parent, cancellationToken);
-            await context.SaveChangesAsync(cancellationToken);
-        }
+        var menuIds = new List<long> { root.id };
+        var parentCodes = new List<string> { "MNT-EMAIL" };
 
-        var page = await context.um_menu.FirstOrDefaultAsync(e => e.menu_unique == "MNT-EMAIL-PRV", cancellationToken);
-        if (page == null)
+        while (parentCodes.Count > 0)
         {
-            page = new um_menu
+            var children = await context.um_menu
+                .Where(e => e.menu_unique_parent != null && parentCodes.Contains(e.menu_unique_parent))
+                .ToListAsync(cancellationToken);
+            if (children.Count == 0)
             {
-                menu_unique = "MNT-EMAIL-PRV",
-                menu_name = "Email Provider",
-                menu_url = "/dashboard/maintenance/email-provider",
-                parent_level_id = "D",
-                menu_unique_parent = "MNT-EMAIL",
-                menu_icon = "fa fa-envelope",
-                order_seq = 1,
-                component_type = "__PROJECT__.Shared.Pages.Maintenance.EmailProvider, __PROJECT__.Shared",
-                statusApproval = Const.StatusApproval.APPROVED,
-                isActive = true,
-                isDeleted = false,
-                isLocked = false,
-                isDefault = false,
-                createdBy = "system",
-                createdDate = now,
-            };
-            await context.um_menu.AddAsync(page, cancellationToken);
-            await context.SaveChangesAsync(cancellationToken);
-        }
-
-        foreach (var menu in new[] { parent, page })
-        {
-            var mapped = await context.um_group_menu.AnyAsync(
-                e => e.group_id == Const.DEFAULT_GROUP_ID_ADMINISTRATOR_CODE && e.menu_id == menu.id,
-                cancellationToken);
-            if (!mapped)
-            {
-                await context.um_group_menu.AddAsync(new um_group_menu
-                {
-                    group_id = Const.DEFAULT_GROUP_ID_ADMINISTRATOR_CODE,
-                    menu_id = menu.id,
-                    statusApproval = Const.StatusApproval.APPROVED,
-                    isActive = true,
-                    isDeleted = false,
-                    isLocked = false,
-                    isDefault = false,
-                    createdBy = "system",
-                    createdDate = now,
-                }, cancellationToken);
+                break;
             }
+
+            menuIds.AddRange(children.Select(e => e.id));
+            parentCodes = children
+                .Where(e => !string.IsNullOrWhiteSpace(e.menu_unique))
+                .Select(e => e.menu_unique!)
+                .ToList();
         }
+
+        var mappings = await context.um_group_menu
+            .Where(e => e.menu_id.HasValue && menuIds.Contains(e.menu_id.Value))
+            .ToListAsync(cancellationToken);
+        context.um_group_menu.RemoveRange(mappings);
+
+        var menus = await context.um_menu
+            .Where(e => menuIds.Contains(e.id))
+            .ToListAsync(cancellationToken);
+        context.um_menu.RemoveRange(menus);
 
         await context.SaveChangesAsync(cancellationToken);
     }

@@ -54,7 +54,7 @@ public class EmailProviderService : IEmailProviderService
         }
 
         var entity = request.Id == 0
-            ? new tb_email_provider()
+            ? new rf_email_provider()
             : await _unitOfWork.EmailProviders.GetByIdAsync(request.Id);
 
         if (entity == null)
@@ -215,7 +215,7 @@ public class EmailProviderService : IEmailProviderService
         }
     }
 
-    private static EmailProviderDto ToDto(tb_email_provider entity)
+    private static EmailProviderDto ToDto(rf_email_provider entity)
     {
         var config = ReadConfig(entity.configuration_json);
         var dto = new EmailProviderDto

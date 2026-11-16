@@ -10,6 +10,8 @@ public static class ParameterSeeder
     private static readonly (string TableName, string Description, string Icon)[] Cards =
     {
         ("rf_default_value", "Parameter Default", "SettingsApplications"),
+        ("rf_email_provider", "Email Provider", "Email"),
+        ("rf_email_template", "Email Template", "Email"),
         ("rf_files_upload_type", "Tipe Jenis File yang diupload", "FileCopy"),
         ("rf_group_access_report_set", "Akses Group untuk Report", "GroupWork"),
         ("rf_message", "Pesan", "Comment"),
@@ -64,6 +66,35 @@ public static class ParameterSeeder
             Field("def_name", "Name", "text", order: 2),
             Field("def_value", "Value", "text", order: 3),
             Field("is_active", "Active", "bit", order: 4),
+        });
+
+        await AddFieldsAsync(context, "rf_email_template", cancellationToken, new[]
+        {
+            Field("template_key", "Template Key", "text", key: true, mandatory: true, order: 1),
+            Field("subject", "Subject", "text", mandatory: true, order: 2),
+            Field("body_html", "Body HTML", "html", order: 3),
+            Field("body_text", "Body Text", "textarea", order: 4),
+            Field("is_active", "Active", "bit", order: 5),
+        });
+
+        await AddFieldsAsync(context, "rf_email_provider", cancellationToken, new[]
+        {
+            Field("id", "ID", "number", key: true, order: 1),
+            Field("provider_type", "Type", "list", mandatory: true, order: 2,
+                reff: "select N'SMTP' as value, N'SMTP' as text union all select N'GMAIL' as value, N'GMAIL' as text"),
+            Field("provider_name", "Name", "text", order: 3),
+            Field("from_email", "From Email", "text", mandatory: true, order: 4),
+            Field("from_name", "From Name", "text", order: 5),
+            Field("priority", "Priority", "number", order: 6),
+            Field("smtp_host", "SMTP Host", "text", order: 7),
+            Field("smtp_port", "SMTP Port", "number", order: 8),
+            Field("smtp_username", "SMTP Username", "text", order: 9),
+            Field("smtp_password", "SMTP Password", "password", order: 10),
+            Field("gmail_client_id", "Gmail Client ID", "text", order: 11),
+            Field("gmail_client_secret", "Gmail Client Secret", "password", order: 12),
+            Field("gmail_refresh_token", "Gmail Refresh Token", "password", order: 13),
+            Field("smtp_ssl", "SMTP SSL", "bit", order: 14),
+            Field("is_active", "Active", "bit", order: 15),
         });
 
         await AddFieldsAsync(context, "rf_files_upload_type", cancellationToken, new[]

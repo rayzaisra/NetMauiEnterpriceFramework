@@ -8,10 +8,23 @@
     </TitleContent>
     <DialogContent>
         <MudGrid Spacing="2">
-            @foreach (var field in Fields)
+            @foreach (var field in OrderedFields)
             {
                 var value = _values.GetValueOrDefault(field.FieldName);
                 var label = field.FieldDesc ?? field.FieldName;
+                var isTextArea = string.Equals(field.FieldType, "textarea", StringComparison.OrdinalIgnoreCase)
+                                 || string.Equals(field.FieldType, "html", StringComparison.OrdinalIgnoreCase);
+                var isPassword = string.Equals(field.FieldType, "password", StringComparison.OrdinalIgnoreCase);
+                var decodedTableName = ParameterReference.Decode(TableName);
+                var hideProviderKey = !IsEdit
+                                      && string.Equals(decodedTableName, "rf_email_provider", StringComparison.OrdinalIgnoreCase)
+                                      && field.IsKey;
+
+                if (hideProviderKey)
+                {
+                    continue;
+                }
+
                 if (string.Equals(field.FieldType, "bit", StringComparison.OrdinalIgnoreCase))
                 {
                     <MudItem xs="12" Class="d-flex align-items-center">
@@ -54,7 +67,8 @@
                                       Variant="Variant.Outlined"
                                       Required="@field.IsMandatory"
                                       Disabled="@(IsEdit && field.IsKey)"
-                                      Lines="@(string.Equals(field.FieldType, "text", StringComparison.OrdinalIgnoreCase) && (field.FieldName.Contains("query", StringComparison.OrdinalIgnoreCase) || field.FieldName.Contains("field_filter", StringComparison.OrdinalIgnoreCase)) ? 4 : 1)" />
+                                      InputType="@(isPassword ? InputType.Password : InputType.Text)"
+                                      Lines="@(isTextArea ? 8 : string.Equals(field.FieldType, "text", StringComparison.OrdinalIgnoreCase) && (field.FieldName.Contains("query", StringComparison.OrdinalIgnoreCase) || field.FieldName.Contains("field_filter", StringComparison.OrdinalIgnoreCase)) ? 4 : 1)" />
                     </MudItem>
                 }
             }
@@ -86,6 +100,15 @@
     private bool _saving;
 
     private bool IsEdit => Row != null;
+
+    private IEnumerable<ParameterFieldDto> OrderedFields
+        => Fields
+            .OrderBy(item => IsBooleanField(item) ? 1 : 0)
+            .ThenBy(item => string.Equals(item.FieldName, "is_active", StringComparison.OrdinalIgnoreCase) ? 1 : 0)
+            .ThenBy(item => item.OrderSeq);
+
+    private static bool IsBooleanField(ParameterFieldDto field)
+        => string.Equals(field.FieldType, "bit", StringComparison.OrdinalIgnoreCase);
 
     protected override async Task OnInitializedAsync()
     {
