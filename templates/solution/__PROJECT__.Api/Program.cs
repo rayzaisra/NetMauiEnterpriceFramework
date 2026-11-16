@@ -94,6 +94,7 @@ builder.Services.AddSingleton<IApiActivityLogQueue>(
 builder.Services.AddHostedService<ApiActivityLogWriter>();
 builder.Services.AddScoped<IPasswordResetService, PasswordResetService>();
 builder.Services.AddScoped<IEmailProviderService, EmailProviderService>();
+builder.Services.AddScoped<IDashboardWidgetService, DashboardWidgetService>();
 builder.Services.AddScoped<EmailOutboxProcessor>();
 builder.Services.AddScoped<INotificationPusher, SignalRNotificationPusher>();
 builder.Services.AddScoped<INotificationService, NotificationService>();

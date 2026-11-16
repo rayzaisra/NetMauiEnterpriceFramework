@@ -173,7 +173,8 @@ tb_screen_menu*             dynamic screen configuration
 tb_report_set               report configuration
 tb_parameter_*              parameter engine and approval staging
 temp_*_pending              maker-checker staging
-tb_notification*            notifications
+tb_notification             notification transactions (BaseEntity)
+rf_notification_type        notification type/template parameter (BaseEntity, varchar id)
 rf_email_provider           email provider parameter (main DB)
 rf_email_template           email template parameter (main DB)
 tb_email_outbox             outbound email queue (main DB)
@@ -501,6 +502,10 @@ remain specific and intentional.
   probes `ApiFallbackUrls` in Development, which includes both `7143` and
   `44333`; keep that fallback when changing launch profiles and rebuild Web so
   `appsettings.Development.json` is regenerated.
+- MAUI also probes `44333`, `7143`, and `44325` during startup. Windows MAUI can
+  use IIS Express on `https://localhost:44333`. Android emulator should use the
+  Kestrel profile on `0.0.0.0:7143` through `https://10.0.2.2:7143`; IIS Express
+  bound only to localhost is not reliably reachable from the emulator.
 
 Typical controller structure:
 
@@ -736,6 +741,55 @@ available in both parameter maker and parameter approval.
   configuration belongs under Parameter Maintenance; the legacy EmailProvider
   page/API may remain as a technical fallback but must not be re-seeded as a menu.
 
+### 9.3 Notification types and email gate
+
+`rf_notification_type` is a reference/parameter table. It uses `BaseEntity` and a
+`varchar(50)` uppercase string id. `tb_notification` is the transaction table and
+also uses `BaseEntity`; its `notification_type_id` is `varchar(50)` and joins to
+`rf_notification_type.id`.
+
+- `ParameterSeeder` registers `rf_notification_type`; `ParameterEngineService`
+  must keep it in `AllowedTables`.
+- Maker/approval fields: `id`, `short_text`, `long_text` (textarea), `href`,
+  `is_send_mail`, `is_send_web`, and `is_active` last.
+- Notification creation requires a type id from this table. Do not auto-create a
+  parameter type at runtime.
+- `@[tboId]` in the type text/href is replaced with `tb_notification.reff_id`.
+- Web real-time delivery uses `UserHub` and the `ReceiveNotification` event.
+- Email delivery is implemented behind `rf_default_value.NOTIF_MAIL`. The seed
+  value is `false`; changing it to `true` enables outbox queuing, but the type
+  must also have `is_send_mail = true` and an active email provider must exist.
+- `NOTIF_MAIL` is edited through the existing `rf_default_value` parameter card.
+
+### 9.4 Mobile dashboard pages
+
+MAUI dashboard pages use a separate mobile shell and routes; do not put large
+`@if (IsMauiApp)` blocks into the Web pages.
+
+```text
+/maui/dashboard     -> MauiDashboard + MauiAuthenticatedLayout
+/maui/profile       -> MauiProfile + MauiAuthenticatedLayout
+/maui/notifications -> MauiNotifications + MauiAuthenticatedLayout
+/maui/menu          -> all authorized D menus
+/maui/settings      -> MNT subtree
+```
+
+The mobile dashboard consumes:
+
+- `GET api/menu` for the authorized menu tree;
+- `GET api/dashboard/widgets` for user-scoped dashboard widgets;
+- `GET api/notification/recent` for the notification badge;
+- `GET api/notification/unread-count` for the exact unread badge;
+- `/api/auth/me` and the existing profile route for profile data.
+
+The dashboard menu list includes level-D menus outside the `MNT` subtree, shows
+at most seven items, and always provides a "Lihat Semua" entry. The setting icon
+is rendered only when the authorized menu tree contains an `MNT` subtree.
+
+`DashboardWidgetService` is currently a demo backend source. Its DTO and HTTP
+contract are the replacement point for a future user/group widget table; do not
+hardcode widget data in the MAUI page.
+
 ## 10. Authentication and authorization
 
 - JWT access + refresh tokens; active sessions are checked by middleware.
@@ -774,8 +828,14 @@ Host-specific behavior:
   `10.0.2.2`.
 - Debug MAUI builds use a certificate-validation bypass; do not copy that
   behavior into Release builds.
-- UI style has a shared neo-brutalist theme plus classic mode. Theme choice is
-  persisted in browser/app storage under `enterprise-ui-style`.
+- UI style has a shared neo-brutalist theme plus default mode. Style choice is
+  persisted in browser/app storage under `enterprise-ui-style` (`default`/`neo`,
+  with legacy `classic` mapped to `default`).
+- Color palette uses one of `default`, `fintech`, `monochrome`, `creative`, or
+  `wellness`, persisted under `enterprise-ui-palette`. Installer defaults are
+  generated into `Shared/Theme/ThemeDefaults.cs`; runtime choices override them.
+- Theme palette is applied through `ThemeCatalog`/`ThemePreferenceService` and
+  CSS variables under `html[data-palette]`; do not add page-specific palette CSS.
 - Web and MAUI must both build after Shared UI changes.
 
 ### MAUI standalone APK

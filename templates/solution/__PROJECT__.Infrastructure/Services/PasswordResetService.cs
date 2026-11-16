@@ -187,7 +187,8 @@ public class PasswordResetService : IPasswordResetService
                 adminId,
                 "Password reset request",
                 $"User {user.user_id} requested a password reset. Link: {link}",
-                null);
+                link,
+                NotificationTypeIds.PasswordReset);
         }
     }
 

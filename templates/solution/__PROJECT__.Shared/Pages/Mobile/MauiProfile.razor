@@ -1,0 +1,240 @@
+@page "/maui/profile"
+@layout MauiAuthenticatedLayout
+@attribute [Authorize]
+@inject AuthService AuthService
+@inject ITokenStorage TokenStorage
+@inject INotifyAuthenticationState AuthStateNotifier
+@inject IDialogService DialogService
+@inject NavigationManager Navigation
+@inject ISnackbar Snackbar
+
+<div class="maui-profile-page">
+    <div class="maui-menu-header maui-profile-topbar">
+        <MudIconButton Icon="@Icons.Material.Filled.ArrowBack"
+                       Color="Color.Default"
+                       aria-label="Kembali"
+                       OnClick="BackToDashboard" />
+        <h1>Profil</h1>
+    </div>
+
+    @if (_loading)
+    {
+        <MudProgressLinear Indeterminate="true" />
+    }
+    else if (_error != null)
+    {
+        <MudAlert Severity="Severity.Error" Class="mb-4">@_error</MudAlert>
+        <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="LoadAsync">Coba Lagi</MudButton>
+    }
+    else if (_user != null)
+    {
+        <section class="maui-profile-identity-card">
+            <div class="maui-profile-avatar">@Initials</div>
+            <div class="maui-profile-identity-copy">
+                <h2>@_user.FullName</h2>
+                <div class="maui-profile-role">@RoleName</div>
+                <div class="maui-profile-chips">
+                    <MudChip T="string" Size="Size.Small" Color="@(_user.IsActive ? Color.Success : Color.Default)">
+                        @(_user.IsActive ? "Active" : "Inactive")
+                    </MudChip>
+                    <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined">ID: @_user.UserId</MudChip>
+                </div>
+            </div>
+            <MudIconButton Icon="@Icons.Material.Filled.Edit"
+                           Color="Color.Primary"
+                           aria-label="Edit Profil"
+                           OnClick="EditProfileAsync" />
+        </section>
+
+        <section class="maui-profile-card">
+            <div class="maui-profile-section-title">
+                <MudIcon Icon="@Icons.Material.Filled.Person" Size="Size.Small" />
+                <h2>Informasi Pribadi</h2>
+            </div>
+            <div class="maui-profile-fields">
+                <div class="maui-profile-field">
+                    <span class="maui-profile-label">Email</span>
+                    <span class="maui-profile-value">@(_user.Email ?? "-")</span>
+                </div>
+                <div class="maui-profile-field">
+                    <span class="maui-profile-label">Nomor HP</span>
+                    <span class="maui-profile-value">@(_user.PhoneNumber ?? "-")</span>
+                </div>
+                <div class="maui-profile-field">
+                    <span class="maui-profile-label">Gender</span>
+                    <span class="maui-profile-value">@GenderName</span>
+                </div>
+                <div class="maui-profile-field">
+                    <span class="maui-profile-label">Role</span>
+                    <span class="maui-profile-value">@RoleName</span>
+                </div>
+                <div class="maui-profile-field">
+                    <span class="maui-profile-label">User ID</span>
+                    <span class="maui-profile-value">@_user.UserId</span>
+                </div>
+                <div class="maui-profile-field">
+                    <span class="maui-profile-label">Status</span>
+                    <span class="maui-profile-value">@(_user.IsActive ? "Active" : "Inactive")</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="maui-profile-card">
+            <div class="maui-profile-section-title">
+                <MudIcon Icon="@Icons.Material.Filled.Security" Size="Size.Small" />
+                <h2>Keamanan Akun</h2>
+            </div>
+
+            <button type="button" class="maui-profile-action-row" @onclick="ChangePasswordAsync">
+                <span class="maui-profile-action-icon">
+                    <MudIcon Icon="@Icons.Material.Filled.Lock" Size="Size.Small" />
+                </span>
+                <span class="maui-profile-action-copy">
+                    <span class="maui-profile-label">Ubah Password</span>
+                    <span class="maui-profile-action-subtitle">Perbarui password akun Anda</span>
+                </span>
+                <MudIcon Icon="@Icons.Material.Filled.ChevronRight" Size="Size.Small" />
+            </button>
+
+            <div class="maui-profile-info-row">
+                <MudIcon Icon="@Icons.Material.Filled.Password" Size="Size.Small" />
+                <div>
+                    <span class="maui-profile-label">Password terakhir diperbarui</span>
+                    <span class="maui-profile-value">@(_user.LastPasswordChangeDate?.ToString("dd MMM yyyy HH:mm") ?? "-")</span>
+                </div>
+            </div>
+            <div class="maui-profile-info-row">
+                <MudIcon Icon="@Icons.Material.Filled.Devices" Size="Size.Small" />
+                <div>
+                    <span class="maui-profile-label">Login terakhir</span>
+                    <span class="maui-profile-value">@_user.LastLoginDate.ToString("dd MMM yyyy HH:mm")</span>
+                </div>
+            </div>
+            <div class="maui-profile-info-row">
+                <MudIcon Icon="@Icons.Material.Filled.Router" Size="Size.Small" />
+                <div>
+                    <span class="maui-profile-label">IP terakhir</span>
+                    <span class="maui-profile-value">@(_user.LastIpAddress ?? "-")</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="maui-profile-card">
+            <div class="maui-profile-section-title">
+                <MudIcon Icon="@Icons.Material.Filled.VerifiedUser" Size="Size.Small" />
+                <h2>Hak Akses</h2>
+            </div>
+            <div class="maui-profile-access-list">
+                <span class="maui-profile-access @(_user.CanAddEdit ? "is-enabled" : "")">
+                    <MudIcon Icon="@(_user.CanAddEdit ? Icons.Material.Filled.CheckCircle : Icons.Material.Filled.RemoveCircleOutline)" Size="Size.Small" />
+                    Add/Edit
+                </span>
+                <span class="maui-profile-access @(_user.CanDelete ? "is-enabled" : "")">
+                    <MudIcon Icon="@(_user.CanDelete ? Icons.Material.Filled.CheckCircle : Icons.Material.Filled.RemoveCircleOutline)" Size="Size.Small" />
+                    Delete
+                </span>
+                <span class="maui-profile-access @(_user.CanReadOnly ? "is-enabled" : "")">
+                    <MudIcon Icon="@(_user.CanReadOnly ? Icons.Material.Filled.CheckCircle : Icons.Material.Filled.RemoveCircleOutline)" Size="Size.Small" />
+                    Read-only
+                </span>
+            </div>
+        </section>
+
+        <button type="button" class="maui-profile-logout" @onclick="LogoutAsync">
+            <MudIcon Icon="@Icons.Material.Outlined.Logout" Size="Size.Small" />
+            Logout
+        </button>
+    }
+</div>
+
+@code {
+    private UserResponseDto? _user;
+    private bool _loading = true;
+    private string? _error;
+
+    private string Initials
+    {
+        get
+        {
+            var source = _user?.FullName ?? _user?.UserId;
+            if (string.IsNullOrWhiteSpace(source))
+            {
+                return "?";
+            }
+
+            return string.Concat(source
+                .Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                .Take(2)
+                .Select(part => char.ToUpperInvariant(part[0])));
+        }
+    }
+
+    private string RoleName => _user?.RoleName ?? _user?.RoleId ?? "-";
+
+    private string GenderName => _user?.GenderId?.ToUpperInvariant() switch
+    {
+        "L" => "Laki-Laki",
+        "P" => "Perempuan",
+        _ => "-",
+    };
+
+    protected override async Task OnInitializedAsync() => await LoadAsync();
+
+    private async Task LoadAsync()
+    {
+        _loading = true;
+        _error = null;
+        try
+        {
+            _user = await AuthService.GetCurrentUserAsync();
+            if (_user == null)
+            {
+                _error = "Profil tidak tersedia.";
+            }
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+
+    private async Task EditProfileAsync()
+    {
+        if (_user == null)
+        {
+            return;
+        }
+
+        var parameters = new DialogParameters { ["User"] = _user };
+        var dialog = await DialogService.ShowAsync<ProfileEditDialog>("Edit Profil", parameters);
+        var result = await dialog.Result;
+        if (result is { Canceled: false, Data: UserResponseDto updated })
+        {
+            _user = updated;
+        }
+    }
+
+    private async Task ChangePasswordAsync()
+    {
+        var dialog = await DialogService.ShowAsync<MauiChangePasswordDialog>("Ubah Password");
+        var result = await dialog.Result;
+        if (result is { Canceled: false })
+        {
+            _user = await AuthService.GetCurrentUserAsync();
+        }
+    }
+
+    private void BackToDashboard() => Navigation.NavigateTo("/maui/dashboard");
+
+    private async Task LogoutAsync()
+    {
+        var refreshToken = await TokenStorage.GetRefreshTokenAsync();
+        await AuthService.LogoutAsync(refreshToken);
+        AuthStateNotifier.NotifyUserLogout();
+        Navigation.NavigateTo("/", true);
+    }
+}

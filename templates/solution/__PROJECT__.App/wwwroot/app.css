@@ -44,3 +44,735 @@ html, body {
         z-index: 1;
     }
 }
+
+/* MAUI dashboard shell */
+.maui-app-shell {
+    min-height: 100vh;
+    width: 100%;
+    background: var(--app-bg, #f9f9ff);
+    color: #101828;
+}
+
+.maui-app-shell.neo-brutalism {
+    --neo-ink: #0f172a;
+}
+
+.maui-dashboard-page,
+.maui-menu-page {
+    box-sizing: border-box;
+    min-height: 100vh;
+    width: 100%;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: calc(22px + env(safe-area-inset-top)) 20px 40px;
+}
+
+.maui-topbar,
+.maui-menu-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.maui-menu-header {
+    justify-content: flex-start;
+    margin-bottom: 28px;
+}
+
+.maui-menu-header h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 800;
+}
+
+.maui-logo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 58px;
+    height: 46px;
+    border: 2px solid var(--neo-ink);
+    border-radius: 4px;
+    background: #fff;
+    color: #101828;
+    box-shadow: 3px 3px 0 var(--neo-ink);
+}
+
+.maui-topbar .mud-icon-button,
+.maui-menu-header .mud-icon-button,
+.maui-header-actions .mud-icon-button,
+.maui-profile-identity-card .mud-icon-button {
+    border: 2px solid var(--neo-ink);
+    border-radius: 4px;
+    background: #fff;
+    box-shadow: 2px 2px 0 var(--neo-ink);
+}
+
+.maui-topbar .mud-icon-button:active,
+.maui-menu-header .mud-icon-button:active,
+.maui-header-actions .mud-icon-button:active,
+.maui-profile-identity-card .mud-icon-button:active {
+    box-shadow: none;
+    transform: translate(2px, 2px);
+}
+
+.maui-greeting-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 18px;
+}
+
+.maui-profile-button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 4px 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+    min-width: 0;
+}
+
+.maui-profile-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    border: 2px solid var(--neo-ink);
+    border-radius: 4px;
+    background: #fff;
+    box-shadow: 2px 2px 0 var(--neo-ink);
+}
+
+.maui-greeting-copy {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.maui-greeting-title {
+    font-size: 25px;
+    line-height: 1.15;
+    font-weight: 800;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.maui-greeting-subtitle {
+    margin-top: 4px;
+    color: #667085;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.maui-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 0 0 auto;
+}
+
+.maui-section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 28px 0 14px;
+}
+
+.maui-section-heading h2,
+.maui-menu-section h2 {
+    margin: 0;
+    color: #101828;
+    font-size: 22px;
+    font-weight: 800;
+}
+
+.maui-menu-section h2 {
+    margin-bottom: 16px;
+}
+
+.maui-text-link {
+    border: 0;
+    background: transparent;
+    color: var(--app-mobile-accent, #e97812);
+    font: inherit;
+    font-size: 14px;
+    font-weight: 800;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.maui-widget-track {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 2px 0 16px;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+}
+
+.maui-widget-track::-webkit-scrollbar {
+    display: none;
+}
+
+.maui-widget-card {
+    display: flex;
+    flex: 0 0 82%;
+    min-height: 174px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    padding: 18px;
+    border: 2px solid var(--neo-ink);
+    border-radius: 4px;
+    color: #101828;
+    text-align: left;
+    cursor: pointer;
+    scroll-snap-align: start;
+    box-shadow: 4px 4px 0 var(--neo-ink);
+}
+
+.maui-widget-card:focus-visible,
+.maui-menu-tile:focus-visible,
+.maui-profile-button:focus-visible,
+.maui-text-link:focus-visible {
+    outline: 3px solid #2f6fed;
+    outline-offset: 3px;
+}
+
+.maui-widget-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    margin-bottom: 5px;
+    border: 2px solid var(--neo-ink);
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 2px 2px 0 var(--neo-ink);
+}
+
+.maui-widget-title {
+    margin-top: auto;
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1.15;
+}
+
+.maui-widget-subtitle {
+    font-size: 12px;
+    font-weight: 500;
+    opacity: .8;
+}
+
+.maui-widget-value {
+    margin-top: 3px;
+    font-size: 25px;
+    font-weight: 900;
+    letter-spacing: -.02em;
+}
+
+.maui-widget-empty {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    padding: 16px;
+    border: 1px dashed #cbd5e1;
+    border-radius: 14px;
+    color: #667085;
+    font-size: 14px;
+}
+
+.maui-menu-heading {
+    margin-top: 12px;
+}
+
+.maui-menu-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px 12px;
+}
+
+.maui-menu-tile {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #101828;
+    font: inherit;
+    text-align: center;
+    cursor: pointer;
+}
+
+.maui-menu-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 62px;
+    height: 62px;
+    border: 2px solid var(--neo-ink);
+    border-radius: 4px;
+    color: #101828;
+    box-shadow: 3px 3px 0 var(--neo-ink);
+    transition: transform .15s ease;
+}
+
+.maui-menu-tile:active .maui-menu-icon {
+    transform: scale(.94);
+}
+
+.maui-menu-label {
+    display: -webkit-box;
+    max-width: 100%;
+    overflow: hidden;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.2;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+.maui-menu-more .maui-menu-icon {
+    border: 2px solid var(--neo-ink);
+    background: #fff;
+}
+
+.maui-profile-page {
+    box-sizing: border-box;
+    min-height: 100vh;
+    width: 100%;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: calc(22px + env(safe-area-inset-top)) 20px 40px;
+}
+
+.maui-profile-topbar {
+    margin-bottom: 22px;
+}
+
+.maui-profile-identity-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 20px;
+    border: 2px solid var(--neo-ink);
+    border-radius: 6px;
+    background: linear-gradient(135deg, #76d7cf 0%, #b7efe9 55%, #e7fffc 100%);
+    color: #101828;
+    box-shadow: 5px 5px 0 var(--neo-ink);
+}
+
+.maui-profile-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 62px;
+    height: 62px;
+    flex: 0 0 62px;
+    border: 2px solid var(--neo-ink);
+    border-radius: 50%;
+    background: #fff;
+    color: #101828;
+    font-size: 21px;
+    font-weight: 800;
+    letter-spacing: .03em;
+    box-shadow: 3px 3px 0 var(--neo-ink);
+}
+
+.maui-profile-identity-copy {
+    min-width: 0;
+    flex: 1;
+}
+
+.maui-profile-identity-copy h2 {
+    margin: 0;
+    overflow: hidden;
+    color: #101828;
+    font-size: 21px;
+    font-weight: 800;
+    line-height: 1.15;
+    text-overflow: ellipsis;
+}
+
+.maui-profile-role {
+    margin-top: 4px;
+    color: #315854;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.maui-profile-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 10px;
+}
+
+.maui-profile-card {
+    margin-top: 16px;
+    padding: 20px;
+    border: 2px solid var(--neo-ink);
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: 4px 4px 0 var(--neo-ink);
+}
+
+.maui-profile-section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    color: #101828;
+}
+
+.maui-profile-section-title h2 {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 800;
+}
+
+.maui-profile-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px 14px;
+}
+
+.maui-profile-field,
+.maui-profile-info-row > div {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.maui-profile-field:first-child {
+    grid-column: span 2;
+}
+
+.maui-profile-label {
+    color: #667085;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .03em;
+    text-transform: uppercase;
+}
+
+.maui-profile-value {
+    overflow-wrap: anywhere;
+    color: #101828;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.35;
+}
+
+.maui-profile-action-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 12px;
+    border: 2px solid var(--neo-ink);
+    border-radius: 4px;
+    background: #f9f9ff;
+    color: #101828;
+    text-align: left;
+    cursor: pointer;
+    box-shadow: 2px 2px 0 var(--neo-ink);
+}
+
+.maui-profile-action-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    flex: 0 0 36px;
+    border: 2px solid var(--neo-ink);
+    border-radius: 4px;
+    background: #eef4ff;
+    color: #3659b8;
+    box-shadow: 2px 2px 0 var(--neo-ink);
+}
+
+.maui-profile-action-copy {
+    display: flex;
+    min-width: 0;
+    flex: 1;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.maui-profile-action-subtitle {
+    color: #667085;
+    font-size: 12px;
+}
+
+.maui-profile-info-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 0 0;
+    color: #667085;
+}
+
+.maui-profile-info-row + .maui-profile-info-row {
+    margin-top: 2px;
+}
+
+.maui-profile-access-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.maui-profile-access {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 7px 10px;
+    border: 2px solid var(--neo-ink);
+    border-radius: 2px;
+    color: #667085;
+    font-size: 12px;
+    font-weight: 700;
+    box-shadow: 2px 2px 0 var(--neo-ink);
+}
+
+.maui-profile-access.is-enabled {
+    background: #ecfdf3;
+    color: #067647;
+}
+
+.maui-profile-logout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    margin-top: 22px;
+    padding: 14px;
+    border: 2px solid var(--neo-ink);
+    border-radius: 4px;
+    background: #fff;
+    color: #b42318;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 3px 3px 0 var(--neo-ink);
+}
+
+.maui-profile-logout:active {
+    box-shadow: none;
+    transform: translate(3px, 3px);
+}
+
+.maui-profile-action-row:focus-visible,
+.maui-profile-logout:focus-visible {
+    outline: 3px solid #2f6fed;
+    outline-offset: 3px;
+}
+
+@media (max-width: 360px) {
+    .maui-profile-page {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .maui-profile-fields {
+        grid-template-columns: 1fr;
+    }
+
+    .maui-profile-field:first-child {
+        grid-column: auto;
+    }
+}
+
+.maui-notifications-page {
+    box-sizing: border-box;
+    min-height: 100vh;
+    width: 100%;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: calc(22px + env(safe-area-inset-top)) 20px 40px;
+}
+
+.maui-notifications-header {
+    margin-bottom: 22px;
+}
+
+.maui-notifications-header h1 {
+    flex: 1;
+}
+
+.maui-notifications-header .maui-text-link {
+    margin-left: auto;
+    white-space: nowrap;
+}
+
+.maui-notification-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.maui-notification-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    width: 100%;
+    padding: 15px;
+    border: 2px solid var(--neo-ink);
+    border-radius: 4px;
+    background: #fff;
+    color: #101828;
+    text-align: left;
+    cursor: pointer;
+    box-shadow: 3px 3px 0 var(--neo-ink);
+}
+
+.maui-notification-card.is-unread {
+    background: #eefcfa;
+}
+
+.maui-notification-card:active {
+    box-shadow: none;
+    transform: translate(3px, 3px);
+}
+
+.maui-notification-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    border: 2px solid var(--neo-ink);
+    border-radius: 4px;
+    background: #eef4ff;
+    color: #3659b8;
+    box-shadow: 2px 2px 0 var(--neo-ink);
+}
+
+.maui-notification-copy {
+    display: flex;
+    min-width: 0;
+    flex: 1;
+    flex-direction: column;
+    gap: 4px;
+    padding-top: 2px;
+}
+
+.maui-notification-title {
+    color: #101828;
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1.25;
+}
+
+.maui-notification-message {
+    display: -webkit-box;
+    overflow: hidden;
+    color: #475467;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.4;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+}
+
+.maui-notification-date {
+    color: #667085;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.maui-notification-dot {
+    width: 9px;
+    height: 9px;
+    flex: 0 0 9px;
+    margin-top: 5px;
+    border: 2px solid var(--neo-ink);
+    border-radius: 50%;
+    background: #f97066;
+}
+
+.maui-notification-empty {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 8px;
+    padding: 48px 20px;
+    border: 2px solid var(--neo-ink);
+    border-radius: 4px;
+    background: #fff;
+    color: #667085;
+    text-align: center;
+    box-shadow: 4px 4px 0 var(--neo-ink);
+}
+
+.maui-notification-empty strong {
+    color: #101828;
+    font-size: 16px;
+}
+
+.maui-notification-empty span {
+    font-size: 12px;
+}
+
+.maui-menu-page {
+    padding-bottom: 48px;
+}
+
+.maui-menu-section {
+    padding-top: 2px;
+    margin-bottom: 28px;
+}
+
+.maui-menu-section + .maui-menu-section {
+    border-top: 1px solid #e4e7ec;
+    padding-top: 24px;
+}
+
+.maui-empty-state {
+    padding: 40px 0;
+    color: #667085;
+    text-align: center;
+}
+
+@media (max-width: 360px) {
+    .maui-dashboard-page,
+    .maui-menu-page {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .maui-menu-grid {
+        gap: 14px 8px;
+    }
+
+    .maui-menu-icon {
+        width: 54px;
+        height: 54px;
+    }
+
+    .maui-greeting-title {
+        font-size: 21px;
+    }
+}

@@ -252,31 +252,31 @@ public class TbNotificationRepository : ITbNotificationRepository
         string userId,
         CancellationToken cancellationToken = default)
         => _context.tb_notification.FirstOrDefaultAsync(
-            e => e.id == id && e.receiver_user_id == userId,
+            e => e.id == id
+                 && e.receiver_user_id == userId
+                 && e.isDeleted != true,
             cancellationToken);
 
     public Task<List<tb_notification>> GetUnseenByUserAsync(
         string userId,
         CancellationToken cancellationToken = default)
         => _context.tb_notification
-            .Where(e => e.receiver_user_id == userId && e.is_seen != true)
+            .Where(e => e.receiver_user_id == userId
+                        && e.is_seen != true
+                        && e.isDeleted != true)
             .ToListAsync(cancellationToken);
+
+    public Task<int> GetUnreadCountAsync(
+        string userId,
+        CancellationToken cancellationToken = default)
+        => _context.tb_notification.CountAsync(
+            e => e.receiver_user_id == userId
+                 && e.is_seen != true
+                 && e.isDeleted != true,
+            cancellationToken);
 
     public Task AddAsync(tb_notification entity, CancellationToken cancellationToken = default)
         => _context.tb_notification.AddAsync(entity, cancellationToken).AsTask();
-}
-
-public class TbNotificationTypeRepository : ITbNotificationTypeRepository
-{
-    private readonly __PROJECT__DbContext _context;
-
-    public TbNotificationTypeRepository(__PROJECT__DbContext context) => _context = context;
-
-    public Task<bool> ExistsAsync(Guid id, CancellationToken cancellationToken = default)
-        => _context.tb_notification_type.AnyAsync(e => e.id == id, cancellationToken);
-
-    public Task AddAsync(tb_notification_type entity, CancellationToken cancellationToken = default)
-        => _context.tb_notification_type.AddAsync(entity, cancellationToken).AsTask();
 }
 
 public class PasswordResetTokenRepository : IPasswordResetTokenRepository

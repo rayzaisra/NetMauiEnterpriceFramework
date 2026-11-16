@@ -21,8 +21,9 @@ BEGIN
 
     SELECT @TotalCount = COUNT(*)
     FROM dbo.tb_notification n
-    LEFT JOIN dbo.tb_notification_type t ON t.id = n.notification_type_id
+    LEFT JOIN dbo.rf_notification_type t ON t.id = n.notification_type_id
     WHERE n.receiver_user_id = @UserId
+      AND ISNULL(n.is_deleted, 0) = 0
       AND (@SearchTerm IS NULL OR t.short_text LIKE N'%' + @SearchTerm + N'%' OR t.long_text LIKE N'%' + @SearchTerm + N'%');
 
     DECLARE @sql nvarchar(max) = N'
@@ -30,8 +31,9 @@ BEGIN
                n.is_seen AS IsSeen, n.created_date AS CreatedDate, n.created_by AS CreatedBy,
                t.short_text AS ShortText, t.long_text AS LongText, t.href AS Href
         FROM dbo.tb_notification n
-        LEFT JOIN dbo.tb_notification_type t ON t.id = n.notification_type_id
+        LEFT JOIN dbo.rf_notification_type t ON t.id = n.notification_type_id
         WHERE n.receiver_user_id = @userId
+          AND ISNULL(n.is_deleted, 0) = 0
           AND (@search IS NULL OR t.short_text LIKE @search OR t.long_text LIKE @search)
         ORDER BY ' + QUOTENAME(@SortColumn) + N' ' + @dir + N'
         OFFSET @offset ROWS FETCH NEXT @page_size ROWS ONLY;';

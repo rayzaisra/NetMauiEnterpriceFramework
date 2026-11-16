@@ -13,7 +13,7 @@ function parseArgs(argv) {
   const takesValue = new Set([
     '--name', '--db', '--audit-db', '--server', '--user', '--password',
     '--admin-user', '--admin-password', '--admin-name', '--admin-email',
-    '--logo', '--config', '--output',
+    '--logo', '--style', '--palette', '--config', '--output',
   ]);
   const camel = {
     '--name': 'name',
@@ -27,6 +27,8 @@ function parseArgs(argv) {
     '--admin-name': 'adminName',
     '--admin-email': 'adminEmail',
     '--logo': 'logo',
+    '--style': 'style',
+    '--palette': 'palette',
     '--config': 'config',
     '--output': 'outputDir',
   };
@@ -61,6 +63,18 @@ function parseArgs(argv) {
   return args;
 }
 
+function normalizeThemeStyle(value) {
+  const style = String(value || DEFAULTS.themeStyle).toLowerCase();
+  return style === 'classic' ? 'default' : style;
+}
+
+function normalizeThemePalette(value) {
+  const palette = String(value || DEFAULTS.themePalette).toLowerCase();
+  if (['black-white', 'blackwhite', 'bw'].includes(palette)) return 'monochrome';
+  if (palette === 'colorful') return 'creative';
+  return palette;
+}
+
 function normalizeSpec(raw, args) {
   const spec = {
     projectName: raw.projectName || raw.name || DEFAULTS.projectName,
@@ -76,6 +90,8 @@ function normalizeSpec(raw, args) {
     adminName: raw.adminName || DEFAULTS.adminName,
     adminEmail: raw.adminEmail || DEFAULTS.adminEmail,
     logoPath: raw.logoPath || raw.logo || '',
+    themeStyle: normalizeThemeStyle(raw.themeStyle || raw.style),
+    themePalette: normalizeThemePalette(raw.themePalette || raw.palette),
     includeMaui: raw.includeMaui !== false && !args.noMaui,
     includeTests: Boolean(raw.includeTests || args.tests),
     includeDocker: Boolean(raw.includeDocker || args.docker),
@@ -110,6 +126,8 @@ ${pc.bold('Options')}
   --admin-name <name>        Admin full name
   --admin-email <email>      Admin email
   --logo <path>              Logo PNG/JPG/SVG
+  --style <default|neo>      Initial UI style
+  --palette <name>           default|fintech|monochrome|creative|wellness
   --config <file>            JSON config (non-interactive)
   --output <dir>             Output directory (default: project name)
   --no-maui                  Skip MAUI project generation
@@ -135,6 +153,8 @@ function printPlan(spec, args) {
   console.log(`  SQL Server   : ${spec.server}`);
   console.log(`  Auth         : ${spec.authType}`);
   console.log(`  Admin user   : ${spec.adminUser}`);
+  console.log(`  UI style     : ${spec.themeStyle}`);
+  console.log(`  Palette      : ${spec.themePalette}`);
   console.log(`  MAUI         : ${spec.includeMaui ? 'yes' : 'no'}`);
   console.log(`  Tests        : ${spec.includeTests ? 'yes' : 'no'}`);
   console.log(`  Docker       : ${spec.includeDocker ? 'yes' : 'no'}`);

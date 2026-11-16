@@ -1,0 +1,198 @@
+@page "/maui/dashboard"
+@layout MauiAuthenticatedLayout
+@attribute [Authorize]
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject MenuService MenuService
+@inject DashboardApiService DashboardApi
+@inject NotificationApiService NotificationApi
+@inject AuthService AuthService
+@inject ITokenStorage TokenStorage
+@inject INotifyAuthenticationState AuthStateNotifier
+@inject NavigationManager Navigation
+@inject ISnackbar Snackbar
+
+<div class="maui-dashboard-page">
+    <div class="maui-topbar">
+        <div class="maui-logo" aria-label="Brand logo">
+            <MudIcon Icon="@Icons.Material.Filled.AccountBalance" Size="Size.Medium" />
+        </div>
+        <MudIconButton Icon="@Icons.Material.Outlined.Logout"
+                       Color="Color.Default"
+                       aria-label="Logout"
+                       OnClick="LogoutAsync" />
+    </div>
+
+    <div class="maui-greeting-row">
+        <button type="button" class="maui-profile-button" @onclick="OpenProfile">
+            <span class="maui-profile-icon">
+                <MudIcon Icon="@Icons.Material.Outlined.Person" Size="Size.Medium" />
+            </span>
+            <span class="maui-greeting-copy">
+                <span class="maui-greeting-title">Hi, @_displayName</span>
+                <span class="maui-greeting-subtitle">Lihat profil Anda</span>
+            </span>
+        </button>
+
+        <div class="maui-header-actions">
+            <MudBadge Color="Color.Error"
+                      Visible="@(_unreadCount > 0)"
+                      Content="@_unreadCount.ToString()"
+                      Overlap="true">
+                <MudIconButton Icon="@Icons.Material.Outlined.Notifications"
+                               Color="Color.Default"
+                               aria-label="Notifikasi"
+                               OnClick="OpenNotifications" />
+            </MudBadge>
+
+            @if (_hasSettingAccess)
+            {
+                <MudIconButton Icon="@Icons.Material.Outlined.Settings"
+                               Color="Color.Default"
+                               aria-label="Setting"
+                               OnClick="OpenSettings" />
+            }
+        </div>
+    </div>
+
+    <div class="maui-section-heading">
+        <h2>Dashboard</h2>
+        <button type="button" class="maui-text-link" @onclick="OpenAllFeatures">Lihat Semua</button>
+    </div>
+
+    <MauiWidgetCarousel Widgets="_widgets" OnSelected="OpenWidgetAsync" />
+
+    <div class="maui-section-heading maui-menu-heading">
+        <h2>Menu</h2>
+        <button type="button" class="maui-text-link" @onclick="OpenAllFeatures">Atur</button>
+    </div>
+
+    <div class="maui-menu-grid">
+        @foreach (var (item, index) in _dashboardMenus.Select((item, index) => (item, index)))
+        {
+            <MauiMenuTile Item="item"
+                          BackgroundColor="MenuColor(index)"
+                          OnSelected="OpenMenu" />
+        }
+
+        <button type="button" class="maui-menu-tile maui-menu-more" @onclick="OpenAllFeatures">
+            <span class="maui-menu-icon">
+                <MudIcon Icon="@Icons.Material.Filled.GridView" Size="Size.Medium" />
+            </span>
+            <span class="maui-menu-label">Lihat Semua</span>
+        </button>
+    </div>
+</div>
+
+@code {
+    private readonly string[] _menuColors =
+    [
+        "#76d7cf", "#f7931e", "#a9b8ff", "#6fd3c8",
+        "#f0a7ed", "#ffd166", "#f7b267", "#c4b5fd",
+    ];
+
+    private string _displayName = "User";
+    private List<MenuItemDto> _dashboardMenus = new();
+    private List<DashboardWidgetDto> _widgets = new();
+    private int _unreadCount;
+    private bool _hasSettingAccess;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        _displayName = authState.User.Identity?.Name ?? "User";
+
+        var menu = await MenuService.GetUserMenuAsync();
+        _dashboardMenus = GetDashboardMenus(menu)
+            .Take(7)
+            .ToList();
+        _hasSettingAccess = HasSettingAccess(menu);
+
+        try
+        {
+            _widgets = await DashboardApi.GetWidgetsAsync();
+        }
+        catch
+        {
+            _widgets = new List<DashboardWidgetDto>();
+        }
+
+        try
+        {
+            _unreadCount = await NotificationApi.GetUnreadCountAsync();
+        }
+        catch
+        {
+            _unreadCount = 0;
+        }
+    }
+
+    private static List<MenuItemDto> GetDashboardMenus(IEnumerable<MenuItemDto> menus)
+    {
+        var result = new List<MenuItemDto>();
+        foreach (var root in menus)
+        {
+            if (string.Equals(root.MenuUnique, "MNT", StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            CollectLevelD(root, result);
+        }
+
+        return result
+            .OrderBy(item => item.OrderSeq ?? int.MaxValue)
+            .ToList();
+    }
+
+    private static void CollectLevelD(MenuItemDto item, ICollection<MenuItemDto> result)
+    {
+        if (string.Equals(item.ParentLevelId, "D", StringComparison.OrdinalIgnoreCase))
+        {
+            result.Add(item);
+        }
+
+        foreach (var child in item.Children)
+        {
+            CollectLevelD(child, result);
+        }
+    }
+
+    private static bool HasSettingAccess(IEnumerable<MenuItemDto> menus)
+    {
+        foreach (var root in menus)
+        {
+            if (string.Equals(root.MenuUnique, "MNT", StringComparison.OrdinalIgnoreCase))
+            {
+                return root.Children.Count > 0;
+            }
+        }
+
+        return false;
+    }
+
+    private string MenuColor(int index) => _menuColors[index % _menuColors.Length];
+
+    private void OpenMenu(MenuItemDto item)
+        => MauiMenuNavigator.Open(Navigation, item, Snackbar);
+
+    private void OpenWidgetAsync(DashboardWidgetDto widget)
+    {
+        if (!string.IsNullOrWhiteSpace(widget.ActionUrl))
+        {
+            Navigation.NavigateTo(widget.ActionUrl);
+        }
+    }
+
+    private void OpenProfile() => Navigation.NavigateTo("/maui/profile");
+    private void OpenNotifications() => Navigation.NavigateTo("/maui/notifications");
+    private void OpenSettings() => Navigation.NavigateTo("/maui/settings");
+    private void OpenAllFeatures() => Navigation.NavigateTo("/maui/menu");
+
+    private async Task LogoutAsync()
+    {
+        var refreshToken = await TokenStorage.GetRefreshTokenAsync();
+        await AuthService.LogoutAsync(refreshToken);
+        AuthStateNotifier.NotifyUserLogout();
+        Navigation.NavigateTo("/", true);
+    }
+}

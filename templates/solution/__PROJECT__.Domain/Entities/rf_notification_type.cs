@@ -3,9 +3,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace __PROJECT__.Domain.Entities;
 
-public partial class tb_notification_type
+public partial class rf_notification_type : BaseEntity
 {
-    public Guid id { get; set; }
+    [Column(TypeName = "varchar(50)")]
+    [StringLength(50)]
+    public string id { get; set; } = string.Empty;
 
     [StringLength(1000)]
     public string? short_text { get; set; }
@@ -17,9 +19,4 @@ public partial class tb_notification_type
     public bool? is_send_web { get; set; }
 
     public string? href { get; set; }
-
-    public DateTime? created_date { get; set; }
-
-    [StringLength(100)]
-    public string? created_by { get; set; }
 }

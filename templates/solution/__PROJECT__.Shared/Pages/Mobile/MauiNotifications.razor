@@ -1,0 +1,117 @@
+@page "/maui/notifications"
+@layout MauiAuthenticatedLayout
+@attribute [Authorize]
+@inject NotificationApiService NotificationApi
+@inject NavigationManager Navigation
+@inject ISnackbar Snackbar
+
+<div class="maui-notifications-page">
+    <div class="maui-menu-header maui-notifications-header">
+        <MudIconButton Icon="@Icons.Material.Filled.ArrowBack"
+                       Color="Color.Default"
+                       aria-label="Kembali"
+                       OnClick="BackToDashboard" />
+        <h1>Notifikasi</h1>
+        @if (_unreadCount > 0)
+        {
+            <button type="button" class="maui-text-link" @onclick="MarkAllReadAsync">Tandai Semua</button>
+        }
+    </div>
+
+    @if (_loading)
+    {
+        <MudProgressLinear Indeterminate="true" />
+    }
+    else if (_notifications.Count == 0)
+    {
+        <div class="maui-notification-empty">
+            <MudIcon Icon="@Icons.Material.Outlined.NotificationsOff" Size="Size.Large" />
+            <strong>Belum ada notifikasi</strong>
+            <span>Notifikasi akun Anda akan muncul di sini.</span>
+        </div>
+    }
+    else
+    {
+        <div class="maui-notification-list">
+            @foreach (var notification in _notifications)
+            {
+                <button type="button"
+                        class="maui-notification-card @(!notification.IsSeen ? "is-unread" : "")"
+                        @onclick="() => OpenNotificationAsync(notification)">
+                    <span class="maui-notification-icon">
+                        <MudIcon Icon="@(notification.IsSeen ? Icons.Material.Outlined.NotificationsNone : Icons.Material.Filled.Notifications)" Size="Size.Small" />
+                    </span>
+                    <span class="maui-notification-copy">
+                        <span class="maui-notification-title">
+                            @(notification.ShortText ?? notification.Type ?? "Notification")
+                        </span>
+                        @if (!string.IsNullOrWhiteSpace(notification.LongText))
+                        {
+                            <span class="maui-notification-message">@notification.LongText</span>
+                        }
+                        <span class="maui-notification-date">@notification.CreatedDate?.ToString("dd MMM yyyy HH:mm")</span>
+                    </span>
+                    @if (!notification.IsSeen)
+                    {
+                        <span class="maui-notification-dot" aria-label="Belum dibaca"></span>
+                    }
+                </button>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private List<NotificationDto> _notifications = new();
+    private bool _loading = true;
+    private int _unreadCount;
+
+    protected override async Task OnInitializedAsync() => await LoadAsync();
+
+    private async Task LoadAsync()
+    {
+        _loading = true;
+        try
+        {
+            _notifications = await NotificationApi.GetRecentAsync(100);
+            _unreadCount = _notifications.Count(item => !item.IsSeen);
+        }
+        catch
+        {
+            Snackbar.Add("Gagal memuat notifikasi.", Severity.Error);
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+
+    private async Task OpenNotificationAsync(NotificationDto notification)
+    {
+        if (!notification.IsSeen)
+        {
+            await NotificationApi.MarkSeenAsync(notification.Id);
+            notification.IsSeen = true;
+            _unreadCount = Math.Max(0, _unreadCount - 1);
+        }
+
+        if (!string.IsNullOrWhiteSpace(notification.Href))
+        {
+            Navigation.NavigateTo(notification.Href);
+        }
+    }
+
+    private async Task MarkAllReadAsync()
+    {
+        await NotificationApi.MarkAllSeenAsync();
+        foreach (var notification in _notifications)
+        {
+            notification.IsSeen = true;
+        }
+
+        _unreadCount = 0;
+        Snackbar.Add("Semua notifikasi ditandai sudah dibaca.", Severity.Success);
+    }
+
+    private void BackToDashboard() => Navigation.NavigateTo("/maui/dashboard");
+}

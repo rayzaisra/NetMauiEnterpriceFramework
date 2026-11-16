@@ -6,6 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>__PROJECT__</title>
     <base href="/" />
+    <script>
+        (function () {
+            var allowed = ["default", "fintech", "monochrome", "creative", "wellness"];
+            var palette = "__THEME_PALETTE__";
+            try {
+                var saved = localStorage.getItem("enterprise-ui-palette");
+                if (saved) palette = saved;
+            } catch (e) { }
+            if (allowed.indexOf(palette) < 0) palette = "default";
+            document.documentElement.setAttribute("data-palette", palette);
+        })();
+    </script>
     <link rel="preload" id="webassembly" />
     <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="_content/MudBlazor/MudBlazor.min.css" />

@@ -15,6 +15,9 @@ public class NotificationApiService
         => await _api.GetFromJsonAsync<List<NotificationDto>>($"api/notification/recent?top={top}", unwrap: true)
            ?? new List<NotificationDto>();
 
+    public async Task<int> GetUnreadCountAsync()
+        => await _api.GetFromJsonAsync<int>("api/notification/unread-count", unwrap: true);
+
     public async Task<BaseGeneralResponse> MarkSeenAsync(long id)
         => await ReadAsync(await _api.PostAsync($"api/notification/{id}/seen", new { }));
 

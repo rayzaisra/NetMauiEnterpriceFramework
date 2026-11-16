@@ -15,6 +15,7 @@ public static class ParameterSeeder
         ("rf_files_upload_type", "Tipe Jenis File yang diupload", "FileCopy"),
         ("rf_group_access_report_set", "Akses Group untuk Report", "GroupWork"),
         ("rf_message", "Pesan", "Comment"),
+        ("rf_notification_type", "Notification Type", "Notifications"),
         ("tb_parameter_system", "Parameter System", "SystemUpdateAlt"),
         ("tb_parameter_system_detail", "Parameter System Detail", "SettingsSystemDaydream"),
         ("tb_report_set", "Report Set", "Report"),
@@ -121,6 +122,17 @@ public static class ParameterSeeder
             Field("is_default", "Default", "bit", order: 4),
         });
 
+        await AddFieldsAsync(context, "rf_notification_type", cancellationToken, new[]
+        {
+            Field("id", "ID", "text", key: true, mandatory: true, order: 1),
+            Field("short_text", "Short Text", "text", mandatory: true, order: 2),
+            Field("long_text", "Long Text", "textarea", order: 3),
+            Field("href", "Href", "text", order: 4),
+            Field("is_send_mail", "Send Mail", "bit", order: 5),
+            Field("is_send_web", "Send Web", "bit", order: 6),
+            Field("is_active", "Active", "bit", order: 7),
+        });
+
         await AddFieldsAsync(context, "tb_parameter_system", cancellationToken, new[]
         {
             Field("table_name", "Table Name", "text", key: true, mandatory: true, order: 1),
@@ -204,36 +216,39 @@ public static class ParameterSeeder
     private static async Task SeedReferenceDataAsync(__PROJECT__DbContext context, CancellationToken cancellationToken)
     {
         var now = DateTime.Now;
-        if (!await context.rf_default_value.AnyAsync(cancellationToken))
+        var defaults = new (string Code, string Name, string Value)[]
         {
-            var defaults = new (string Code, string Name, string Value)[]
-            {
-                ("V030", "Password expiry days", "90"),
-                ("V031", "Password warning days before expiry", "10"),
-                ("V001", "Default age for rate in input", "35"),
-                ("V005", "Default Plafon Max Capital", "0"),
-                ("V006", "Default percent allocate gaji", "0"),
-                ("V007", "Default percent provisi", "0"),
-                ("V008", "Default percent premi asuransi", "0"),
-                ("V018", "Default usia minimal berdasarkan rate asuransi", "18"),
-                ("V021", "Default usia maksimal berdasarkan rate asuransi", "65"),
-                ("V022", "Default waktu valid pengecekan SLIK dalam hari", "30"),
-            };
+            ("V030", "Password expiry days", "90"),
+            ("V031", "Password warning days before expiry", "10"),
+            ("V001", "Default age for rate in input", "35"),
+            ("V005", "Default Plafon Max Capital", "0"),
+            ("V006", "Default percent allocate gaji", "0"),
+            ("V007", "Default percent provisi", "0"),
+            ("V008", "Default percent premi asuransi", "0"),
+            ("V018", "Default usia minimal berdasarkan rate asuransi", "18"),
+            ("V021", "Default usia maksimal berdasarkan rate asuransi", "65"),
+            ("V022", "Default waktu valid pengecekan SLIK dalam hari", "30"),
+            ("NOTIF_MAIL", "Notification email enabled", "false"),
+        };
 
-            foreach (var item in defaults)
+        foreach (var item in defaults)
+        {
+            if (await context.rf_default_value.AnyAsync(e => e.def_code == item.Code, cancellationToken))
             {
-                await context.rf_default_value.AddAsync(new rf_default_value
-                {
-                    def_code = item.Code,
-                    def_name = item.Name,
-                    def_value = item.Value,
-                    statusApproval = Const.StatusApproval.APPROVED,
-                    isActive = true,
-                    isDeleted = false,
-                    createdBy = "system",
-                    createdDate = now,
-                }, cancellationToken);
+                continue;
             }
+
+            await context.rf_default_value.AddAsync(new rf_default_value
+            {
+                def_code = item.Code,
+                def_name = item.Name,
+                def_value = item.Value,
+                statusApproval = Const.StatusApproval.APPROVED,
+                isActive = true,
+                isDeleted = false,
+                createdBy = "system",
+                createdDate = now,
+            }, cancellationToken);
         }
 
         if (!await context.rf_message.AnyAsync(cancellationToken))

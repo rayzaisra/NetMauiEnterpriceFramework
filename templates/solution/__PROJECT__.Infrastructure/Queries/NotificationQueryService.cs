@@ -17,23 +17,42 @@ public class NotificationQueryService : INotificationQueryService
         int top = 20,
         CancellationToken cancellationToken = default)
     {
-        return await (from notification in _context.tb_notification
-                      join type in _context.tb_notification_type
-                          on notification.notification_type_id equals type.id into typeJoin
-                      from type in typeJoin.DefaultIfEmpty()
-                      where notification.receiver_user_id == userId
-                      orderby notification.created_date descending
-                      select new NotificationDto
-                      {
-                          Id = notification.id,
-                          Type = type != null ? type.short_text : null,
-                          ShortText = type != null ? type.short_text : null,
-                          LongText = type != null ? type.long_text : null,
-                          Href = notification.reff_id ?? (type != null ? type.href : null),
-                          IsSeen = notification.is_seen == true,
-                          CreatedDate = notification.created_date,
-                      })
+        var rows = await (from notification in _context.tb_notification
+                          join type in _context.rf_notification_type
+                              on notification.notification_type_id equals type.id into typeJoin
+                          from type in typeJoin.DefaultIfEmpty()
+                          where notification.receiver_user_id == userId
+                                && notification.isDeleted != true
+                          orderby notification.createdDate descending
+                          select new { notification, type })
             .Take(Math.Clamp(top, 1, 100))
             .ToListAsync(cancellationToken);
+
+        return rows.Select(row => new NotificationDto
+        {
+            Id = row.notification.id,
+            NotificationTypeId = row.notification.notification_type_id,
+            Type = row.type != null ? row.type.short_text : null,
+            ShortText = Render(row.type?.short_text, row.notification.reff_id),
+            LongText = Render(row.type?.long_text, row.notification.reff_id),
+            ReffId = row.notification.reff_id,
+            Href = !string.IsNullOrWhiteSpace(row.notification.reff_id)
+                ? row.notification.reff_id
+                : Render(row.type?.href, row.notification.reff_id),
+            IsSeen = row.notification.is_seen == true,
+            CreatedDate = row.notification.createdDate,
+        }).ToList();
     }
+
+    private static string? Render(string? template, string? reffId)
+        => template?.Replace("@[tboId]", reffId ?? string.Empty, StringComparison.OrdinalIgnoreCase);
+
+    public Task<int> GetUnreadCountAsync(
+        string userId,
+        CancellationToken cancellationToken = default)
+        => _context.tb_notification.CountAsync(
+            e => e.receiver_user_id == userId
+                 && e.is_seen != true
+                 && e.isDeleted != true,
+            cancellationToken);
 }

@@ -1,0 +1,28 @@
+@inherits LayoutComponentBase
+@inject ThemePreferenceService ThemeService
+
+@if (ThemeService.Palette == "default")
+{
+    <MudThemeProvider />
+}
+else
+{
+    <MudThemeProvider Theme="ThemeService.GetTheme(false)" />
+}
+
+<div class="maui-app-shell neo-brutalism @ThemeService.PaletteClass">
+    @Body
+</div>
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            return;
+        }
+
+        await ThemeService.InitializeAsync();
+        StateHasChanged();
+    }
+}

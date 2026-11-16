@@ -29,6 +29,7 @@ public class ParameterEngineService : IParameterEngineService
         "rf_files_upload_type",
         "rf_group_access_report_set",
         "rf_message",
+        "rf_notification_type",
         "tb_parameter_system",
         "tb_parameter_system_detail",
         "tb_report_set",
@@ -1202,6 +1203,7 @@ public class ParameterEngineService : IParameterEngineService
         AddInsertColumn(columns, command, insertColumns, insertParameters, "is_default", false);
         AddInsertColumn(columns, command, insertColumns, insertParameters, "approved_by", Actor);
         AddInsertColumn(columns, command, insertColumns, insertParameters, "approved_date", now);
+        AddInsertColumn(columns, command, insertColumns, insertParameters, "approval_type_id", Const.ApprovalType.ADD);
     }
 
     private static void AddInsertColumn(HashSet<string> columns, SqlCommand command, List<string> insertColumns, List<string> insertParameters, string column, object value)

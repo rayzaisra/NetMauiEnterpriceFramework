@@ -55,7 +55,7 @@ public class __PROJECT__DbContext : DbContext
     public DbSet<tb_report_set> tb_report_set => Set<tb_report_set>();
 
     public DbSet<tb_notification> tb_notification => Set<tb_notification>();
-    public DbSet<tb_notification_type> tb_notification_type => Set<tb_notification_type>();
+    public DbSet<rf_notification_type> rf_notification_type => Set<rf_notification_type>();
 
     public DbSet<rf_default_value> rf_default_value => Set<rf_default_value>();
     public DbSet<rf_files_upload_type> rf_files_upload_type => Set<rf_files_upload_type>();
@@ -340,13 +340,18 @@ public class __PROJECT__DbContext : DbContext
     private static void ConfigureNotifications(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<tb_notification>().HasKey(e => e.id);
-        modelBuilder.Entity<tb_notification_type>().HasKey(e => e.id);
+        modelBuilder.Entity<rf_notification_type>().HasKey(e => e.id);
 
         modelBuilder.Entity<tb_notification>()
-            .HasOne<tb_notification_type>()
+            .HasOne<rf_notification_type>()
             .WithMany()
             .HasForeignKey(e => e.notification_type_id)
             .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<tb_notification>()
+            .HasIndex(e => new { e.receiver_user_id, e.is_seen, e.createdDate });
+        modelBuilder.Entity<tb_notification>()
+            .HasIndex(e => new { e.receiver_user_id, e.createdDate });
     }
 
     private static void ConfigureEmailAndReset(ModelBuilder modelBuilder)

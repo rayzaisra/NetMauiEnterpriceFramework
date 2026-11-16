@@ -1,0 +1,45 @@
+@using __PROJECT__.Application.DTOs.Dashboard
+
+@if (Widgets.Count == 0)
+{
+    <div class="maui-widget-empty">
+        <MudIcon Icon="@Icons.Material.Outlined.Dashboard" Size="Size.Small" />
+        <span>Belum ada widget.</span>
+    </div>
+}
+else
+{
+    <div class="maui-widget-track">
+        @foreach (var widget in Widgets.OrderBy(item => item.SortOrder))
+        {
+            <button type="button"
+                    class="maui-widget-card"
+                    style="background-color:@(widget.BackgroundColor ?? "#76d7cf")"
+                    @onclick="() => OpenWidgetAsync(widget)">
+                <span class="maui-widget-icon">
+                    <MudIcon Icon="@MenuIconResolver.GetIcon(widget.Icon)" Size="Size.Medium" />
+                </span>
+                <span class="maui-widget-title">@widget.Title</span>
+                @if (!string.IsNullOrWhiteSpace(widget.Subtitle))
+                {
+                    <span class="maui-widget-subtitle">@widget.Subtitle</span>
+                }
+                @if (!string.IsNullOrWhiteSpace(widget.Value))
+                {
+                    <span class="maui-widget-value">@widget.Value</span>
+                }
+            </button>
+        }
+    </div>
+}
+
+@code {
+    [Parameter]
+    public List<DashboardWidgetDto> Widgets { get; set; } = new();
+
+    [Parameter]
+    public EventCallback<DashboardWidgetDto> OnSelected { get; set; }
+
+    private Task OpenWidgetAsync(DashboardWidgetDto widget)
+        => OnSelected.InvokeAsync(widget);
+}

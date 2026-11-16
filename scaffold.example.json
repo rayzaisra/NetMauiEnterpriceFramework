@@ -12,6 +12,8 @@
   "adminName": "Administrator",
   "adminEmail": "admin@example.com",
   "logoPath": "",
+  "themeStyle": "neo",
+  "themePalette": "default",
   "includeMaui": true,
   "includeTests": false,
   "includeDocker": false,

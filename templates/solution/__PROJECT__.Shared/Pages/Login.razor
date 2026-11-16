@@ -10,15 +10,16 @@
 @inject NavigationManager Navigation
 @inject ISnackbar Snackbar
 @inject IJSRuntime JS
+@inject ThemePreferenceService ThemeService
 
-<MudThemeProvider Theme="LoginTheme" />
+<MudThemeProvider Theme="ThemeService.LoginTheme" />
 
 @if (IsMauiApp)
 {
     <div class="maui-auth-shell neo-brutalism">
         <div class="maui-auth-card">
             <div class="maui-auth-logo">
-                <MudIcon Icon="@Icons.Material.Filled.AccountBalance" />
+                <img src="/images/branding/app-logo.png" alt="" />
             </div>
 
             <div class="maui-auth-heading">
@@ -219,12 +220,12 @@
 }
 else
 {
-<MudGrid Justify="Justify.Center" Class="@LoginPageClass" Style="min-height:100vh; background:#e7eeff;">
-    <MudItem xs="12" md="6" Class="login-brand-item">
+<div class="@LoginPageClass login-shell">
+    <section class="login-brand-item">
         <MudPaper Elevation="0" Class="login-brand-panel">
             <div class="login-brand-top">
                 <div class="login-logo">
-                    <MudIcon Icon="@Icons.Material.Filled.AccountBalance" />
+                    <img src="/images/branding/app-logo.png" alt="" />
                 </div>
                 <div>
                     <div class="login-brand-name">@BrandName</div>
@@ -232,22 +233,15 @@ else
                 </div>
             </div>
 
-            <div class="login-brand-copy">
-                <h1>Securing your enterprise future today.</h1>
-                <p>Access your high-performance financial dashboard and manage corporate assets with precision-grade tools.</p>
+            <div class="login-brand-visual">
+                <img src="/images/login/login-illustration.png"
+                     alt="Enterprise workspace illustration"
+                     loading="eager" />
             </div>
-
-            <div class="login-brand-features">
-                <div><MudIcon Icon="@Icons.Material.Filled.VerifiedUser" /> Enterprise-grade security</div>
-                <div><MudIcon Icon="@Icons.Material.Filled.Insights" /> Operational insight</div>
-                <div><MudIcon Icon="@Icons.Material.Filled.Settings" /> Configurable modules</div>
-            </div>
-
-            <div class="login-brand-footer">© @DateTime.Now.Year @BrandName. Internal use only.</div>
         </MudPaper>
-    </MudItem>
+    </section>
 
-    <MudItem xs="12" md="6" Class="login-form-item">
+    <section class="login-form-item">
         <MudPaper Elevation="0" Class="login-form-panel">
             <div class="login-form-header">
                 <h2>@HeaderTitle</h2>
@@ -440,20 +434,15 @@ else
                 </EditForm>
             }
 
-            <div class="login-form-footer">
-                Need assistance? <MudLink Href="#" Underline="Underline.Always" Style="color:#004481;">Contact Support</MudLink>
-            </div>
         </MudPaper>
-    </MudItem>
-</MudGrid>
+    </section>
+</div>
 }
 
 @code {
     private const string BrandName = "__PROJECT__";
-    private const string StyleStorageKey = "enterprise-ui-style";
-    private bool _neoBrutalism = true;
     private static bool IsMauiApp => !OperatingSystem.IsBrowser();
-    private string LoginPageClass => $"login-page {(_neoBrutalism ? "neo-brutalism" : "classic-login")}";
+    private string LoginPageClass => $"login-page {(ThemeService.IsNeoBrutalism ? "neo-brutalism" : "classic-login")} palette-{ThemeService.Palette}";
     private string MauiHeaderTitle => _requiresPasswordChange ? "Reset Password" : HeaderTitle;
     private string MauiHeaderSubtitle => _requiresPasswordChange
         ? "Set a new password for your account."
@@ -553,39 +542,9 @@ else
             return;
         }
 
-        try
-        {
-            var savedStyle = await JS.InvokeAsync<string?>("localStorage.getItem", StyleStorageKey);
-            if (string.Equals(savedStyle, "classic", StringComparison.OrdinalIgnoreCase))
-            {
-                _neoBrutalism = false;
-                StateHasChanged();
-            }
-        }
-        catch
-        {
-            // Storage can be unavailable during prerender; keep the default style.
-        }
+        await ThemeService.InitializeAsync();
+        StateHasChanged();
     }
-
-    private readonly MudTheme LoginTheme = new()
-    {
-        PaletteLight = new PaletteLight
-        {
-            Primary = "#004481",
-            Secondary = "#b6171e",
-            Background = "#e7eeff",
-            Surface = "#ffffff",
-            AppbarBackground = "#ffffff",
-        },
-        Typography = new Typography
-        {
-            Default = new DefaultTypography
-            {
-                FontFamily = new[] { "Plus Jakarta Sans", "sans-serif" },
-            },
-        },
-    };
 
     private void ShowForgot()
     {
@@ -719,7 +678,7 @@ else
             }
             else
             {
-                Navigation.NavigateTo("/dashboard", true);
+                Navigation.NavigateTo(IsMauiApp ? "/maui/dashboard" : "/dashboard", true);
             }
         }
         catch (Exception ex)

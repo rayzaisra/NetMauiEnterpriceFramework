@@ -11,18 +11,19 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject ISnackbar Snackbar
 @inject NotificationApiService NotificationApi
+@inject ThemePreferenceService ThemeService
 @inject ApiService ApiService
 @inject IHttpMessageHandlerFactory HttpMessageHandlerFactory
 @inject ILogger<AuthenticatedLayout> Logger
 @inject IJSRuntime JS
 @inject IBrowserViewportService ViewportService
 
-<MudThemeProvider Theme="_theme" @bind-IsDarkMode="_isDarkMode" />
+<MudThemeProvider Theme="ThemeService.GetTheme(_isDarkMode)" @bind-IsDarkMode="_isDarkMode" />
 
 <MudLayout Class="@ShellClass" @onclick="CloseSearch">
     <MudAppBar Elevation="1" Class="app-topbar">
         <div class="app-brand" title="@BrandName">
-            <MudIcon Icon="@Icons.Material.Filled.AccountBalance" Color="Color.Primary" Class="app-brand-icon" />
+            <img src="/images/branding/app-logo.png" class="app-brand-icon" alt="" />
             <MudText Typo="Typo.h6" Class="app-brand-text">@BrandName</MudText>
         </div>
         <MudIconButton Icon="@(DrawerToggleState ? Icons.Material.Filled.MenuOpen : Icons.Material.Filled.Menu)"
@@ -139,16 +140,40 @@
                        Color="Color.Inherit"
                        aria-label="@(_isDarkMode ? "Switch to light mode" : "Switch to dark mode")"
                        OnClick="@(_ => ToggleDarkMode())" />
+        <MudMenu>
+            <ActivatorContent Context="paletteMenu">
+                <MudIconButton Icon="@Icons.Material.Filled.Palette"
+                               Color="Color.Inherit"
+                               aria-label="Color palette"
+                               title="Color palette"
+                               OnClick="@(_ => paletteMenu.ToggleAsync())" />
+            </ActivatorContent>
+            <ChildContent>
+                @foreach (var palette in ThemeCatalog.Palettes)
+                {
+                    <MudMenuItem OnClick="@(() => ChangePaletteAsync(palette.Id))">
+                        <span class="palette-menu-item">
+                            <span class="palette-swatch palette-swatch-@palette.Id"></span>
+                            <span>@palette.Label</span>
+                        </span>
+                    </MudMenuItem>
+                }
+            </ChildContent>
+        </MudMenu>
         <MudIconButton Icon="@Icons.Material.Filled.Brush"
                        Color="Color.Inherit"
-                       aria-label="@(_neoBrutalism ? "Use classic style" : "Try neo brutalism")"
-                       title="@(_neoBrutalism ? "Classic style" : "Neo brutalism")"
+                       aria-label="@(ThemeService.IsNeoBrutalism ? "Use default style" : "Use neo brutalism")"
+                       title="@(ThemeService.IsNeoBrutalism ? "Default style" : "Neo brutalism")"
                        OnClick="@(_ => ToggleNeoBrutalismAsync())" />
         <MudMenu>
             <ActivatorContent Context="accountMenu">
-                <MudIconButton Icon="@Icons.Material.Filled.AccountCircle"
-                               Color="Color.Inherit"
-                               OnClick="@(_ => accountMenu.ToggleAsync())" />
+                <button type="button"
+                        class="app-user-avatar"
+                        aria-label="Account menu"
+                        @onclick:stopPropagation="true"
+                        @onclick="@(_ => accountMenu.ToggleAsync())">
+                    <img src="/images/branding/user-avatar.png" alt="" />
+                </button>
             </ActivatorContent>
             <ChildContent>
                 <MudMenuItem OnClick="@(_ => OpenProfile())">Profile</MudMenuItem>
@@ -171,7 +196,7 @@
             {
                 <div class="sidebar-brand">
                     <div class="sidebar-brand-icon">
-                        <MudIcon Icon="@Icons.Material.Filled.AccountBalance" />
+                        <img src="/images/branding/app-logo.png" class="sidebar-brand-logo" alt="" />
                     </div>
                     <div class="sidebar-brand-copy">
                         <div class="sidebar-brand-title">@BrandName</div>
@@ -191,7 +216,7 @@
             else
             {
                 <div class="sidebar-rail-brand">
-                    <MudIcon Icon="@Icons.Material.Filled.AccountBalance" />
+                    <img src="/images/branding/app-logo.png" class="sidebar-rail-logo" alt="" />
                 </div>
                 <MudDivider Class="my-2" />
                 <div class="sidebar-rail">
@@ -266,15 +291,13 @@
     private const string ProfileComponent = "__PROJECT__.Shared.Pages.Profile, __PROJECT__.Shared";
     private const string NotificationsComponent = "__PROJECT__.Shared.Pages.Notifications, __PROJECT__.Shared";
 
-    private const string StyleStorageKey = "enterprise-ui-style";
     private readonly Guid _viewportObserverId = Guid.NewGuid();
     private bool _drawerExpanded = true;
     private bool _sidebarCompact;
-    private bool _neoBrutalism = true;
     private bool _isMobile;
     private bool _mobileMenuOpen;
     private string? _expandedParentUnique;
-    private string ShellClass => $"{(_isDarkMode ? "app-dark" : "app-light")} {(_drawerExpanded ? "app-shell-expanded" : "app-shell-collapsed")} {(_neoBrutalism ? "neo-brutalism" : string.Empty)}";
+    private string ShellClass => $"{(_isDarkMode ? "app-dark" : "app-light")} {(_drawerExpanded ? "app-shell-expanded" : "app-shell-collapsed")} {ThemeService.ShellClass}";
     private bool DrawerToggleState => _isMobile ? _mobileMenuOpen : _drawerExpanded;
     private bool DrawerIsOpen => _isMobile ? _mobileMenuOpen : true;
     private string DrawerWidth => _isMobile || _drawerExpanded ? "240px" : "72px";
@@ -293,46 +316,6 @@
     private List<NotificationDto> _notifications = new();
     private HubConnection? _hub;
 
-    private readonly MudTheme _theme = new()
-    {
-        PaletteLight = new PaletteLight
-        {
-            Primary = "#004481",
-            Secondary = "#b6171e",
-            Background = "#f9f9ff",
-            Surface = "#ffffff",
-            AppbarBackground = "#ffffff",
-            AppbarText = "#004481",
-            DrawerBackground = "#ffffff",
-            DrawerText = "#263143",
-            TextPrimary = "#111c2d",
-            TextSecondary = "#5b6472",
-            ActionDefault = "#5b6472",
-        },
-        PaletteDark = new PaletteDark
-        {
-            Primary = "#a5c8ff",
-            Secondary = "#ffb3ac",
-            Background = "#111c2d",
-            Surface = "#1b2638",
-            AppbarBackground = "#162235",
-            AppbarText = "#e8eef9",
-            DrawerBackground = "#162235",
-            DrawerText = "#dbe6f5",
-            TextPrimary = "#e8eef9",
-            TextSecondary = "#b8c4d9",
-            ActionDefault = "#b8c4d9",
-            Divider = "rgba(255, 255, 255, .12)",
-        },
-        Typography = new Typography
-        {
-            Default = new DefaultTypography
-            {
-                FontFamily = new[] { "Plus Jakarta Sans", "sans-serif" },
-            },
-        },
-    };
-
     protected override async Task OnInitializedAsync()
     {
         TabService.OnTabsChanged += OnTabsChanged;
@@ -344,7 +327,7 @@
         try
         {
             _notifications = await NotificationApi.GetRecentAsync();
-            _unreadCount = _notifications.Count(e => !e.IsSeen);
+            _unreadCount = await NotificationApi.GetUnreadCountAsync();
         }
         catch
         {
@@ -561,19 +544,9 @@
             return;
         }
 
-        try
-        {
-            var savedStyle = await JS.InvokeAsync<string?>("localStorage.getItem", StyleStorageKey);
-            if (string.Equals(savedStyle, "classic", StringComparison.OrdinalIgnoreCase))
-            {
-                _neoBrutalism = false;
-                StateHasChanged();
-            }
-        }
-        catch
-        {
-            // Storage can be unavailable during prerender; keep the default style.
-        }
+        await ThemeService.InitializeAsync();
+        await ThemeService.SetDarkModeAsync(_isDarkMode);
+        StateHasChanged();
 
         try
         {
@@ -585,23 +558,22 @@
         }
     }
 
-    private void ToggleDarkMode() => _isDarkMode = !_isDarkMode;
+    private async Task ToggleDarkMode()
+    {
+        _isDarkMode = !_isDarkMode;
+        await ThemeService.SetDarkModeAsync(_isDarkMode);
+    }
 
     private async Task ToggleNeoBrutalismAsync()
     {
-        _neoBrutalism = !_neoBrutalism;
+        await ThemeService.ToggleStyleAsync();
+        StateHasChanged();
+    }
 
-        try
-        {
-            await JS.InvokeVoidAsync(
-                "localStorage.setItem",
-                StyleStorageKey,
-                _neoBrutalism ? "neo" : "classic");
-        }
-        catch
-        {
-            // The visual toggle still works when storage is unavailable.
-        }
+    private async Task ChangePaletteAsync(string paletteId)
+    {
+        await ThemeService.SetPaletteAsync(paletteId);
+        StateHasChanged();
     }
 
     private void OpenMenu(MenuItemDto item)

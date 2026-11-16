@@ -74,6 +74,8 @@ create-ryzcore \
   --server localhost,1433 \
   --user sa \
   --password "YourStrong!Passw0rd" \
+  --style neo \
+  --palette fintech \
   --no-maui \
   --tests \
   --docker
@@ -90,6 +92,8 @@ create-ryzcore \
 | `--user`, `--password` | Kredensial SQL Server |
 | `--admin-*` | Data admin awal |
 | `--logo` | Path logo PNG/JPG/SVG |
+| `--style` | Style awal: `default` atau `neo` |
+| `--palette` | Palette awal: `default`, `fintech`, `monochrome`, `creative`, `wellness` |
 | `--config` | Config JSON non-interaktif |
 | `--output` | Direktori output |
 | `--no-maui` | Tanpa project MAUI |
@@ -100,6 +104,19 @@ create-ryzcore \
 | `--force` | Timpa output yang tidak kosong |
 | `--dry-run` | Validasi dan tampilkan rencana saja |
 | `--yes` | Non-interaktif |
+
+Palette awal yang tersedia:
+
+| Nilai | Nama |
+|---|---|
+| `default` | Default |
+| `fintech` | FinTech |
+| `monochrome` | Black & White |
+| `creative` | Creative Colorful |
+| `wellness` | Wellness |
+
+Setelah aplikasi berjalan, style dan palette dapat diganti dari topbar Web.
+Pilihan disimpan di browser; nilai install hanya menjadi default awal.
 
 ## Struktur hasil generate
 

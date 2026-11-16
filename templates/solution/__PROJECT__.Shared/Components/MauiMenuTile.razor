@@ -1,0 +1,23 @@
+@using __PROJECT__.Application.DTOs.Menu
+
+<button type="button"
+        class="maui-menu-tile"
+        @onclick="HandleClickAsync">
+    <span class="maui-menu-icon" style="background-color:@(BackgroundColor ?? "#76d7cf")">
+        <MudIcon Icon="@MenuIconResolver.GetIcon(Item.MenuIcon)" Size="Size.Medium" />
+    </span>
+    <span class="maui-menu-label">@Item.MenuName</span>
+</button>
+
+@code {
+    [Parameter, EditorRequired]
+    public MenuItemDto Item { get; set; } = new();
+
+    [Parameter]
+    public string? BackgroundColor { get; set; }
+
+    [Parameter]
+    public EventCallback<MenuItemDto> OnSelected { get; set; }
+
+    private Task HandleClickAsync() => OnSelected.InvokeAsync(Item);
+}

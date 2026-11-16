@@ -8,4 +8,8 @@ public interface INotificationQueryService
         string userId,
         int top = 20,
         CancellationToken cancellationToken = default);
+
+    Task<int> GetUnreadCountAsync(
+        string userId,
+        CancellationToken cancellationToken = default);
 }

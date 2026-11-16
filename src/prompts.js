@@ -19,7 +19,22 @@ const DEFAULTS = {
   adminUser: 'admin',
   adminName: 'Administrator',
   adminEmail: 'admin@example.com',
+  themeStyle: 'neo',
+  themePalette: 'default',
 };
+
+const STYLE_CHOICES = [
+  { title: 'Default', value: 'default' },
+  { title: 'Neo Brutalism', value: 'neo' },
+];
+
+const PALETTE_CHOICES = [
+  { title: 'Default', value: 'default' },
+  { title: 'FinTech', value: 'fintech' },
+  { title: 'Black & White', value: 'monochrome' },
+  { title: 'Creative Colorful', value: 'creative' },
+  { title: 'Wellness', value: 'wellness' },
+];
 
 async function askQuestions(args = {}) {
   const answers = await prompts(
@@ -109,6 +124,27 @@ async function askQuestions(args = {}) {
         validate: validateLogo,
       },
       {
+        type: 'select',
+        name: 'themeStyle',
+        message: 'UI style',
+        choices: STYLE_CHOICES,
+        initial: ['default', 'classic'].includes(String(args.style || DEFAULTS.themeStyle).toLowerCase())
+          ? 0
+          : 1,
+      },
+      {
+        type: 'select',
+        name: 'themePalette',
+        message: 'Color palette',
+        choices: PALETTE_CHOICES,
+        initial: Math.max(
+          0,
+          PALETTE_CHOICES.findIndex(
+            (choice) => choice.value === String(args.palette || DEFAULTS.themePalette).toLowerCase()
+          )
+        ),
+      },
+      {
         type: 'confirm',
         name: 'includeMaui',
         message: 'Generate .NET MAUI Blazor Hybrid project?',
@@ -153,6 +189,8 @@ async function askQuestions(args = {}) {
     includeTests: Boolean(rest.includeTests),
     includeDocker: Boolean(rest.includeDocker),
     agentDocs: Boolean(rest.agentDocs),
+    themeStyle: rest.themeStyle || DEFAULTS.themeStyle,
+    themePalette: rest.themePalette || DEFAULTS.themePalette,
   };
 }
 

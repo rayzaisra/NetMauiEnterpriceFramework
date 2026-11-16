@@ -20,27 +20,39 @@ internal static class MauiApiSettings
         if (DeviceInfo.Platform == DevicePlatform.Android)
         {
             AddCandidate(candidates, "https://10.0.2.2:44325");
+            AddCandidate(candidates, "https://10.0.2.2:44333");
             AddCandidate(candidates, "https://10.0.2.2:7143");
+            AddCandidate(candidates, "http://10.0.2.2:60453");
+            AddCandidate(candidates, "http://10.0.2.2:7142");
         }
 
         AddCandidate(candidates, "https://localhost:44325");
         AddCandidate(candidates, "https://127.0.0.1:44325");
+        AddCandidate(candidates, "https://localhost:44333");
+        AddCandidate(candidates, "https://127.0.0.1:44333");
         AddCandidate(candidates, "https://localhost:7143");
         AddCandidate(candidates, "https://127.0.0.1:7143");
-        foreach (var fallback in config.ApiFallbackUrls)
+        AddCandidate(candidates, "http://localhost:60453");
+        AddCandidate(candidates, "http://127.0.0.1:60453");
+        AddCandidate(candidates, "http://localhost:7142");
+        AddCandidate(candidates, "http://127.0.0.1:7142");
+        foreach (var fallbackUrl in config.ApiFallbackUrls)
         {
-            AddCandidate(candidates, fallback);
+            AddCandidate(candidates, fallbackUrl);
         }
 
         foreach (var candidate in candidates)
         {
             if (Probe(candidate, handlerFactory))
             {
+                System.Diagnostics.Debug.WriteLine($"[MauiApiSettings] API base URL: {candidate}");
                 return candidate;
             }
         }
 
-        return candidates.FirstOrDefault() ?? "https://localhost:7143";
+        var fallback = candidates.FirstOrDefault() ?? "https://localhost:7143";
+        System.Diagnostics.Debug.WriteLine($"[MauiApiSettings] No reachable API; using: {fallback}");
+        return fallback;
     }
 
     private static bool Probe(string baseUrl, Func<HttpClientHandler> handlerFactory)

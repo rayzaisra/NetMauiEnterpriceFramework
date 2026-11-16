@@ -6,6 +6,8 @@ const path = require('path');
 const PROJECT_NAME = /^[A-Za-z_][A-Za-z0-9_]*$/;
 const DB_NAME = /^[A-Za-z_][A-Za-z0-9_]*$/;
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const THEME_STYLES = new Set(['default', 'neo']);
+const THEME_PALETTES = new Set(['default', 'fintech', 'monochrome', 'creative', 'wellness']);
 
 const CSHARP_KEYWORDS = new Set([
   'abstract', 'as', 'base', 'bool', 'break', 'byte', 'case', 'catch', 'char',
@@ -109,6 +111,12 @@ function validateSpec(spec) {
   }
   if (validateLogo(spec.logoPath) !== true) {
     errors.push(`logoPath: ${validateLogo(spec.logoPath)}`);
+  }
+  if (!THEME_STYLES.has(spec.themeStyle)) {
+    errors.push('themeStyle: use default or neo.');
+  }
+  if (!THEME_PALETTES.has(spec.themePalette)) {
+    errors.push('themePalette: use default, fintech, monochrome, creative, or wellness.');
   }
 
   return errors;

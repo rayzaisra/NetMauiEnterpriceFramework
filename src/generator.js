@@ -38,6 +38,8 @@ function buildTokens(spec) {
     __ADMIN_NAME__: spec.adminName,
     __ADMIN_EMAIL__: spec.adminEmail,
     __BRAND_NAME__: spec.projectName,
+    __THEME_STYLE__: spec.themeStyle || 'neo',
+    __THEME_PALETTE__: spec.themePalette || 'default',
     __APP_ID__: `com.companyname.${appIdName}.app`,
   };
 }

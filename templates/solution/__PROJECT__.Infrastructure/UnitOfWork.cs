@@ -28,8 +28,9 @@ public class UnitOfWork : IUnitOfWork
     private IEmailTemplateRepository? _emailTemplates;
     private IEmailOutboxRepository? _emailOutbox;
     private ITbNotificationRepository? _notifications;
-    private ITbNotificationTypeRepository? _notificationTypes;
+    private IRfNotificationTypeRepository? _notificationTypes;
     private IEmailProviderRepository? _emailProviders;
+    private IRfDefaultValueRepository? _defaultValues;
 
     public UnitOfWork(__PROJECT__DbContext context) => _context = context;
 
@@ -49,8 +50,9 @@ public class UnitOfWork : IUnitOfWork
     public IEmailTemplateRepository EmailTemplates => _emailTemplates ??= new EmailTemplateRepository(_context);
     public IEmailOutboxRepository EmailOutbox => _emailOutbox ??= new EmailOutboxRepository(_context);
     public ITbNotificationRepository Notifications => _notifications ??= new TbNotificationRepository(_context);
-    public ITbNotificationTypeRepository NotificationTypes => _notificationTypes ??= new TbNotificationTypeRepository(_context);
+    public IRfNotificationTypeRepository NotificationTypes => _notificationTypes ??= new RfNotificationTypeRepository(_context);
     public IEmailProviderRepository EmailProviders => _emailProviders ??= new EmailProviderRepository(_context);
+    public IRfDefaultValueRepository DefaultValues => _defaultValues ??= new RfDefaultValueRepository(_context);
 
     public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         => _context.SaveChangesAsync(cancellationToken);

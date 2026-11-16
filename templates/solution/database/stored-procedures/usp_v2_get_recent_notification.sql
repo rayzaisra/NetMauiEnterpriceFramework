@@ -11,8 +11,9 @@ BEGIN
            n.is_seen AS IsSeen, n.created_date AS CreatedDate, n.created_by AS CreatedBy,
            t.short_text AS ShortText, t.long_text AS LongText, t.href AS Href
     FROM dbo.tb_notification n
-    LEFT JOIN dbo.tb_notification_type t ON t.id = n.notification_type_id
+    LEFT JOIN dbo.rf_notification_type t ON t.id = n.notification_type_id
     WHERE n.receiver_user_id = @UserId
+      AND ISNULL(n.is_deleted, 0) = 0
     ORDER BY n.created_date DESC;
 END;
 GO

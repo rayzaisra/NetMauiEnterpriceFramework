@@ -45,7 +45,7 @@ html, body {
 }
 
 .loading-progress circle:last-child {
-    stroke: #004481;
+    stroke: var(--app-accent, #004481);
     stroke-dasharray: calc(3.141 * var(--blazor-load-percentage, 0%) * 0.8), 500%;
     transition: stroke-dasharray 0.05s ease-in-out;
 }
@@ -54,7 +54,7 @@ html, body {
     position: absolute;
     text-align: center;
     font-weight: 700;
-    color: #004481;
+    color: var(--app-accent, #004481);
     inset: calc(20vh + 3.25rem) 0 auto 0.2rem;
 }
 

@@ -85,7 +85,7 @@ create-ryzcore --help
 create-ryzcore
 ```
 
-Ikuti pertanyaan: nama project, database, kredensial SQL, admin awal, logo, MAUI, test, dan Docker.
+Ikuti pertanyaan: nama project, database, kredensial SQL, admin awal, logo, UI style, color palette, MAUI, test, dan Docker.
 
 ### Mode config
 
@@ -112,12 +112,26 @@ Contoh isi config:
   "adminName": "Administrator",
   "adminEmail": "admin@example.com",
   "logoPath": "",
+  "themeStyle": "neo",
+  "themePalette": "default",
   "includeMaui": true,
   "includeTests": false,
   "includeDocker": false,
   "agentDocs": false
 }
 ```
+
+Palette yang tersedia:
+
+```text
+default      Default
+fintech      FinTech
+monochrome   Black & White
+creative     Creative Colorful
+wellness     Wellness
+```
+
+Nilai `themeStyle`: `default` atau `neo`.
 
 ### Mode argumen
 
@@ -131,6 +145,8 @@ create-ryzcore \
   --password "YourStrong!Passw0rd" \
   --admin-user admin \
   --admin-password "Admin#12345" \
+  --style neo \
+  --palette wellness \
   --no-maui \
   --tests
 ```
@@ -180,9 +196,13 @@ generate minimal 64 byte random dan simpan hanya di user-secrets atau
 `appsettings.Development.json` lokal.
 
 Visual Studio IIS Express dapat memakai API di `https://localhost:44333`.
-Web client sudah mencoba port `44333` sebagai fallback development; rebuild
-project Web setelah mengganti launch profile agar `appsettings.Development.json`
-diregenerasi.
+Web client dan MAUI sudah mencoba port `44333` sebagai fallback development.
+Rebuild project Web setelah mengganti launch profile agar
+`appsettings.Development.json` diregenerasi.
+
+Untuk Android emulator, gunakan profile Kestrel API `https`/`http` dengan alamat
+`0.0.0.0` dan `https://10.0.2.2:7143`; IIS Express yang hanya listen ke localhost
+tidak selalu bisa diakses dari emulator.
 
 MAUI Windows:
 

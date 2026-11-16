@@ -50,12 +50,14 @@ public static class MauiProgram
         builder.Services.AddScoped<ApiService>();
         builder.Services.AddScoped<AuthService>();
         builder.Services.AddScoped<MenuService>();
+        builder.Services.AddScoped<DashboardApiService>();
         builder.Services.AddScoped<SettingApiService>();
         builder.Services.AddScoped<ApprovalApiService>();
         builder.Services.AddScoped<ParameterApiService>();
         builder.Services.AddScoped<EmailProviderApiService>();
         builder.Services.AddScoped<DynamicApiService>();
         builder.Services.AddScoped<NotificationApiService>();
+        builder.Services.AddScoped<ThemePreferenceService>();
         builder.Services.AddScoped<ExportApiService>();
         builder.Services.AddScoped<ScreenMenuApiService>();
         builder.Services.AddScoped<IExcelFilePicker, MauiExcelFilePicker>();

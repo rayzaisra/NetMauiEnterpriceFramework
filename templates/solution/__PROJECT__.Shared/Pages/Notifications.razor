@@ -12,22 +12,27 @@
         <p>All notifications for your account.</p>
     </div>
     <div class="d-flex align-items-center gap-2">
-        <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="MarkAllReadAsync">
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   StartIcon="@Icons.Material.Filled.DoneAll"
+                   OnClick="MarkAllReadAsync">
             Mark All Read
         </MudButton>
     </div>
 </div>
 
 <MudPaper Elevation="0" Class="notification-page-panel">
-    <MudTextField @bind-Value="_search"
-                  @bind-Value:after="ApplyFilter"
-                  Label="Search"
-                  Placeholder="Search notifications..."
-                  Variant="Variant.Outlined"
-                  Adornment="Adornment.End"
-                  AdornmentIcon="@Icons.Material.Filled.Search"
-                  Immediate="true"
-                  Class="notification-search" />
+    <div class="notification-toolbar">
+        <MudTextField @bind-Value="_search"
+                      @bind-Value:after="ApplyFilter"
+                      Label="Search"
+                      Placeholder="Search notifications..."
+                      Variant="Variant.Outlined"
+                      Adornment="Adornment.End"
+                      AdornmentIcon="@Icons.Material.Filled.Search"
+                      Immediate="true"
+                      Class="notification-search" />
+    </div>
 
     <MudTable Items="_filtered"
               Hover="true"
@@ -36,12 +41,24 @@
               Bordered="true"
               Class="mt-4">
         <HeaderContent>
+            <MudTh>Action</MudTh>
             <MudTh><MudTableSortLabel T="NotificationDto" SortLabel="shorttext" SortBy="new Func<NotificationDto, object>(x => x.ShortText ?? string.Empty)">Notification</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel T="NotificationDto" SortLabel="createddate" SortBy="new Func<NotificationDto, object>(x => x.CreatedDate ?? DateTime.MinValue)">Date</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel T="NotificationDto" SortLabel="isseen" SortBy="new Func<NotificationDto, object>(x => x.IsSeen)">Status</MudTableSortLabel></MudTh>
-            <MudTh>Action</MudTh>
         </HeaderContent>
         <RowTemplate>
+            <MudTd DataLabel="Action">
+                @if (!context.IsSeen)
+                {
+                    <MudTooltip Text="Mark as read">
+                        <MudIconButton Icon="@Icons.Material.Filled.MarkEmailRead"
+                                       Color="Color.Primary"
+                                       Size="Size.Small"
+                                       aria-label="Mark as read"
+                                       OnClick="@(() => MarkReadAsync(context))" />
+                    </MudTooltip>
+                }
+            </MudTd>
             <MudTd DataLabel="Notification">
                 <div class="d-flex align-start gap-2">
                     @if (!context.IsSeen)
@@ -61,14 +78,6 @@
                 <MudChip T="string" Size="Size.Small" Color="@(context.IsSeen ? Color.Default : Color.Primary)" Variant="Variant.Outlined">
                     @(context.IsSeen ? "Read" : "Unread")
                 </MudChip>
-            </MudTd>
-            <MudTd DataLabel="Action">
-                @if (!context.IsSeen)
-                {
-                    <MudButton Variant="Variant.Text" Color="Color.Primary" Size="Size.Small" OnClick="@(() => MarkReadAsync(context))">
-                        Mark Read
-                    </MudButton>
-                }
             </MudTd>
         </RowTemplate>
         <NoRecordsContent>

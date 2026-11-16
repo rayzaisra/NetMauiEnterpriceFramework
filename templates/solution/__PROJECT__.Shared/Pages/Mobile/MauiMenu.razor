@@ -1,0 +1,142 @@
+@page "/maui/menu"
+@page "/maui/settings"
+@layout MauiAuthenticatedLayout
+@attribute [Authorize]
+@inject MenuService MenuService
+@inject NavigationManager Navigation
+@inject ISnackbar Snackbar
+
+<div class="maui-menu-page">
+    <div class="maui-menu-header">
+        <MudIconButton Icon="@Icons.Material.Filled.ArrowBack"
+                       Color="Color.Default"
+                       aria-label="Back"
+                       OnClick="BackToDashboard" />
+        <h1>@(_isSettings ? "Setting" : "Semua Fitur")</h1>
+    </div>
+
+    @if (_loading)
+    {
+        <MudProgressLinear Indeterminate="true" />
+    }
+    else if (_sections.Count == 0)
+    {
+        <MudText Class="maui-empty-state">Belum ada menu yang tersedia.</MudText>
+    }
+    else
+    {
+        @foreach (var section in _sections)
+        {
+            <section class="maui-menu-section">
+                <h2>@section.Title</h2>
+                <div class="maui-menu-grid">
+                    @foreach (var (item, index) in section.Items.Select((item, index) => (item, index)))
+                    {
+                        <MauiMenuTile Item="item"
+                                      BackgroundColor="MenuColor(index)"
+                                      OnSelected="OpenMenu" />
+                    }
+                </div>
+            </section>
+        }
+    }
+</div>
+
+@code {
+    private readonly string[] _menuColors =
+    [
+        "#76d7cf", "#f7931e", "#a9b8ff", "#6fd3c8",
+        "#f0a7ed", "#ffd166", "#f7b267", "#c4b5fd",
+    ];
+
+    private bool _isSettings;
+    private bool _loading = true;
+    private List<MenuSection> _sections = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _isSettings = Navigation.Uri.Contains("/maui/settings", StringComparison.OrdinalIgnoreCase);
+
+        try
+        {
+            var menus = await MenuService.GetUserMenuAsync();
+            _sections = BuildSections(menus, _isSettings);
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+
+    private static List<MenuSection> BuildSections(
+        IEnumerable<MenuItemDto> menus,
+        bool settingsOnly)
+    {
+        var sections = new List<MenuSection>();
+
+        foreach (var root in menus)
+        {
+            var isMnt = string.Equals(root.MenuUnique, "MNT", StringComparison.OrdinalIgnoreCase);
+            if (settingsOnly != isMnt)
+            {
+                continue;
+            }
+
+            if (isMnt)
+            {
+                AddSections(root, sections);
+            }
+            else if (string.Equals(root.ParentLevelId, "A", StringComparison.OrdinalIgnoreCase))
+            {
+                AddSections(root, sections);
+            }
+            else
+            {
+                var items = CollectLevelD(root).ToList();
+                if (items.Count > 0)
+                {
+                    sections.Add(new MenuSection(root.MenuName, items));
+                }
+            }
+        }
+
+        return sections;
+    }
+
+    private static void AddSections(MenuItemDto parent, ICollection<MenuSection> sections)
+    {
+        foreach (var child in parent.Children)
+        {
+            var items = CollectLevelD(child).ToList();
+            if (items.Count > 0)
+            {
+                sections.Add(new MenuSection(child.MenuName, items));
+            }
+        }
+    }
+
+    private static IEnumerable<MenuItemDto> CollectLevelD(MenuItemDto item)
+    {
+        if (string.Equals(item.ParentLevelId, "D", StringComparison.OrdinalIgnoreCase))
+        {
+            yield return item;
+        }
+
+        foreach (var child in item.Children)
+        {
+            foreach (var descendant in CollectLevelD(child))
+            {
+                yield return descendant;
+            }
+        }
+    }
+
+    private string MenuColor(int index) => _menuColors[index % _menuColors.Length];
+
+    private void OpenMenu(MenuItemDto item)
+        => MauiMenuNavigator.Open(Navigation, item, Snackbar);
+
+    private void BackToDashboard() => Navigation.NavigateTo("/maui/dashboard");
+
+    private sealed record MenuSection(string Title, List<MenuItemDto> Items);
+}

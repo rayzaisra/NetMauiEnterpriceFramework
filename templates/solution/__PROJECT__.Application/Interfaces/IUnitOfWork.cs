@@ -20,8 +20,9 @@ public interface IUnitOfWork
     IEmailTemplateRepository EmailTemplates { get; }
     IEmailOutboxRepository EmailOutbox { get; }
     ITbNotificationRepository Notifications { get; }
-    ITbNotificationTypeRepository NotificationTypes { get; }
+    IRfNotificationTypeRepository NotificationTypes { get; }
     IEmailProviderRepository EmailProviders { get; }
+    IRfDefaultValueRepository DefaultValues { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     Task<IUnitOfWorkTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default);

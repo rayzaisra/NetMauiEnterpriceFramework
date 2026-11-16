@@ -27,6 +27,15 @@ public class NotificationController : ControllerBase
             : Ok(ApiResponseFactory.Success(await _notificationService.GetRecentAsync(userId, top), "Notifications retrieved successfully"));
     }
 
+    [HttpGet("unread-count")]
+    public async Task<IActionResult> GetUnreadCount()
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        return string.IsNullOrWhiteSpace(userId)
+            ? Unauthorized()
+            : Ok(ApiResponseFactory.Success(await _notificationService.GetUnreadCountAsync(userId), "Unread notifications retrieved successfully"));
+    }
+
     [HttpPost("{id:long}/seen")]
     public async Task<IActionResult> MarkSeen(long id)
     {
