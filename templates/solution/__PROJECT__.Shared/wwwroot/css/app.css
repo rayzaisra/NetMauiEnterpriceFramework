@@ -2162,3 +2162,131 @@ body:has(.neo-brutalism) .mud-dialog .mud-switch-thumb {
         padding: 30px;
     }
 }
+
+:root {
+    --ryz-motion-fast: 160ms;
+    --ryz-motion-standard: 220ms;
+    --ryz-motion-enter: 420ms;
+    --ryz-ease-out: cubic-bezier(.2, .8, .2, 1);
+}
+
+.maui-dashboard-page,
+.maui-menu-page,
+.maui-profile-page,
+.maui-notifications-page {
+    animation: ryz-page-in var(--ryz-motion-standard) var(--ryz-ease-out) backwards;
+}
+
+.sidebar-link {
+    position: relative;
+    transition: background-color 120ms ease, color 120ms ease;
+}
+
+.sidebar-link.is-active {
+    background: rgba(0, 68, 129, .1);
+    color: var(--mud-palette-primary);
+    font-weight: 700;
+}
+
+.sidebar-link.is-active::before {
+    content: "";
+    position: absolute;
+    top: 6px;
+    bottom: 6px;
+    left: 0;
+    width: 3px;
+    border-radius: 2px;
+    background: var(--mud-palette-primary);
+    transform-origin: center;
+    animation: ryz-sidebar-active 180ms var(--ryz-ease-out) both;
+}
+
+.neo-brutalism .sidebar-link.is-active {
+    background: var(--app-soft);
+}
+
+.neo-brutalism .sidebar-link.is-active::before {
+    width: 4px;
+    background: var(--neo-ink);
+}
+
+.menu-tile.is-active {
+    outline: 3px solid var(--app-accent);
+    outline-offset: 2px;
+}
+
+.enterprise-tabs .mud-tab {
+    transition: color 120ms ease;
+}
+
+.enterprise-tabs .mud-tab-slider {
+    transition: left 180ms var(--ryz-ease-out), width 180ms var(--ryz-ease-out);
+}
+
+.ryz-busy-button.is-busy {
+    cursor: progress;
+    pointer-events: none;
+}
+
+.ryz-busy-button.is-busy .mud-icon-root {
+    display: none;
+}
+
+.ryz-busy-button.is-busy::after {
+    content: "";
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin-left: 8px;
+    vertical-align: -2px;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: ryz-button-spin 720ms linear infinite;
+}
+
+@keyframes ryz-page-in {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes ryz-sidebar-active {
+    from {
+        transform: scaleY(.2);
+        opacity: .4;
+    }
+
+    to {
+        transform: scaleY(1);
+        opacity: 1;
+    }
+}
+
+@keyframes ryz-button-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .maui-dashboard-page,
+    .maui-menu-page,
+    .maui-profile-page,
+    .maui-notifications-page,
+    .sidebar-link.is-active::before,
+    .ryz-busy-button.is-busy::after {
+        animation: none;
+    }
+
+    .enterprise-tabs .mud-tab-slider,
+    .sidebar-link {
+        transition: none;
+    }
+}

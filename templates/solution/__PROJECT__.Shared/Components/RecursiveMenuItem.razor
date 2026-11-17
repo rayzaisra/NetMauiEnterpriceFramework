@@ -5,8 +5,9 @@
 {
     <div class="sidebar-group @(_expanded ? "sidebar-group-open" : string.Empty)">
         <button type="button"
-                class="sidebar-link sidebar-group-toggle"
+                class="sidebar-link sidebar-group-toggle @(IsActive ? "is-active" : string.Empty)"
                 aria-expanded="@_expanded"
+                aria-current="@(IsActive ? "page" : null)"
                 @onclick="Toggle">
             <MudIcon Icon="@MenuIconResolver.GetIcon(Item.MenuIcon)" Class="sidebar-link-icon" />
             <span class="sidebar-label" title="@Item.MenuName">
@@ -24,7 +25,7 @@
                     <div class="menu-tile-grid">
                         @foreach (var child in Item.Children.OrderBy(c => c.OrderSeq))
                         {
-                            <RecursiveMenuItem Item="child" OnOpen="OnOpen" AsTile="true" />
+                            <RecursiveMenuItem Item="child" OnOpen="OnOpen" ActiveUrl="ActiveUrl" AsTile="true" />
                         }
                     </div>
                 }
@@ -32,7 +33,7 @@
                 {
                     @foreach (var child in Item.Children.OrderBy(c => c.OrderSeq))
                     {
-                        <RecursiveMenuItem Item="child" OnOpen="OnOpen" />
+                        <RecursiveMenuItem Item="child" OnOpen="OnOpen" ActiveUrl="ActiveUrl" />
                     }
                 }
             </div>
@@ -42,7 +43,8 @@
 else if (AsTile)
 {
     <button type="button"
-            class="menu-tile"
+            class="menu-tile @(IsActive ? "is-active" : string.Empty)"
+            aria-current="@(IsActive ? "page" : null)"
             disabled="@(string.IsNullOrWhiteSpace(Item.ComponentType))"
             @onclick="@(() => OnOpen.InvokeAsync(Item))">
         <MudIcon Icon="@MenuIconResolver.GetIcon(Item.MenuIcon)" />
@@ -52,7 +54,8 @@ else if (AsTile)
 else
 {
     <button type="button"
-            class="sidebar-link"
+            class="sidebar-link @(IsActive ? "is-active" : string.Empty)"
+            aria-current="@(IsActive ? "page" : null)"
             disabled="@(string.IsNullOrWhiteSpace(Item.ComponentType))"
             @onclick="@(() => OnOpen.InvokeAsync(Item))">
         <MudIcon Icon="@MenuIconResolver.GetIcon(Item.MenuIcon)" Class="sidebar-link-icon" />
@@ -75,9 +78,25 @@ else
     [Parameter]
     public bool Expanded { get; set; }
 
+    [Parameter]
+    public string? ActiveUrl { get; set; }
+
     private bool _expanded;
 
+    private bool IsActive => IsActiveItem(Item, ActiveUrl);
+
     private string? LongLabelClass => Item.MenuName.Length > 14 ? "sidebar-label-long" : null;
+
+    private static bool IsActiveItem(MenuItemDto item, string? activeUrl)
+    {
+        if (!string.IsNullOrWhiteSpace(activeUrl)
+            && string.Equals(item.MenuUrl, activeUrl, StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        return item.Children.Any(child => IsActiveItem(child, activeUrl));
+    }
 
     protected override void OnParametersSet()
     {

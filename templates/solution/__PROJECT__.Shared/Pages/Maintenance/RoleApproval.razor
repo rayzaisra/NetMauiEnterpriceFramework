@@ -78,7 +78,7 @@
     </MudTable>
 
     <div class="d-flex justify-center mt-4">
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Gavel" Disabled="@_submitting" OnClick="SubmitApprovalsAsync">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Gavel" Class="@("ryz-busy-button" + (_submitting ? " is-busy" : string.Empty))" Disabled="@_submitting" OnClick="SubmitApprovalsAsync">
             @(_submitting ? "Submitting..." : "Submit")
         </MudButton>
     </div>
@@ -149,6 +149,11 @@
 
     private async Task SubmitApprovalsAsync()
     {
+        if (_submitting)
+        {
+            return;
+        }
+
         var approveIds = _currentItems.Where(x => x.SelectedAction == 1).Select(x => x.Id).ToList();
         var rejectIds = _currentItems.Where(x => x.SelectedAction == 0).Select(x => x.Id).ToList();
 

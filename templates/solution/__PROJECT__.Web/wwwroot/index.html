@@ -44,6 +44,20 @@
 
     <script src="_content/MudBlazor/MudBlazor.min.js"></script>
     <script src="_framework/blazor.webassembly#[.{fingerprint}].js"></script>
+    <script>
+        window.ryzMotionModule = (window.ryzMotionModule
+            || import("./_content/__PROJECT__.Shared/js/ryzcore-motion.js"))
+            .catch(function () { return null; });
+        window.ryzMotionInvoke = function (method) {
+            return window.ryzMotionModule.then(function (module) {
+                if (module && typeof module[method] === "function") {
+                    module[method]();
+                    return true;
+                }
+                return false;
+            });
+        };
+    </script>
 </body>
 
 </html>

@@ -15,7 +15,7 @@
     </div>
     <div class="d-flex gap-2">
         <MudButton Variant="Variant.Outlined" Color="Color.Default" OnClick="ResetDefaults">Reset Defaults</MudButton>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" Disabled="@_saving" OnClick="SaveAsync">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" Class="@("ryz-busy-button" + (_saving ? " is-busy" : string.Empty))" Disabled="@_saving" OnClick="SaveAsync">
             @(_saving ? "Saving..." : "Save Changes")
         </MudButton>
     </div>
@@ -158,6 +158,11 @@
 
     private async Task SaveAsync()
     {
+        if (_saving)
+        {
+            return;
+        }
+
         if (string.IsNullOrWhiteSpace(_groupId))
         {
             Snackbar.Add("Please select a group first.", Severity.Warning);

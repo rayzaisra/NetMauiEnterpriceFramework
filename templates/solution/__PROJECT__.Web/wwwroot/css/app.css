@@ -28,18 +28,20 @@ html, body {
 }
 
 .loading-progress {
-    position: absolute;
+    position: fixed;
     display: block;
-    width: 8rem;
-    height: 8rem;
-    inset: 20vh 0 auto 0;
-    margin: 0 auto 0 auto;
+    width: clamp(10rem, 22vw, 16rem);
+    height: clamp(10rem, 22vw, 16rem);
+    top: 50%;
+    left: 50%;
+    margin: 0;
+    transform: translate(-50%, -50%);
 }
 
 .loading-progress circle {
     fill: none;
     stroke: #e0e0e0;
-    stroke-width: 0.6rem;
+    stroke-width: 0.7rem;
     transform-origin: 50% 50%;
     transform: rotate(-90deg);
 }
@@ -48,16 +50,39 @@ html, body {
     stroke: var(--app-accent, #004481);
     stroke-dasharray: calc(3.141 * var(--blazor-load-percentage, 0%) * 0.8), 500%;
     transition: stroke-dasharray 0.05s ease-in-out;
+    filter: drop-shadow(0 0 5px var(--app-accent, #004481));
+    animation: ryz-loading-pulse 1.8s ease-in-out infinite;
 }
 
 .loading-progress-text {
-    position: absolute;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     text-align: center;
+    font-size: clamp(1rem, 1.2vw, 1.25rem);
     font-weight: 700;
     color: var(--app-accent, #004481);
-    inset: calc(20vh + 3.25rem) 0 auto 0.2rem;
 }
 
 .loading-progress-text:after {
     content: var(--blazor-load-percentage-text, "Loading");
+}
+
+@keyframes ryz-loading-pulse {
+    0%,
+    100% {
+        opacity: .72;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .loading-progress circle:last-child {
+        animation: none;
+        filter: none;
+    }
 }

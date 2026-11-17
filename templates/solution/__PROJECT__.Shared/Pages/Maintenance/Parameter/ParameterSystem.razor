@@ -25,7 +25,7 @@
         @if (IsMakerView)
         {
             <div class="d-flex gap-2">
-                <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.FileDownload" Disabled="@_exporting" OnClick="ExportMakerAsync">
+                <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.FileDownload" Class="@("ryz-busy-button" + (_exporting ? " is-busy" : string.Empty))" Disabled="@_exporting" OnClick="ExportMakerAsync">
                     @(_exporting ? "Exporting..." : "Export Excel")
                 </MudButton>
                 <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="@(_ => OpenAddAsync())">Add</MudButton>
@@ -189,7 +189,7 @@
         </MudTable>
 
         <div class="d-flex justify-center mt-4">
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Gavel" Disabled="@_submittingApproval" OnClick="SubmitApprovalsAsync">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Gavel" Class="@("ryz-busy-button" + (_submittingApproval ? " is-busy" : string.Empty))" Disabled="@_submittingApproval" OnClick="SubmitApprovalsAsync">
                 @(_submittingApproval ? "Submitting..." : "Submit")
             </MudButton>
         </div>
@@ -360,6 +360,11 @@
 
     private async Task ExportMakerAsync()
     {
+        if (_exporting)
+        {
+            return;
+        }
+
         if (string.IsNullOrWhiteSpace(TableName))
         {
             Snackbar.Add("Table is not available.", Severity.Error);
@@ -506,6 +511,11 @@
 
     private async Task SubmitApprovalsAsync()
     {
+        if (_submittingApproval)
+        {
+            return;
+        }
+
         var approveIds = _approvalRows.Where(x => x.Action == 1).Select(x => x.IdPending).ToList();
         var rejectIds = _approvalRows.Where(x => x.Action == 0).Select(x => x.IdPending).ToList();
 

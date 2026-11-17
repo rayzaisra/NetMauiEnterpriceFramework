@@ -10,6 +10,7 @@
 @inject INotifyAuthenticationState AuthStateNotifier
 @inject NavigationManager Navigation
 @inject ISnackbar Snackbar
+@inject MotionService Motion
 
 <div class="maui-dashboard-page">
     <div class="maui-topbar">
@@ -95,6 +96,7 @@
     private List<DashboardWidgetDto> _widgets = new();
     private int _unreadCount;
     private bool _hasSettingAccess;
+    private bool _motionPlayed;
 
     protected override async Task OnInitializedAsync()
     {
@@ -124,6 +126,17 @@
         {
             _unreadCount = 0;
         }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender || _motionPlayed)
+        {
+            return;
+        }
+
+        _motionPlayed = true;
+        await Motion.PlayDashboardAsync();
     }
 
     private static List<MenuItemDto> GetDashboardMenus(IEnumerable<MenuItemDto> menus)

@@ -1,6 +1,6 @@
 {
   "name": "create-ryzcore",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "RyzCore: scaffolder for an enterprise .NET 10 framework with Blazor WASM, MAUI Blazor Hybrid, MudBlazor, dynamic menus, and audit DB.",
   "license": "MIT",
   "repository": {

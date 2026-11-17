@@ -8,6 +8,71 @@ html, body {
     height: 100%;
 }
 
+.loading-progress {
+    position: fixed;
+    display: block;
+    width: clamp(10rem, 22vw, 16rem);
+    height: clamp(10rem, 22vw, 16rem);
+    top: 50%;
+    left: 50%;
+    margin: 0;
+    transform: translate(-50%, -50%);
+}
+
+.loading-progress circle {
+    fill: none;
+    stroke: var(--app-soft, #e0e0e0);
+    stroke-width: 0.7rem;
+    transform-origin: 50% 50%;
+    transform: rotate(-90deg);
+}
+
+.loading-progress circle:last-child {
+    stroke: var(--app-accent, #004481);
+    stroke-dasharray: 150 500;
+    filter: drop-shadow(0 0 5px var(--app-accent, #004481));
+    animation: ryz-maui-loading 1.6s ease-in-out infinite;
+}
+
+.loading-progress-text {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--app-accent, #004481);
+    font-size: clamp(1rem, 1.2vw, 1.25rem);
+    font-weight: 700;
+    text-align: center;
+}
+
+.loading-progress-text:after {
+    content: "Loading";
+}
+
+@keyframes ryz-maui-loading {
+    0% {
+        stroke-dashoffset: 0;
+        opacity: .7;
+    }
+
+    50% {
+        stroke-dashoffset: -42;
+        opacity: 1;
+    }
+
+    100% {
+        stroke-dashoffset: -84;
+        opacity: .7;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .loading-progress circle:last-child {
+        animation: none;
+        filter: none;
+    }
+}
+
 #blazor-error-ui {
     color-scheme: light only;
     background: lightyellow;

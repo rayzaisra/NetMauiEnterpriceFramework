@@ -2,6 +2,7 @@
 @layout AuthenticatedLayout
 @attribute [Authorize]
 @inject NotificationApiService NotificationApi
+@inject MotionService Motion
 @inject ISnackbar Snackbar
 
 <MudBreadcrumbs Items="_breadcrumbs" Separator=">" Class="mb-4" />
@@ -103,6 +104,16 @@
     protected override async Task OnInitializedAsync()
     {
         await LoadAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            return;
+        }
+
+        await Motion.PlayNotificationsAsync();
     }
 
     private async Task LoadAsync()

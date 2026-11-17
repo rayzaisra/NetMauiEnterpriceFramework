@@ -76,7 +76,7 @@
     </DialogContent>
     <DialogActions>
         <MudButton Variant="Variant.Outlined" Color="Color.Default" OnClick="@(_ => MudDialog.Cancel())">Cancel</MudButton>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@_saving" OnClick="@(_ => SaveAsync())">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="@("ryz-busy-button" + (_saving ? " is-busy" : string.Empty))" Disabled="@_saving" OnClick="@(_ => SaveAsync())">
             @(_saving ? "Saving..." : "Save")
         </MudButton>
     </DialogActions>
@@ -132,6 +132,11 @@
 
     private async Task SaveAsync()
     {
+        if (_saving)
+        {
+            return;
+        }
+
         _saving = true;
         try
         {

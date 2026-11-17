@@ -119,6 +119,7 @@ else
                         <MudButton Variant="Variant.Filled"
                                    Color="Color.Primary"
                                    FullWidth="true"
+                                   Class="@("ryz-busy-button" + (_passwordSaving ? " is-busy" : string.Empty))"
                                    Disabled="@_passwordSaving"
                                    OnClick="UpdatePasswordAsync">
                             @(_passwordSaving ? "Updating..." : "Update Password")
@@ -260,6 +261,11 @@ else
 
     private async Task UpdatePasswordAsync()
     {
+        if (_passwordSaving)
+        {
+            return;
+        }
+
         _passwordError = null;
 
         if (string.IsNullOrWhiteSpace(_changePasswordModel.CurrentPassword)

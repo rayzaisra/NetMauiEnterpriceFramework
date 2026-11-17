@@ -2,6 +2,7 @@
 @layout MauiAuthenticatedLayout
 @attribute [Authorize]
 @inject AuthService AuthService
+@inject MotionService Motion
 @inject ITokenStorage TokenStorage
 @inject INotifyAuthenticationState AuthStateNotifier
 @inject IDialogService DialogService
@@ -150,6 +151,7 @@
 @code {
     private UserResponseDto? _user;
     private bool _loading = true;
+    private bool _motionPlayed;
     private string? _error;
 
     private string Initials
@@ -179,6 +181,17 @@
     };
 
     protected override async Task OnInitializedAsync() => await LoadAsync();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender || _motionPlayed)
+        {
+            return;
+        }
+
+        _motionPlayed = true;
+        await Motion.PlayMobilePageAsync();
+    }
 
     private async Task LoadAsync()
     {

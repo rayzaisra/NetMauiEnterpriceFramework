@@ -1,5 +1,6 @@
 @inherits LayoutComponentBase
 @implements IDisposable
+@implements IAsyncDisposable
 @using Microsoft.AspNetCore.SignalR.Client
 @inject NavigationManager Navigation
 @inject MenuService MenuService
@@ -12,6 +13,7 @@
 @inject ISnackbar Snackbar
 @inject NotificationApiService NotificationApi
 @inject ThemePreferenceService ThemeService
+@inject MotionService Motion
 @inject ApiService ApiService
 @inject IHttpMessageHandlerFactory HttpMessageHandlerFactory
 @inject ILogger<AuthenticatedLayout> Logger
@@ -210,6 +212,7 @@
                 {
                     <RecursiveMenuItem Item="item"
                                        OnOpen="OpenMenu"
+                                       ActiveUrl="@ActiveUrl"
                                        Expanded="@(_expandedParentUnique == item.MenuUnique)" />
                 }
             }
@@ -241,7 +244,12 @@
         <MudContainer MaxWidth="MaxWidth.False" Class="app-main-container">
             @if (TabService.Tabs.Count > 0)
             {
-                <MudTabs @bind-ActivePanelIndex="_selectedTabIndex" Elevation="0" Rounded="true" KeepPanelsAlive="true" Class="enterprise-tabs">
+                <MudTabs @bind-ActivePanelIndex="_selectedTabIndex"
+                         @bind-ActivePanelIndex:after="OnTabChanged"
+                         Elevation="0"
+                         Rounded="true"
+                         KeepPanelsAlive="true"
+                         Class="enterprise-tabs">
                     @foreach (var tab in TabService.Tabs)
                     {
                         <MudTabPanel @key="tab.Id">
@@ -315,6 +323,9 @@
     private List<MenuItemDto> _menuItems = new();
     private List<NotificationDto> _notifications = new();
     private HubConnection? _hub;
+    private bool _pendingTabAnimation;
+    private bool _pendingNotificationAnimation;
+    private string? ActiveUrl => TabService.ActiveTab?.Url;
 
     protected override async Task OnInitializedAsync()
     {
@@ -370,6 +381,7 @@
                     _unreadCount++;
                 }
 
+                _pendingNotificationAnimation = true;
                 StateHasChanged();
             });
         });
@@ -450,8 +462,19 @@
         _ = InvokeAsync(() =>
         {
             SyncSelectedTab();
+            _pendingTabAnimation = true;
             StateHasChanged();
         });
+    }
+
+    private void OnTabChanged()
+    {
+        if (_selectedTabIndex >= 0 && _selectedTabIndex < TabService.Tabs.Count)
+        {
+            TabService.ActivateTab(TabService.Tabs[_selectedTabIndex]);
+        }
+
+        _pendingTabAnimation = true;
     }
 
     private void SyncSelectedTab()
@@ -539,22 +562,32 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (!firstRender)
+        if (firstRender)
         {
-            return;
+            await ThemeService.InitializeAsync();
+            await ThemeService.SetDarkModeAsync(_isDarkMode);
+            StateHasChanged();
+
+            try
+            {
+                await ViewportService.SubscribeAsync(_viewportObserverId, OnViewportChanged, null, true);
+            }
+            catch
+            {
+                // Keep desktop behavior when the viewport listener is unavailable.
+            }
         }
 
-        await ThemeService.InitializeAsync();
-        await ThemeService.SetDarkModeAsync(_isDarkMode);
-        StateHasChanged();
-
-        try
+        if (_pendingTabAnimation)
         {
-            await ViewportService.SubscribeAsync(_viewportObserverId, OnViewportChanged, null, true);
+            _pendingTabAnimation = false;
+            await Motion.PlayTabPanelAsync();
         }
-        catch
+
+        if (_pendingNotificationAnimation)
         {
-            // Keep desktop behavior when the viewport listener is unavailable.
+            _pendingNotificationAnimation = false;
+            await Motion.PlayNotificationArrivalAsync();
         }
     }
 
@@ -713,5 +746,11 @@
         {
             _ = _hub.DisposeAsync();
         }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await Motion.DisposeAsync();
+        Dispose();
     }
 }

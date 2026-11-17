@@ -46,6 +46,7 @@ builder.Services.AddScoped<EmailProviderApiService>();
 builder.Services.AddScoped<DynamicApiService>();
 builder.Services.AddScoped<NotificationApiService>();
 builder.Services.AddScoped<ThemePreferenceService>();
+builder.Services.AddScoped<MotionService>();
 builder.Services.AddScoped<ExportApiService>();
 builder.Services.AddScoped<ScreenMenuApiService>();
 builder.Services.AddScoped<IExcelFilePicker, NoopExcelFilePicker>();

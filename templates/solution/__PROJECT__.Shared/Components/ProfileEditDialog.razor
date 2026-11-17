@@ -16,7 +16,7 @@
     </DialogContent>
     <DialogActions>
         <MudButton Variant="Variant.Outlined" Color="Color.Default" OnClick="@(_ => MudDialog.Cancel())">Cancel</MudButton>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@_saving" OnClick="SaveAsync">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="@("ryz-busy-button" + (_saving ? " is-busy" : string.Empty))" Disabled="@_saving" OnClick="SaveAsync">
             @(_saving ? "Saving..." : "Save Changes")
         </MudButton>
     </DialogActions>
@@ -45,6 +45,11 @@
 
     private async Task SaveAsync()
     {
+        if (_saving)
+        {
+            return;
+        }
+
         if (string.IsNullOrWhiteSpace(_fullName))
         {
             Snackbar.Add("Full name is required.", Severity.Warning);

@@ -11,6 +11,7 @@
 @inject ISnackbar Snackbar
 @inject IJSRuntime JS
 @inject ThemePreferenceService ThemeService
+@inject MotionService Motion
 
 <MudThemeProvider Theme="ThemeService.LoginTheme" />
 
@@ -543,6 +544,7 @@ else
         }
 
         await ThemeService.InitializeAsync();
+        await Motion.PlayLoginAsync();
         StateHasChanged();
     }
 
@@ -576,6 +578,11 @@ else
 
     private async Task OnForgotPasswordAsync()
     {
+        if (_forgotLoading)
+        {
+            return;
+        }
+
         _forgotLoading = true;
         try
         {
@@ -602,6 +609,11 @@ else
 
     private async Task OnResetPasswordAsync()
     {
+        if (_resetLoading)
+        {
+            return;
+        }
+
         var policyError = PasswordPolicy.Validate(_resetModel.NewPassword);
         if (policyError != null)
         {
@@ -641,6 +653,11 @@ else
 
     private async Task OnLoginAsync()
     {
+        if (_isLoading)
+        {
+            return;
+        }
+
         _isLoading = true;
         _errorMessage = null;
 
@@ -700,6 +717,11 @@ else
 
     private async Task OnFirstLoginPasswordChangeAsync()
     {
+        if (_isLoading)
+        {
+            return;
+        }
+
         _errorMessage = null;
         _successMessage = null;
 

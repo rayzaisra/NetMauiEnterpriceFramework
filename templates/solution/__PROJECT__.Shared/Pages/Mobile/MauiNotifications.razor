@@ -2,6 +2,7 @@
 @layout MauiAuthenticatedLayout
 @attribute [Authorize]
 @inject NotificationApiService NotificationApi
+@inject MotionService Motion
 @inject NavigationManager Navigation
 @inject ISnackbar Snackbar
 
@@ -65,8 +66,20 @@
     private List<NotificationDto> _notifications = new();
     private bool _loading = true;
     private int _unreadCount;
+    private bool _motionPlayed;
 
     protected override async Task OnInitializedAsync() => await LoadAsync();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender || _motionPlayed)
+        {
+            return;
+        }
+
+        _motionPlayed = true;
+        await Motion.PlayNotificationsAsync();
+    }
 
     private async Task LoadAsync()
     {

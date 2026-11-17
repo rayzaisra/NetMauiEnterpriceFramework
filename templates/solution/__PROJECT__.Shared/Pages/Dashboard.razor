@@ -2,6 +2,7 @@
 @layout AuthenticatedLayout
 @attribute [Authorize]
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject MotionService Motion
 
 <MudContainer MaxWidth="MaxWidth.False" Class="pa-0">
     <MudPaper Elevation="0" Class="dashboard-hero">
@@ -25,5 +26,15 @@
         {
             _displayName = name;
         }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            return;
+        }
+
+        await Motion.PlayDashboardAsync();
     }
 }

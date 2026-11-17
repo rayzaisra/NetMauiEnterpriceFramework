@@ -135,7 +135,7 @@
     </DialogContent>
     <DialogActions>
         <MudButton Variant="Variant.Text" OnClick="@(_ => MudDialog.Cancel())">Cancel</MudButton>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@_saving" OnClick="@(_ => SaveAsync())">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="@("ryz-busy-button" + (_saving ? " is-busy" : string.Empty))" Disabled="@_saving" OnClick="@(_ => SaveAsync())">
             @(_saving ? "Saving..." : "Send for Approval")
         </MudButton>
     </DialogActions>
@@ -180,6 +180,11 @@
 
     private async Task SaveAsync()
     {
+        if (_saving)
+        {
+            return;
+        }
+
         _model.Child = _hasChild ? _child : null;
         _model.Import = _hasImport ? _import : null;
         _model.ScreenMenuChildId = _hasChild ? _child.ScreenMenuChildId : null;

@@ -18,7 +18,7 @@
     </div>
     <div class="d-flex gap-2">
         <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="@(_ => OpenAddAsync())">Add Role</MudButton>
-        <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.FileDownload" Disabled="@_isExporting" OnClick="ExportExcelAsync">
+        <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.FileDownload" Class="@("ryz-busy-button" + (_isExporting ? " is-busy" : string.Empty))" Disabled="@_isExporting" OnClick="ExportExcelAsync">
             @(_isExporting ? "Exporting..." : "Export Excel")
         </MudButton>
     </div>
@@ -178,6 +178,11 @@
 
     private async Task ExportExcelAsync()
     {
+        if (_isExporting)
+        {
+            return;
+        }
+
         _isExporting = true;
         try
         {

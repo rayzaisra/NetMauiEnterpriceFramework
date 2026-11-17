@@ -9,7 +9,7 @@ RyzCore adalah generator framework enterprise **.NET 10** untuk menghasilkan apl
 - SQL Server + EF Core
 - JWT access/refresh token + session validation
 - Dynamic menu, screen, report, dan parameter engine
-- Maker-checker approval (Mode A staging)
+- Maker-checker approval
 - SignalR notification + Hangfire background job
 - Import Excel dan export Excel/PDF
 - Stored procedure + synonym deployment
@@ -68,9 +68,9 @@ Contoh non-interaktif:
 
 ```bash
 create-ryzcore \
-  --name MitraPensiun \
-  --db mitra_pensiun_db \
-  --audit-db mitra_pensiun_log_audit \
+  --name Procurement \
+  --db procurement_db \
+  --audit-db procurement_log_audit \
   --server localhost,1433 \
   --user sa \
   --password "YourStrong!Passw0rd" \
@@ -158,7 +158,6 @@ docker compose up --build
 - Ganti password admin awal setelah login pertama.
 - Jangan commit `appsettings.Development.json` berisi kredensial nyata.
 - Gunakan SQL login dengan hak minimum yang dibutuhkan.
-- Approval Mode A: data utama baru ditulis setelah approve.
 
 ## Lisensi
 
@@ -166,4 +165,3 @@ MIT — lihat [LICENSE](LICENSE).
 
 ---
 
-Dokumen perencanaan internal/AI tidak disertakan dalam repository ini.

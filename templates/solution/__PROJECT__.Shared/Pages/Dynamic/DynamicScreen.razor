@@ -143,6 +143,7 @@
                     <MudButton Variant="Variant.Outlined"
                                Color="Color.Primary"
                                StartIcon="@Icons.Material.Filled.UploadFile"
+                               Class="@("ryz-busy-button" + (_importing ? " is-busy" : string.Empty))"
                                Disabled="@_importing"
                                OnClick="@(_ => PickImportAsync())">@(_importing ? "Importing..." : "Import Excel")</MudButton>
                 }
@@ -657,6 +658,11 @@
 
     private async Task ImportExcelStreamAsync(string fileName, Stream stream)
     {
+        if (_importing)
+        {
+            return;
+        }
+
         _importing = true;
         try
         {
