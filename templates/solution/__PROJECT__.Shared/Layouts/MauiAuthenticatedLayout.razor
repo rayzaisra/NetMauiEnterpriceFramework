@@ -1,5 +1,6 @@
 @inherits LayoutComponentBase
 @inject ThemePreferenceService ThemeService
+@inject MotionService Motion
 
 @if (ThemeService.Palette == "default")
 {
@@ -9,6 +10,8 @@ else
 {
     <MudThemeProvider Theme="ThemeService.GetTheme(false)" />
 }
+
+<ProcessOverlay />
 
 <div class="maui-app-shell neo-brutalism @ThemeService.PaletteClass">
     @Body
@@ -23,6 +26,7 @@ else
         }
 
         await ThemeService.InitializeAsync();
+        await Motion.InitBusyIndicatorsAsync();
         StateHasChanged();
     }
 }

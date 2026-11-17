@@ -301,10 +301,337 @@ export function pulseMenu(element) {
     });
 }
 
+let processMode = null;
+let processProgressState = null;
+let processProgressAnimation = null;
+let processLoopAnimations = [];
+let processHideTimer = null;
+let processShowTimer = null;
+let busyObserver = null;
+let busyCheckTimer = null;
+
+const busyActionPattern = /(export|import|save|submit|approve|reject|update|chang|menyimpan|memproses|mengirim)/i;
+
+function processElements() {
+    return {
+        overlay: document.querySelector(".ryz-process-overlay"),
+        title: document.querySelector(".ryz-process-title"),
+        stage: document.querySelector(".ryz-process-stage"),
+        bar: document.querySelector(".ryz-process-bar"),
+        percent: document.querySelector(".ryz-process-percent")
+    };
+}
+
+function stopProcessLoops() {
+    for (const animation of processLoopAnimations) {
+        animation.pause();
+    }
+
+    processLoopAnimations = [];
+}
+
+function showProcess(mode, title, stage, duration, steps) {
+    const elements = processElements();
+    if (!elements.overlay || !elements.title || !elements.stage || !elements.bar || !elements.percent) {
+        return false;
+    }
+
+    clearTimeout(processHideTimer);
+    clearTimeout(processShowTimer);
+
+    processMode = mode;
+    elements.overlay.classList.add("is-active");
+    elements.overlay.setAttribute("aria-hidden", "false");
+    elements.title.textContent = title;
+    elements.stage.textContent = stage;
+    elements.bar.style.width = "0%";
+    elements.percent.textContent = "0%";
+
+    stopProcessLoops();
+
+    if (motionAllowed()) {
+        const rings = Array.from(document.querySelectorAll(".ryz-process-ring"));
+        rings.forEach((ring, index) => {
+            processLoopAnimations.push(animate(ring, {
+                rotate: [0, 360],
+                duration: 1400 + (index * 520),
+                loop: true,
+                ease: "linear"
+            }));
+        });
+
+        const dots = document.querySelectorAll(".ryz-process-dot");
+        if (dots.length > 0) {
+            processLoopAnimations.push(animate(dots, {
+                scale: [0.55, 1.2, 0.55],
+                opacity: [0.4, 1, 0.4],
+                duration: 900,
+                delay: stagger(150),
+                loop: true,
+                ease: "inOut(2)"
+            }));
+        }
+    }
+
+    processProgressState = { value: 0 };
+    processProgressAnimation = animate(processProgressState, {
+        value: 92,
+        duration,
+        ease: "out(4)",
+        onUpdate: () => {
+            const value = Math.min(92, Math.round(processProgressState.value));
+            elements.bar.style.width = `${value}%`;
+            elements.percent.textContent = `${value}%`;
+
+            if (!steps || steps.length === 0) {
+                return;
+            }
+
+            let currentStage = steps[0].text;
+            for (const step of steps) {
+                if (value >= step.at) {
+                    currentStage = step.text;
+                }
+            }
+
+            elements.stage.textContent = currentStage;
+        }
+    });
+
+    return true;
+}
+
+function completeProcess(mode) {
+    if (processMode !== mode) {
+        return;
+    }
+
+    clearTimeout(processShowTimer);
+
+    if (processProgressAnimation) {
+        processProgressAnimation.pause();
+        processProgressAnimation = null;
+    }
+
+    const elements = processElements();
+    if (!elements.bar || !elements.percent) {
+        hideProcess();
+        return;
+    }
+
+    const current = processProgressState ? processProgressState.value : 0;
+    const state = { value: current };
+
+    animate(state, {
+        value: 100,
+        duration: 420,
+        ease: "out(3)",
+        onUpdate: () => {
+            const value = Math.min(100, Math.round(state.value));
+            elements.bar.style.width = `${value}%`;
+            elements.percent.textContent = `${value}%`;
+        },
+        onComplete: () => {
+            elements.bar.style.width = "100%";
+            elements.percent.textContent = "100%";
+            if (elements.stage) {
+                elements.stage.textContent = "Completed";
+            }
+
+            clearTimeout(processHideTimer);
+            processHideTimer = setTimeout(hideProcess, 320);
+        }
+    });
+}
+
+function hideProcess() {
+    const elements = processElements();
+    if (elements.overlay) {
+        elements.overlay.classList.remove("is-active");
+        elements.overlay.setAttribute("aria-hidden", "true");
+    }
+
+    stopProcessLoops();
+    processProgressState = null;
+    processMode = null;
+}
+
+function stopProcess(mode) {
+    if (mode && processMode !== mode) {
+        return;
+    }
+
+    clearTimeout(processHideTimer);
+    clearTimeout(processShowTimer);
+
+    if (processProgressAnimation) {
+        processProgressAnimation.pause();
+        processProgressAnimation = null;
+    }
+
+    hideProcess();
+}
+
+function describeBusyAction(label) {
+    if (label.includes("import")) {
+        return {
+            title: "Importing Excel",
+            stage: "Uploading file...",
+            duration: 22000,
+            steps: [
+                { at: 0, text: "Uploading file..." },
+                { at: 40, text: "Validating rows..." },
+                { at: 78, text: "Saving data..." }
+            ]
+        };
+    }
+
+    if (label.includes("export")) {
+        return {
+            title: "Exporting Excel",
+            stage: "Preparing data...",
+            duration: 16000,
+            steps: [
+                { at: 0, text: "Preparing data..." },
+                { at: 60, text: "Generating workbook..." },
+                { at: 88, text: "Finalizing file..." }
+            ]
+        };
+    }
+
+    if (label.includes("save") || label.includes("menyimpan") || label.includes("update")) {
+        return {
+            title: "Saving changes",
+            stage: "Writing to database...",
+            duration: 7000,
+            steps: [
+                { at: 0, text: "Writing to database..." },
+                { at: 70, text: "Refreshing data..." }
+            ]
+        };
+    }
+
+    if (label.includes("submit") || label.includes("approve") || label.includes("reject")) {
+        return {
+            title: "Submitting",
+            stage: "Processing request...",
+            duration: 9000,
+            steps: [
+                { at: 0, text: "Processing request..." },
+                { at: 70, text: "Applying changes..." }
+            ]
+        };
+    }
+
+    return {
+        title: "Updating",
+        stage: "Applying changes...",
+        duration: 6000,
+        steps: [
+            { at: 0, text: "Applying changes..." },
+            { at: 70, text: "Finishing up..." }
+        ]
+    };
+}
+
+function activeBusyButton() {
+    return Array.from(document.querySelectorAll(".ryz-busy-button.is-busy"))
+        .find((button) => busyActionPattern.test((button.textContent || "").trim())) ?? null;
+}
+
+function checkBusyButtons() {
+    const button = activeBusyButton();
+
+    if (button) {
+        clearTimeout(processHideTimer);
+        clearTimeout(processShowTimer);
+
+        if (processMode === "busy" || processMode === "upload") {
+            return;
+        }
+
+        processShowTimer = setTimeout(() => {
+            const stillBusy = activeBusyButton();
+            if (!stillBusy || processMode) {
+                return;
+            }
+
+            const action = describeBusyAction((stillBusy.textContent || "").trim().toLowerCase());
+            showProcess("busy", action.title, action.stage, action.duration, action.steps);
+        }, 120);
+
+        return;
+    }
+
+    clearTimeout(processShowTimer);
+    processShowTimer = null;
+
+    if (processMode === "busy") {
+        completeProcess("busy");
+    }
+}
+
+function scheduleBusyCheck() {
+    if (busyCheckTimer) {
+        return;
+    }
+
+    busyCheckTimer = setTimeout(() => {
+        busyCheckTimer = null;
+        checkBusyButtons();
+    }, 80);
+}
+
+export function initBusyIndicators() {
+    if (busyObserver) {
+        return;
+    }
+
+    busyObserver = new MutationObserver(scheduleBusyCheck);
+    busyObserver.observe(document.body, {
+        subtree: true,
+        childList: true,
+        attributes: true,
+        attributeFilter: ["class"]
+    });
+
+    scheduleBusyCheck();
+}
+
+export function startUploadIndicator() {
+    showProcess(
+        "upload",
+        "Importing Excel",
+        "Uploading file...",
+        22000,
+        [
+            { at: 0, text: "Uploading file..." },
+            { at: 40, text: "Validating rows..." },
+            { at: 78, text: "Saving tasks..." }
+        ]);
+}
+
+export function completeUploadIndicator() {
+    completeProcess("upload");
+}
+
+export function stopUploadIndicator() {
+    stopProcess("upload");
+}
+
 export function cleanup() {
     for (const scope of scopes.values()) {
         scope.revert();
     }
 
     scopes.clear();
+
+    if (busyObserver) {
+        busyObserver.disconnect();
+        busyObserver = null;
+    }
+
+    clearTimeout(busyCheckTimer);
+    busyCheckTimer = null;
+    stopProcess();
 }

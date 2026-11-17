@@ -27,6 +27,8 @@ public sealed class MotionService : IAsyncDisposable
 
     public Task PlayNotificationArrivalAsync() => InvokeAsync("playNotificationArrival");
 
+    public Task InitBusyIndicatorsAsync() => InvokeAsync("initBusyIndicators");
+
     public async ValueTask DisposeAsync()
     {
         try

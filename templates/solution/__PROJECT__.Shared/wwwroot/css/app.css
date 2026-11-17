@@ -2325,3 +2325,193 @@ body:has(.neo-brutalism) .mud-dialog .mud-switch-thumb {
     width: 16px;
     height: 16px;
 }
+
+/* Excel upload and action process overlay (motion driven by ryzcore-motion.js / anime.js) */
+.ryz-process-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1400;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: color-mix(in srgb, var(--app-secondary) 32%, transparent);
+    backdrop-filter: blur(3px);
+    animation: ryz-process-overlay-in 180ms ease-out;
+}
+
+.ryz-process-overlay.is-active {
+    display: flex;
+}
+
+.ryz-process-card {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    width: min(470px, 100%);
+    padding: 24px 26px;
+    color: var(--app-text);
+    background: var(--app-surface);
+    border: 1px solid color-mix(in srgb, var(--app-accent) 28%, transparent);
+    border-radius: 14px;
+    box-shadow: 0 24px 60px color-mix(in srgb, var(--app-secondary) 30%, transparent);
+    animation: ryz-process-card-in 220ms cubic-bezier(.2, .8, .2, 1);
+}
+
+.ryz-process-visual {
+    position: relative;
+    flex: 0 0 auto;
+    width: 74px;
+    height: 74px;
+}
+
+.ryz-process-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    will-change: transform;
+}
+
+.ryz-process-ring.ring-1 {
+    width: 74px;
+    height: 74px;
+    margin: -37px 0 0 -37px;
+    border-top-color: var(--app-accent);
+    border-right-color: color-mix(in srgb, var(--app-accent) 35%, transparent);
+}
+
+.ryz-process-ring.ring-2 {
+    width: 54px;
+    height: 54px;
+    margin: -27px 0 0 -27px;
+    border-top-color: color-mix(in srgb, var(--app-accent) 70%, var(--app-warning));
+    border-left-color: color-mix(in srgb, var(--app-accent) 25%, transparent);
+}
+
+.ryz-process-ring.ring-3 {
+    width: 34px;
+    height: 34px;
+    margin: -17px 0 0 -17px;
+    border-top-color: var(--app-warning);
+}
+
+.ryz-process-dot {
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--app-accent);
+    will-change: transform, opacity;
+}
+
+.ryz-process-dot.dot-1 {
+    top: 6px;
+    left: 50%;
+    margin-left: -3px;
+}
+
+.ryz-process-dot.dot-2 {
+    bottom: 10px;
+    left: 14px;
+    background: var(--app-warning);
+}
+
+.ryz-process-dot.dot-3 {
+    bottom: 10px;
+    right: 14px;
+    background: color-mix(in srgb, var(--app-accent) 60%, var(--app-warning));
+}
+
+.ryz-process-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.ryz-process-title {
+    color: var(--app-text-strong);
+    font-size: 1.02rem;
+    font-weight: 700;
+    letter-spacing: .01em;
+}
+
+.ryz-process-stage {
+    margin-top: 2px;
+    color: var(--app-muted);
+    font-size: .85rem;
+}
+
+.ryz-process-track {
+    height: 8px;
+    margin-top: 14px;
+    overflow: hidden;
+    background: color-mix(in srgb, var(--app-accent) 14%, var(--app-soft));
+    border-radius: 999px;
+}
+
+.ryz-process-progress-bar {
+    width: 0;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--app-accent), var(--app-warning));
+}
+
+.ryz-process-percent {
+    margin-top: 6px;
+    color: var(--app-accent);
+    font-size: .78rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+}
+
+.neo-brutalism .ryz-process-card {
+    border: 3px solid var(--neo-ink);
+    border-radius: 6px;
+    box-shadow: 6px 6px 0 var(--neo-ink);
+}
+
+.neo-brutalism .ryz-process-track {
+    border: 2px solid var(--neo-ink);
+}
+
+.neo-brutalism .ryz-process-progress-bar {
+    background: var(--app-accent);
+}
+
+@keyframes ryz-process-overlay-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes ryz-process-card-in {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@media (max-width: 520px) {
+    .ryz-process-card {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ryz-process-overlay,
+    .ryz-process-card {
+        animation: none;
+    }
+}

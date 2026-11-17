@@ -22,6 +22,8 @@
 
 <MudThemeProvider Theme="ThemeService.GetTheme(_isDarkMode)" @bind-IsDarkMode="_isDarkMode" />
 
+<ProcessOverlay />
+
 <MudLayout Class="@ShellClass" @onclick="CloseSearch">
     <MudAppBar Elevation="1" Class="app-topbar">
         <div class="app-brand" title="@BrandName">
@@ -566,6 +568,7 @@
         {
             await ThemeService.InitializeAsync();
             await ThemeService.SetDarkModeAsync(_isDarkMode);
+            await Motion.InitBusyIndicatorsAsync();
             StateHasChanged();
 
             try

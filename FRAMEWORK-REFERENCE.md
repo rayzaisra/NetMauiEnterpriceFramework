@@ -574,7 +574,10 @@ as the starting point for every new CRUD/data page.
    - primary Add button;
    - optional Export button;
    - import/upload actions use `MudFileUpload` with a `MudButton` as
-     `CustomContent`; never use a `label` plus raw `InputFile` as a button.
+     `CustomContent`; never use a `label` plus raw `InputFile` as a button;
+   - long-running save, submit, select, export, and import actions must set
+     the `is-busy` state on their `MudButton`; the global `ProcessOverlay`
+     observes that state. Do not add page-specific progress overlays.
 3. `MudPaper Elevation="0" Class="dashboard-card"`.
 4. `MudTable` with:
    - `ServerData`;
