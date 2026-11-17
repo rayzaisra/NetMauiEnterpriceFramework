@@ -1622,28 +1622,20 @@ html, body {
     width: 95vw;
 }
 
-.import-excel-button {
-    position: relative;
+.import-excel-upload {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    min-height: 36px;
-    padding: 6px 16px;
-    border: 1px solid var(--mud-palette-primary);
-    border-radius: var(--mud-default-borderradius);
-    color: var(--mud-palette-primary);
-    font-size: .875rem;
-    font-weight: 500;
-    cursor: pointer;
-    overflow: hidden;
-    white-space: nowrap;
+    margin: 0;
 }
 
-.import-excel-button input[type="file"] {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    cursor: pointer;
+.import-excel-upload .mud-input-control,
+.import-excel-upload .mud-file-upload-custom-content {
+    display: inline-flex;
+    margin: 0;
+}
+
+.import-excel-upload .mud-file-upload-files {
+    display: none;
 }
 
 .page-heading .mud-button-root {
@@ -1708,7 +1700,6 @@ body:has(.app-dark) {
     box-shadow: none;
 }
 
-.neo-brutalism .import-excel-button,
 .neo-brutalism .menu-tile {
     border: 2px solid var(--neo-ink);
     border-radius: 3px;
@@ -1717,7 +1708,6 @@ body:has(.app-dark) {
     box-shadow: 3px 3px 0 var(--neo-ink);
 }
 
-.neo-brutalism .import-excel-button:hover,
 .neo-brutalism .menu-tile:hover {
     transform: translate(1px, 1px);
     box-shadow: 2px 2px 0 var(--neo-ink);

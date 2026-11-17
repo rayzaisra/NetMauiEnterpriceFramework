@@ -149,10 +149,22 @@
                 }
                 else
                 {
-                    <label class="import-excel-button">
-                        <InputFile OnChange="ImportExcelAsync" accept=".xlsx" />
-                        <span>@(_importing ? "Importing..." : "Import Excel")</span>
-                    </label>
+                    <MudFileUpload T="IBrowserFile"
+                                   Accept=".xlsx"
+                                   Disabled="@_importing"
+                                   Class="import-excel-upload"
+                                   OnFilesChanged="ImportExcelAsync">
+                        <CustomContent Context="upload">
+                            <MudButton Variant="Variant.Outlined"
+                                       Color="Color.Primary"
+                                       StartIcon="@Icons.Material.Filled.UploadFile"
+                                       Class="@("ryz-busy-button" + (_importing ? " is-busy" : string.Empty))"
+                                       Disabled="@_importing"
+                                       OnClick="@(_ => upload.OpenFilePickerAsync())">
+                                @(_importing ? "Importing..." : "Import Excel")
+                            </MudButton>
+                        </CustomContent>
+                    </MudFileUpload>
                 }
             }
             @if (_screen.HasButtonDelete == true)

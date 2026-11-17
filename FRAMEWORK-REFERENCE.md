@@ -572,7 +572,9 @@ as the starting point for every new CRUD/data page.
    - `h1`;
    - short description;
    - primary Add button;
-   - optional Export button.
+   - optional Export button;
+   - import/upload actions use `MudFileUpload` with a `MudButton` as
+     `CustomContent`; never use a `label` plus raw `InputFile` as a button.
 3. `MudPaper Elevation="0" Class="dashboard-card"`.
 4. `MudTable` with:
    - `ServerData`;
