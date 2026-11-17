@@ -440,6 +440,14 @@ Interfaces live in `Application/Interfaces/Repositories` and
 `Application/Interfaces/Queries`. Implementations live in
 `Infrastructure/Repositories` and `Infrastructure/Queries`.
 
+Interface file naming is part of the contract:
+
+- one public interface per file;
+- the file name must match the interface name exactly;
+- query interface names use the `I` prefix and `QueryService` suffix;
+- use `IUserQueryService.cs`, not `UserQueries.cs`;
+- use `IUserQueryService`, not `UserQueries` or `IUserQueries`.
+
 Repository responsibilities:
 
 - fetch tracked entities for updates;
