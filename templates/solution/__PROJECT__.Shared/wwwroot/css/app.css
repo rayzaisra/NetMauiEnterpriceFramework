@@ -1245,9 +1245,10 @@ html, body {
 
 .app-main-container {
     width: 100%;
-    max-width: 1600px;
-    margin: 0 auto;
+    max-width: none;
+    margin: 0;
     padding: 24px clamp(20px, 2.5vw, 36px) 40px;
+    box-sizing: border-box;
 }
 
 .mud-breadcrumbs a {
@@ -2289,4 +2290,48 @@ body:has(.neo-brutalism) .mud-dialog .mud-switch-thumb {
     .sidebar-link {
         transition: none;
     }
+}
+
+.approval-radios {
+    gap: 6px 10px;
+}
+
+.approval-radios .mud-radio {
+    gap: 5px;
+    min-height: 24px;
+    margin: 0;
+    padding: 0;
+    white-space: nowrap;
+}
+
+.approval-radios .mud-radio .mud-typography {
+    font-size: .8125rem;
+    line-height: 1.2;
+}
+
+.neo-brutalism .approval-radios .mud-button-root.mud-icon-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+    padding: 0 !important;
+    box-sizing: border-box;
+    border: 2px solid var(--neo-ink) !important;
+    border-radius: 50% !important;
+    background: var(--mud-palette-surface) !important;
+    box-shadow: 1px 1px 0 var(--neo-ink) !important;
+}
+
+.neo-brutalism .approval-radios .mud-button-root.mud-icon-button .mud-icon-root {
+    width: 16px;
+    height: 16px;
+    font-size: 16px !important;
+}
+
+.neo-brutalism .approval-radios .mud-button-root.mud-icon-button svg {
+    width: 16px;
+    height: 16px;
 }
