@@ -307,6 +307,8 @@ let processProgressAnimation = null;
 let processLoopAnimations = [];
 let processHideTimer = null;
 let processShowTimer = null;
+let processCompleteTimer = null;
+let processCompleting = false;
 let busyObserver = null;
 let busyCheckTimer = null;
 
@@ -338,8 +340,16 @@ function showProcess(mode, title, stage, duration, steps) {
 
     clearTimeout(processHideTimer);
     clearTimeout(processShowTimer);
+    clearTimeout(processCompleteTimer);
+    processCompleteTimer = null;
+
+    if (processProgressAnimation) {
+        processProgressAnimation.pause();
+        processProgressAnimation = null;
+    }
 
     processMode = mode;
+    processCompleting = false;
     elements.overlay.classList.add("is-active");
     elements.overlay.setAttribute("aria-hidden", "false");
     elements.title.textContent = title;
@@ -402,11 +412,14 @@ function showProcess(mode, title, stage, duration, steps) {
 }
 
 function completeProcess(mode) {
-    if (processMode !== mode) {
+    if (processMode !== mode || processCompleting) {
         return;
     }
 
+    processCompleting = true;
     clearTimeout(processShowTimer);
+    clearTimeout(processCompleteTimer);
+    processCompleteTimer = setTimeout(hideProcess, 1600);
 
     if (processProgressAnimation) {
         processProgressAnimation.pause();
@@ -445,6 +458,9 @@ function completeProcess(mode) {
 }
 
 function hideProcess() {
+    clearTimeout(processCompleteTimer);
+    processCompleteTimer = null;
+
     const elements = processElements();
     if (elements.overlay) {
         elements.overlay.classList.remove("is-active");
@@ -453,6 +469,7 @@ function hideProcess() {
 
     stopProcessLoops();
     processProgressState = null;
+    processCompleting = false;
     processMode = null;
 }
 
@@ -463,6 +480,7 @@ function stopProcess(mode) {
 
     clearTimeout(processHideTimer);
     clearTimeout(processShowTimer);
+    clearTimeout(processCompleteTimer);
 
     if (processProgressAnimation) {
         processProgressAnimation.pause();
@@ -543,6 +561,18 @@ function checkBusyButtons() {
     const button = activeBusyButton();
 
     if (button) {
+        const overlay = document.querySelector(".ryz-process-overlay");
+        const overlayActive = overlay?.classList.contains("is-active") ?? false;
+
+        if (processCompleting && !overlayActive) {
+            processCompleting = false;
+            processMode = null;
+        }
+
+        if (processCompleting) {
+            return;
+        }
+
         clearTimeout(processHideTimer);
         clearTimeout(processShowTimer);
 
@@ -558,7 +588,7 @@ function checkBusyButtons() {
 
             const action = describeBusyAction((stillBusy.textContent || "").trim().toLowerCase());
             showProcess("busy", action.title, action.stage, action.duration, action.steps);
-        }, 120);
+        }, 40);
 
         return;
     }
