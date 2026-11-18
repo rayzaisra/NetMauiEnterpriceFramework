@@ -6,19 +6,21 @@
 > `RyzCore`. Do not infer behavior from generic .NET
 > templates; follow the patterns and constraints below.
 
-This guidance is also packaged as a **separate** Agent Skill under
-`skills/ryzcore/` (`SKILL.md` + `references/`). It is not part of the generated
-solution; install it into the agent's skills directory when needed. When a rule
-changes in this document, mirror it in the skill references.
+This guidance is also packaged as a **separate** Agent Skill,
+`ryzcore-skill`, under `packages/ryzcore-skill/ryzcore/` (`SKILL.md` +
+`references/`). It is not part of the generated solution or the npm generator
+package. When a rule changes in this document, mirror it in the skill
+references.
 
 ## 1. Repository and generator
 
-The repository has two distinct layers:
+The repository has three distinct layers:
 
 ```text
 src/                 Node.js scaffolder and SQL Server setup
 bin/                 CLI entry point
 templates/solution/  .NET 10 solution template copied by the generator
+packages/ryzcore-skill/  separate agent-skill npm package (not shipped by the generator)
 ```
 
 The generated application is produced by replacing tokens in the template:

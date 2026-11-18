@@ -1,0 +1,33 @@
+{
+  "name": "ryzcore-skill",
+  "version": "0.1.0",
+  "description": "Agent skill for RyzCore: teaches AI agents the framework's coding style, database, backend layering, UI conventions, menus, and parameter maintenance.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rayzaisra/NetMauiEnterpriceFramework.git",
+    "directory": "packages/ryzcore-skill"
+  },
+  "homepage": "https://github.com/rayzaisra/NetMauiEnterpriceFramework/tree/main/packages/ryzcore-skill#readme",
+  "bugs": {
+    "url": "https://github.com/rayzaisra/NetMauiEnterpriceFramework/issues"
+  },
+  "keywords": [
+    "agent-skills",
+    "skill",
+    "ai",
+    "ryzcore",
+    "dotnet",
+    "blazor",
+    "maui",
+    "mudblazor"
+  ],
+  "files": [
+    "ryzcore",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  }
+}

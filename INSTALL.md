@@ -48,7 +48,7 @@ npx create-ryzcore --help
 ### Dari GitHub (global)
 
 ```bash
-npm install -g github:rayzaisra/RyzCore
+npm install -g github:rayzaisra/NetMauiEnterpriceFramework
 create-ryzcore --help
 ```
 
@@ -56,7 +56,7 @@ create-ryzcore --help
 
 ```bash
 npm pack
-npm install -g ./create-ryzcore-0.1.0.tgz
+npm install -g ./create-ryzcore-0.1.2.tgz
 ```
 
 Jika PowerShell tidak menemukan command setelah install global, jalankan binary langsung:
@@ -70,8 +70,8 @@ Atau tambahkan `%APPDATA%\npm` ke `PATH` lalu buka terminal baru.
 ### Dari source lokal
 
 ```bash
-git clone https://github.com/rayzaisra/RyzCore.git
-cd RyzCore
+git clone https://github.com/rayzaisra/NetMauiEnterpriceFramework.git
+cd NetMauiEnterpriceFramework
 npm install
 npm link
 create-ryzcore --help
@@ -302,7 +302,7 @@ Generator menggunakan nama database dari config. Gunakan nama berbeda atau hapus
 ```bash
 npm update -g create-ryzcore
 # atau
-npm install -g github:rayzaisra/RyzCore
+npm install -g github:rayzaisra/NetMauiEnterpriceFramework
 ```
 
 Aplikasi yang sudah digenerate tidak otomatis ter-upgrade. Untuk template terbaru, generate project baru lalu port perubahan bisnis secara terkontrol.

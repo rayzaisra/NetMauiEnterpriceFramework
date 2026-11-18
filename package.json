@@ -1,15 +1,15 @@
 {
   "name": "create-ryzcore",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "RyzCore: scaffolder for an enterprise .NET 10 framework with Blazor WASM, MAUI Blazor Hybrid, MudBlazor, dynamic menus, and audit DB.",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rayzaisra/RyzCore.git"
+    "url": "git+https://github.com/rayzaisra/NetMauiEnterpriceFramework.git"
   },
-  "homepage": "https://github.com/rayzaisra/RyzCore#readme",
+  "homepage": "https://github.com/rayzaisra/NetMauiEnterpriceFramework#readme",
   "bugs": {
-    "url": "https://github.com/rayzaisra/RyzCore/issues"
+    "url": "https://github.com/rayzaisra/NetMauiEnterpriceFramework/issues"
   },
   "keywords": [
     "dotnet",
