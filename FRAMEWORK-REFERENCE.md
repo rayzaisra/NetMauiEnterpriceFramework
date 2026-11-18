@@ -6,6 +6,11 @@
 > `RyzCore`. Do not infer behavior from generic .NET
 > templates; follow the patterns and constraints below.
 
+This guidance is also packaged as a **separate** Agent Skill under
+`skills/ryzcore/` (`SKILL.md` + `references/`). It is not part of the generated
+solution; install it into the agent's skills directory when needed. When a rule
+changes in this document, mirror it in the skill references.
+
 ## 1. Repository and generator
 
 The repository has two distinct layers:
