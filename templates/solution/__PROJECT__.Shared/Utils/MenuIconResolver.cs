@@ -15,30 +15,7 @@ public static class MenuIconResolver
             return Icons.Material.Filled.Circle;
         }
 
-        var name = iconName switch
-        {
-            "fa fa-gear" => "Settings",
-            "fa fa-user-circle" => "EmojiPeople",
-            "fa fa-group" => "Groups",
-            "fa fa-user-o" => "Hail",
-            "fa fa-pagelines" => "MenuBook",
-            "fa fa-cc-jcb" => "AdminPanelSettings",
-            "fa fa-list-ul" => "FormatListBulleted",
-            "fa fa-th-list" => "Checklist",
-            "fa fa-cc-mastercard" => "AddModerator",
-            "fa fa-cc-paypal" => "GppGood",
-            "fa fa-flag" => "Flag",
-            "fa fa-map-pin" => "PinDrop",
-            "fa fa-flask" => "Science",
-            "fa fa-envelope" => "Email",
-            "GroupWork" => "Groups",
-            "SettingsApplications" => "Settings",
-            "SystemUpdateAlt" => "SystemUpdateAlt",
-            "SettingsSystemDaydream" => "Settings",
-            "FileCopy" => "FileCopy",
-            _ => iconName,
-        };
-
+        var name = iconName.Trim();
         var field = FilledIcons.GetField(name, BindingFlags.Public | BindingFlags.Static);
         if (field?.GetValue(null) is string icon)
         {

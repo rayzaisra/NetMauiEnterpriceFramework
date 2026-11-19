@@ -1,3942 +1,837 @@
-﻿[
-    {
-        "menu_icon_code":  "fa fa-500px",
-        "menu_icon_name":  "500px",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-address-book",
-        "menu_icon_name":  "address-book",
-        "menu_icon_name_alternate":  "Contacts"
-    },
-    {
-        "menu_icon_code":  "fa fa-address-book-o",
-        "menu_icon_name":  "address-book-o",
-        "menu_icon_name_alternate":  "Contacts"
-    },
-    {
-        "menu_icon_code":  "fa fa-address-card",
-        "menu_icon_name":  "address-card",
-        "menu_icon_name_alternate":  "ContactMail"
-    },
-    {
-        "menu_icon_code":  "fa fa-address-card-o",
-        "menu_icon_name":  "address-card-o",
-        "menu_icon_name_alternate":  "ContactMail"
-    },
-    {
-        "menu_icon_code":  "fa fa-adjust",
-        "menu_icon_name":  "adjust",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-adn",
-        "menu_icon_name":  "adn",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-align-center",
-        "menu_icon_name":  "align-center",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-align-justify",
-        "menu_icon_name":  "align-justify",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-align-left",
-        "menu_icon_name":  "align-left",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-align-right",
-        "menu_icon_name":  "align-right",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-amazon",
-        "menu_icon_name":  "amazon",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-ambulance",
-        "menu_icon_name":  "ambulance",
-        "menu_icon_name_alternate":  "Ambulance"
-    },
-    {
-        "menu_icon_code":  "fa fa-american-sign-language-interpreting",
-        "menu_icon_name":  "american-sign-language-interpreting",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-anchor",
-        "menu_icon_name":  "anchor",
-        "menu_icon_name_alternate":  "Anchor"
-    },
-    {
-        "menu_icon_code":  "fa fa-android",
-        "menu_icon_name":  "android",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-angellist",
-        "menu_icon_name":  "angellist",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-angle-double-down",
-        "menu_icon_name":  "angle-double-down",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-angle-double-left",
-        "menu_icon_name":  "angle-double-left",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-angle-double-right",
-        "menu_icon_name":  "angle-double-right",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-angle-double-up",
-        "menu_icon_name":  "angle-double-up",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-angle-down",
-        "menu_icon_name":  "angle-down",
-        "menu_icon_name_alternate":  "ExpandMore"
-    },
-    {
-        "menu_icon_code":  "fa fa-angle-left",
-        "menu_icon_name":  "angle-left",
-        "menu_icon_name_alternate":  "ChevronLeft"
-    },
-    {
-        "menu_icon_code":  "fa fa-angle-right",
-        "menu_icon_name":  "angle-right",
-        "menu_icon_name_alternate":  "ChevronRight"
-    },
-    {
-        "menu_icon_code":  "fa fa-angle-up",
-        "menu_icon_name":  "angle-up",
-        "menu_icon_name_alternate":  "ExpandLess"
-    },
-    {
-        "menu_icon_code":  "fa fa-apple",
-        "menu_icon_name":  "apple",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-archive",
-        "menu_icon_name":  "archive",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-area-chart",
-        "menu_icon_name":  "area-chart",
-        "menu_icon_name_alternate":  "AreaChart"
-    },
-    {
-        "menu_icon_code":  "fa fa-arrow-circle-down",
-        "menu_icon_name":  "arrow-circle-down",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-arrow-circle-left",
-        "menu_icon_name":  "arrow-circle-left",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-arrow-circle-o-down",
-        "menu_icon_name":  "arrow-circle-o-down",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-arrow-circle-o-left",
-        "menu_icon_name":  "arrow-circle-o-left",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-arrow-circle-o-right",
-        "menu_icon_name":  "arrow-circle-o-right",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-arrow-circle-o-up",
-        "menu_icon_name":  "arrow-circle-o-up",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-arrow-circle-right",
-        "menu_icon_name":  "arrow-circle-right",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-arrow-circle-up",
-        "menu_icon_name":  "arrow-circle-up",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-arrow-down",
-        "menu_icon_name":  "arrow-down",
-        "menu_icon_name_alternate":  "ArrowDownward"
-    },
-    {
-        "menu_icon_code":  "fa fa-arrow-left",
-        "menu_icon_name":  "arrow-left",
-        "menu_icon_name_alternate":  "ArrowBack"
-    },
-    {
-        "menu_icon_code":  "fa fa-arrow-right",
-        "menu_icon_name":  "arrow-right",
-        "menu_icon_name_alternate":  "ArrowForward"
-    },
-    {
-        "menu_icon_code":  "fa fa-arrow-up",
-        "menu_icon_name":  "arrow-up",
-        "menu_icon_name_alternate":  "ArrowUpward"
-    },
-    {
-        "menu_icon_code":  "fa fa-arrows",
-        "menu_icon_name":  "arrows",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-arrows-alt",
-        "menu_icon_name":  "arrows-alt",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-arrows-h",
-        "menu_icon_name":  "arrows-h",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-arrows-v",
-        "menu_icon_name":  "arrows-v",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-asl-interpreting",
-        "menu_icon_name":  "asl-interpreting",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-assistive-listening-systems",
-        "menu_icon_name":  "assistive-listening-systems",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-asterisk",
-        "menu_icon_name":  "asterisk",
-        "menu_icon_name_alternate":  "Asterisk"
-    },
-    {
-        "menu_icon_code":  "fa fa-at",
-        "menu_icon_name":  "at",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-audio-description",
-        "menu_icon_name":  "audio-description",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-automobile",
-        "menu_icon_name":  "automobile",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-backward",
-        "menu_icon_name":  "backward",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-balance-scale",
-        "menu_icon_name":  "balance-scale",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-ban",
-        "menu_icon_name":  "ban",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-bandcamp",
-        "menu_icon_name":  "bandcamp",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-bank",
-        "menu_icon_name":  "bank",
-        "menu_icon_name_alternate":  "AccountBalance"
-    },
-    {
-        "menu_icon_code":  "fa fa-bar-chart",
-        "menu_icon_name":  "bar-chart",
-        "menu_icon_name_alternate":  "BarChart"
-    },
-    {
-        "menu_icon_code":  "fa fa-bar-chart-o",
-        "menu_icon_name":  "bar-chart-o",
-        "menu_icon_name_alternate":  "BarChart"
-    },
-    {
-        "menu_icon_code":  "fa fa-barcode",
-        "menu_icon_name":  "barcode",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-bars",
-        "menu_icon_name":  "bars",
-        "menu_icon_name_alternate":  "Menu"
-    },
-    {
-        "menu_icon_code":  "fa fa-bath",
-        "menu_icon_name":  "bath",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-bathtub",
-        "menu_icon_name":  "bathtub",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-battery",
-        "menu_icon_name":  "battery",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-battery-0",
-        "menu_icon_name":  "battery-0",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-battery-1",
-        "menu_icon_name":  "battery-1",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-battery-2",
-        "menu_icon_name":  "battery-2",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-battery-3",
-        "menu_icon_name":  "battery-3",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-battery-4",
-        "menu_icon_name":  "battery-4",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-battery-empty",
-        "menu_icon_name":  "battery-empty",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-battery-full",
-        "menu_icon_name":  "battery-full",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-battery-half",
-        "menu_icon_name":  "battery-half",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-battery-quarter",
-        "menu_icon_name":  "battery-quarter",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-battery-three-quarters",
-        "menu_icon_name":  "battery-three-quarters",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-bed",
-        "menu_icon_name":  "bed",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-beer",
-        "menu_icon_name":  "beer",
-        "menu_icon_name_alternate":  "Beer"
-    },
-    {
-        "menu_icon_code":  "fa fa-behance",
-        "menu_icon_name":  "behance",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-behance-square",
-        "menu_icon_name":  "behance-square",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-bell",
-        "menu_icon_name":  "bell",
-        "menu_icon_name_alternate":  "Notifications"
-    },
-    {
-        "menu_icon_code":  "fa fa-bell-o",
-        "menu_icon_name":  "bell-o",
-        "menu_icon_name_alternate":  "Notifications"
-    },
-    {
-        "menu_icon_code":  "fa fa-bell-slash",
-        "menu_icon_name":  "bell-slash",
-        "menu_icon_name_alternate":  "NotificationsOff"
-    },
-    {
-        "menu_icon_code":  "fa fa-bell-slash-o",
-        "menu_icon_name":  "bell-slash-o",
-        "menu_icon_name_alternate":  "NotificationsOff"
-    },
-    {
-        "menu_icon_code":  "fa fa-bicycle",
-        "menu_icon_name":  "bicycle",
-        "menu_icon_name_alternate":  "Bicycle"
-    },
-    {
-        "menu_icon_code":  "fa fa-binoculars",
-        "menu_icon_name":  "binoculars",
-        "menu_icon_name_alternate":  "Explore"
-    },
-    {
-        "menu_icon_code":  "fa fa-birthday-cake",
-        "menu_icon_name":  "birthday-cake",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-bitbucket",
-        "menu_icon_name":  "bitbucket",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-bitbucket-square",
-        "menu_icon_name":  "bitbucket-square",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-bitcoin",
-        "menu_icon_name":  "bitcoin",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-black-tie",
-        "menu_icon_name":  "black-tie",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-blind",
-        "menu_icon_name":  "blind",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-bluetooth",
-        "menu_icon_name":  "bluetooth",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-bluetooth-b",
-        "menu_icon_name":  "bluetooth-b",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-bold",
-        "menu_icon_name":  "bold",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-bolt",
-        "menu_icon_name":  "bolt",
-        "menu_icon_name_alternate":  "Bolt"
-    },
-    {
-        "menu_icon_code":  "fa fa-bomb",
-        "menu_icon_name":  "bomb",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-book",
-        "menu_icon_name":  "book",
-        "menu_icon_name_alternate":  "Book"
-    },
-    {
-        "menu_icon_code":  "fa fa-bookmark",
-        "menu_icon_name":  "bookmark",
-        "menu_icon_name_alternate":  "Bookmark"
-    },
-    {
-        "menu_icon_code":  "fa fa-bookmark-o",
-        "menu_icon_name":  "bookmark-o",
-        "menu_icon_name_alternate":  "Bookmark"
-    },
-    {
-        "menu_icon_code":  "fa fa-braille",
-        "menu_icon_name":  "braille",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-briefcase",
-        "menu_icon_name":  "briefcase",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-btc",
-        "menu_icon_name":  "btc",
-        "menu_icon_name_alternate":  "Bitcoin"
-    },
-    {
-        "menu_icon_code":  "fa fa-bug",
-        "menu_icon_name":  "bug",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-building",
-        "menu_icon_name":  "building",
-        "menu_icon_name_alternate":  "Business"
-    },
-    {
-        "menu_icon_code":  "fa fa-building-o",
-        "menu_icon_name":  "building-o",
-        "menu_icon_name_alternate":  "Business"
-    },
-    {
-        "menu_icon_code":  "fa fa-bullhorn",
-        "menu_icon_name":  "bullhorn",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-bullseye",
-        "menu_icon_name":  "bullseye",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-bus",
-        "menu_icon_name":  "bus",
-        "menu_icon_name_alternate":  "Bus"
-    },
-    {
-        "menu_icon_code":  "fa fa-buysellads",
-        "menu_icon_name":  "buysellads",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-cab",
-        "menu_icon_name":  "cab",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-calculator",
-        "menu_icon_name":  "calculator",
-        "menu_icon_name_alternate":  "Calculate"
-    },
-    {
-        "menu_icon_code":  "fa fa-calendar",
-        "menu_icon_name":  "calendar",
-        "menu_icon_name_alternate":  "CalendarToday"
-    },
-    {
-        "menu_icon_code":  "fa fa-calendar-check-o",
-        "menu_icon_name":  "calendar-check-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-calendar-minus-o",
-        "menu_icon_name":  "calendar-minus-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-calendar-o",
-        "menu_icon_name":  "calendar-o",
-        "menu_icon_name_alternate":  "CalendarToday"
-    },
-    {
-        "menu_icon_code":  "fa fa-calendar-plus-o",
-        "menu_icon_name":  "calendar-plus-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-calendar-times-o",
-        "menu_icon_name":  "calendar-times-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-camera",
-        "menu_icon_name":  "camera",
-        "menu_icon_name_alternate":  "Camera"
-    },
-    {
-        "menu_icon_code":  "fa fa-camera-retro",
-        "menu_icon_name":  "camera-retro",
-        "menu_icon_name_alternate":  "CameraRetro"
-    },
-    {
-        "menu_icon_code":  "fa fa-car",
-        "menu_icon_name":  "car",
-        "menu_icon_name_alternate":  "Car"
-    },
-    {
-        "menu_icon_code":  "fa fa-caret-down",
-        "menu_icon_name":  "caret-down",
-        "menu_icon_name_alternate":  "ArrowDropDown"
-    },
-    {
-        "menu_icon_code":  "fa fa-caret-left",
-        "menu_icon_name":  "caret-left",
-        "menu_icon_name_alternate":  "ArrowDropLeft"
-    },
-    {
-        "menu_icon_code":  "fa fa-caret-right",
-        "menu_icon_name":  "caret-right",
-        "menu_icon_name_alternate":  "ArrowDropRight"
-    },
-    {
-        "menu_icon_code":  "fa fa-caret-square-o-down",
-        "menu_icon_name":  "caret-square-o-down",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-caret-square-o-left",
-        "menu_icon_name":  "caret-square-o-left",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-caret-square-o-right",
-        "menu_icon_name":  "caret-square-o-right",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-caret-square-o-up",
-        "menu_icon_name":  "caret-square-o-up",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-caret-up",
-        "menu_icon_name":  "caret-up",
-        "menu_icon_name_alternate":  "ArrowDropUp"
-    },
-    {
-        "menu_icon_code":  "fa fa-cart-arrow-down",
-        "menu_icon_name":  "cart-arrow-down",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-cart-plus",
-        "menu_icon_name":  "cart-plus",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-cc",
-        "menu_icon_name":  "cc",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-cc-amex",
-        "menu_icon_name":  "cc-amex",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-cc-diners-club",
-        "menu_icon_name":  "cc-diners-club",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-cc-discover",
-        "menu_icon_name":  "cc-discover",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-cc-jcb",
-        "menu_icon_name":  "cc-jcb",
-        "menu_icon_name_alternate":  "AdminPanelSettings"
-    },
-    {
-        "menu_icon_code":  "fa fa-cc-mastercard",
-        "menu_icon_name":  "cc-mastercard",
-        "menu_icon_name_alternate":  "AddModerator"
-    },
-    {
-        "menu_icon_code":  "fa fa-cc-paypal",
-        "menu_icon_name":  "cc-paypal",
-        "menu_icon_name_alternate":  "GppGood"
-    },
-    {
-        "menu_icon_code":  "fa fa-cc-stripe",
-        "menu_icon_name":  "cc-stripe",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-cc-visa",
-        "menu_icon_name":  "cc-visa",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-certificate",
-        "menu_icon_name":  "certificate",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-chain",
-        "menu_icon_name":  "chain",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-chain-broken",
-        "menu_icon_name":  "chain-broken",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-check",
-        "menu_icon_name":  "check",
-        "menu_icon_name_alternate":  "Check"
-    },
-    {
-        "menu_icon_code":  "fa fa-check-circle",
-        "menu_icon_name":  "check-circle",
-        "menu_icon_name_alternate":  "CheckCircle"
-    },
-    {
-        "menu_icon_code":  "fa fa-check-circle-o",
-        "menu_icon_name":  "check-circle-o",
-        "menu_icon_name_alternate":  "CheckCircle"
-    },
-    {
-        "menu_icon_code":  "fa fa-check-square",
-        "menu_icon_name":  "check-square",
-        "menu_icon_name_alternate":  "CheckSquare"
-    },
-    {
-        "menu_icon_code":  "fa fa-check-square-o",
-        "menu_icon_name":  "check-square-o",
-        "menu_icon_name_alternate":  "CheckSquare"
-    },
-    {
-        "menu_icon_code":  "fa fa-chevron-circle-down",
-        "menu_icon_name":  "chevron-circle-down",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-chevron-circle-left",
-        "menu_icon_name":  "chevron-circle-left",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-chevron-circle-right",
-        "menu_icon_name":  "chevron-circle-right",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-chevron-circle-up",
-        "menu_icon_name":  "chevron-circle-up",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-chevron-down",
-        "menu_icon_name":  "chevron-down",
-        "menu_icon_name_alternate":  "ExpandMore"
-    },
-    {
-        "menu_icon_code":  "fa fa-chevron-left",
-        "menu_icon_name":  "chevron-left",
-        "menu_icon_name_alternate":  "ChevronLeft"
-    },
-    {
-        "menu_icon_code":  "fa fa-chevron-right",
-        "menu_icon_name":  "chevron-right",
-        "menu_icon_name_alternate":  "ChevronRight"
-    },
-    {
-        "menu_icon_code":  "fa fa-chevron-up",
-        "menu_icon_name":  "chevron-up",
-        "menu_icon_name_alternate":  "ExpandLess"
-    },
-    {
-        "menu_icon_code":  "fa fa-child",
-        "menu_icon_name":  "child",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-chrome",
-        "menu_icon_name":  "chrome",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-circle",
-        "menu_icon_name":  "circle",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-circle-o",
-        "menu_icon_name":  "circle-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-circle-o-notch",
-        "menu_icon_name":  "circle-o-notch",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-circle-thin",
-        "menu_icon_name":  "circle-thin",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-clipboard",
-        "menu_icon_name":  "clipboard",
-        "menu_icon_name_alternate":  "Assignment"
-    },
-    {
-        "menu_icon_code":  "fa fa-clock-o",
-        "menu_icon_name":  "clock-o",
-        "menu_icon_name_alternate":  "AccessTime"
-    },
-    {
-        "menu_icon_code":  "fa fa-clone",
-        "menu_icon_name":  "clone",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-close",
-        "menu_icon_name":  "close",
-        "menu_icon_name_alternate":  "Close"
-    },
-    {
-        "menu_icon_code":  "fa fa-cloud",
-        "menu_icon_name":  "cloud",
-        "menu_icon_name_alternate":  "Cloud"
-    },
-    {
-        "menu_icon_code":  "fa fa-cloud-download",
-        "menu_icon_name":  "cloud-download",
-        "menu_icon_name_alternate":  "CloudDownload"
-    },
-    {
-        "menu_icon_code":  "fa fa-cloud-upload",
-        "menu_icon_name":  "cloud-upload",
-        "menu_icon_name_alternate":  "CloudUpload"
-    },
-    {
-        "menu_icon_code":  "fa fa-cny",
-        "menu_icon_name":  "cny",
-        "menu_icon_name_alternate":  "CurrencyYuan"
-    },
-    {
-        "menu_icon_code":  "fa fa-code",
-        "menu_icon_name":  "code",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-code-fork",
-        "menu_icon_name":  "code-fork",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-codepen",
-        "menu_icon_name":  "codepen",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-codiepie",
-        "menu_icon_name":  "codiepie",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-coffee",
-        "menu_icon_name":  "coffee",
-        "menu_icon_name_alternate":  "Coffee"
-    },
-    {
-        "menu_icon_code":  "fa fa-cog",
-        "menu_icon_name":  "cog",
-        "menu_icon_name_alternate":  "Settings"
-    },
-    {
-        "menu_icon_code":  "fa fa-cogs",
-        "menu_icon_name":  "cogs",
-        "menu_icon_name_alternate":  "Settings"
-    },
-    {
-        "menu_icon_code":  "fa fa-columns",
-        "menu_icon_name":  "columns",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-comment",
-        "menu_icon_name":  "comment",
-        "menu_icon_name_alternate":  "Comment"
-    },
-    {
-        "menu_icon_code":  "fa fa-comment-o",
-        "menu_icon_name":  "comment-o",
-        "menu_icon_name_alternate":  "Comment"
-    },
-    {
-        "menu_icon_code":  "fa fa-commenting",
-        "menu_icon_name":  "commenting",
-        "menu_icon_name_alternate":  "Commenting"
-    },
-    {
-        "menu_icon_code":  "fa fa-commenting-o",
-        "menu_icon_name":  "commenting-o",
-        "menu_icon_name_alternate":  "Commenting"
-    },
-    {
-        "menu_icon_code":  "fa fa-comments",
-        "menu_icon_name":  "comments",
-        "menu_icon_name_alternate":  "Comments"
-    },
-    {
-        "menu_icon_code":  "fa fa-comments-o",
-        "menu_icon_name":  "comments-o",
-        "menu_icon_name_alternate":  "Comments"
-    },
-    {
-        "menu_icon_code":  "fa fa-compass",
-        "menu_icon_name":  "compass",
-        "menu_icon_name_alternate":  "Compass"
-    },
-    {
-        "menu_icon_code":  "fa fa-compress",
-        "menu_icon_name":  "compress",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-connectdevelop",
-        "menu_icon_name":  "connectdevelop",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-contao",
-        "menu_icon_name":  "contao",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-copy",
-        "menu_icon_name":  "copy",
-        "menu_icon_name_alternate":  "FileCopy"
-    },
-    {
-        "menu_icon_code":  "fa fa-copyright",
-        "menu_icon_name":  "copyright",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-creative-commons",
-        "menu_icon_name":  "creative-commons",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-credit-card",
-        "menu_icon_name":  "credit-card",
-        "menu_icon_name_alternate":  "Payment"
-    },
-    {
-        "menu_icon_code":  "fa fa-credit-card-alt",
-        "menu_icon_name":  "credit-card-alt",
-        "menu_icon_name_alternate":  "Payment"
-    },
-    {
-        "menu_icon_code":  "fa fa-crop",
-        "menu_icon_name":  "crop",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-crosshairs",
-        "menu_icon_name":  "crosshairs",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-css3",
-        "menu_icon_name":  "css3",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-cube",
-        "menu_icon_name":  "cube",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-cubes",
-        "menu_icon_name":  "cubes",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-cut",
-        "menu_icon_name":  "cut",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-cutlery",
-        "menu_icon_name":  "cutlery",
-        "menu_icon_name_alternate":  "Restaurant"
-    },
-    {
-        "menu_icon_code":  "fa fa-dashboard",
-        "menu_icon_name":  "dashboard",
-        "menu_icon_name_alternate":  "Dashboard"
-    },
-    {
-        "menu_icon_code":  "fa fa-dashcube",
-        "menu_icon_name":  "dashcube",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-database",
-        "menu_icon_name":  "database",
-        "menu_icon_name_alternate":  "Storage"
-    },
-    {
-        "menu_icon_code":  "fa fa-deaf",
-        "menu_icon_name":  "deaf",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-deafness",
-        "menu_icon_name":  "deafness",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-dedent",
-        "menu_icon_name":  "dedent",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-delicious",
-        "menu_icon_name":  "delicious",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-desktop",
-        "menu_icon_name":  "desktop",
-        "menu_icon_name_alternate":  "Desktop"
-    },
-    {
-        "menu_icon_code":  "fa fa-deviantart",
-        "menu_icon_name":  "deviantart",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-diamond",
-        "menu_icon_name":  "diamond",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-digg",
-        "menu_icon_name":  "digg",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-dollar",
-        "menu_icon_name":  "dollar",
-        "menu_icon_name_alternate":  "AttachMoney"
-    },
-    {
-        "menu_icon_code":  "fa fa-dot-circle-o",
-        "menu_icon_name":  "dot-circle-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-download",
-        "menu_icon_name":  "download",
-        "menu_icon_name_alternate":  "Download"
-    },
-    {
-        "menu_icon_code":  "fa fa-dribbble",
-        "menu_icon_name":  "dribbble",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-drivers-license",
-        "menu_icon_name":  "drivers-license",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-drivers-license-o",
-        "menu_icon_name":  "drivers-license-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-dropbox",
-        "menu_icon_name":  "dropbox",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-drupal",
-        "menu_icon_name":  "drupal",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-edge",
-        "menu_icon_name":  "edge",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-edit",
-        "menu_icon_name":  "edit",
-        "menu_icon_name_alternate":  "Edit"
-    },
-    {
-        "menu_icon_code":  "fa fa-eercast",
-        "menu_icon_name":  "eercast",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-eject",
-        "menu_icon_name":  "eject",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-ellipsis-h",
-        "menu_icon_name":  "ellipsis-h",
-        "menu_icon_name_alternate":  "MoreHoriz"
-    },
-    {
-        "menu_icon_code":  "fa fa-ellipsis-v",
-        "menu_icon_name":  "ellipsis-v",
-        "menu_icon_name_alternate":  "MoreVert"
-    },
-    {
-        "menu_icon_code":  "fa fa-empire",
-        "menu_icon_name":  "empire",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-envelope",
-        "menu_icon_name":  "envelope",
-        "menu_icon_name_alternate":  "Mail"
-    },
-    {
-        "menu_icon_code":  "fa fa-envelope-o",
-        "menu_icon_name":  "envelope-o",
-        "menu_icon_name_alternate":  "Mail"
-    },
-    {
-        "menu_icon_code":  "fa fa-envelope-open",
-        "menu_icon_name":  "envelope-open",
-        "menu_icon_name_alternate":  "MailOpen"
-    },
-    {
-        "menu_icon_code":  "fa fa-envelope-open-o",
-        "menu_icon_name":  "envelope-open-o",
-        "menu_icon_name_alternate":  "MailOpen"
-    },
-    {
-        "menu_icon_code":  "fa fa-envelope-square",
-        "menu_icon_name":  "envelope-square",
-        "menu_icon_name_alternate":  "MailSquare"
-    },
-    {
-        "menu_icon_code":  "fa fa-envira",
-        "menu_icon_name":  "envira",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-eraser",
-        "menu_icon_name":  "eraser",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-etsy",
-        "menu_icon_name":  "etsy",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-eur",
-        "menu_icon_name":  "eur",
-        "menu_icon_name_alternate":  "Euro"
-    },
-    {
-        "menu_icon_code":  "fa fa-euro",
-        "menu_icon_name":  "euro",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-exchange",
-        "menu_icon_name":  "exchange",
-        "menu_icon_name_alternate":  "SwapHoriz"
-    },
-    {
-        "menu_icon_code":  "fa fa-exclamation",
-        "menu_icon_name":  "exclamation",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-exclamation-circle",
-        "menu_icon_name":  "exclamation-circle",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-exclamation-triangle",
-        "menu_icon_name":  "exclamation-triangle",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-expand",
-        "menu_icon_name":  "expand",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-expeditedssl",
-        "menu_icon_name":  "expeditedssl",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-external-link",
-        "menu_icon_name":  "external-link",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-external-link-square",
-        "menu_icon_name":  "external-link-square",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-eye",
-        "menu_icon_name":  "eye",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-eye-slash",
-        "menu_icon_name":  "eye-slash",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-eyedropper",
-        "menu_icon_name":  "eyedropper",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-fa",
-        "menu_icon_name":  "fa",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-facebook",
-        "menu_icon_name":  "facebook",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-facebook-f",
-        "menu_icon_name":  "facebook-f",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-facebook-official",
-        "menu_icon_name":  "facebook-official",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-facebook-square",
-        "menu_icon_name":  "facebook-square",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-fast-backward",
-        "menu_icon_name":  "fast-backward",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-fast-forward",
-        "menu_icon_name":  "fast-forward",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-fax",
-        "menu_icon_name":  "fax",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-feed",
-        "menu_icon_name":  "feed",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-female",
-        "menu_icon_name":  "female",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-fighter-jet",
-        "menu_icon_name":  "fighter-jet",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-file",
-        "menu_icon_name":  "file",
-        "menu_icon_name_alternate":  "InsertDriveFile"
-    },
-    {
-        "menu_icon_code":  "fa fa-file-archive-o",
-        "menu_icon_name":  "file-archive-o",
-        "menu_icon_name_alternate":  "InsertDriveFile"
-    },
-    {
-        "menu_icon_code":  "fa fa-file-audio-o",
-        "menu_icon_name":  "file-audio-o",
-        "menu_icon_name_alternate":  "AudioFile"
-    },
-    {
-        "menu_icon_code":  "fa fa-file-code-o",
-        "menu_icon_name":  "file-code-o",
-        "menu_icon_name_alternate":  "InsertDriveFile"
-    },
-    {
-        "menu_icon_code":  "fa fa-file-excel-o",
-        "menu_icon_name":  "file-excel-o",
-        "menu_icon_name_alternate":  "InsertDriveFile"
-    },
-    {
-        "menu_icon_code":  "fa fa-file-image-o",
-        "menu_icon_name":  "file-image-o",
-        "menu_icon_name_alternate":  "InsertDriveFile"
-    },
-    {
-        "menu_icon_code":  "fa fa-file-movie-o",
-        "menu_icon_name":  "file-movie-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-file-o",
-        "menu_icon_name":  "file-o",
-        "menu_icon_name_alternate":  "InsertDriveFile"
-    },
-    {
-        "menu_icon_code":  "fa fa-file-pdf-o",
-        "menu_icon_name":  "file-pdf-o",
-        "menu_icon_name_alternate":  "PictureAsPdf"
-    },
-    {
-        "menu_icon_code":  "fa fa-file-photo-o",
-        "menu_icon_name":  "file-photo-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-file-picture-o",
-        "menu_icon_name":  "file-picture-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-file-powerpoint-o",
-        "menu_icon_name":  "file-powerpoint-o",
-        "menu_icon_name_alternate":  "InsertDriveFile"
-    },
-    {
-        "menu_icon_code":  "fa fa-file-sound-o",
-        "menu_icon_name":  "file-sound-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-file-text",
-        "menu_icon_name":  "file-text",
-        "menu_icon_name_alternate":  "InsertDriveFile"
-    },
-    {
-        "menu_icon_code":  "fa fa-file-text-o",
-        "menu_icon_name":  "file-text-o",
-        "menu_icon_name_alternate":  "InsertDriveFile"
-    },
-    {
-        "menu_icon_code":  "fa fa-file-video-o",
-        "menu_icon_name":  "file-video-o",
-        "menu_icon_name_alternate":  "VideoFile"
-    },
-    {
-        "menu_icon_code":  "fa fa-file-word-o",
-        "menu_icon_name":  "file-word-o",
-        "menu_icon_name_alternate":  "InsertDriveFile"
-    },
-    {
-        "menu_icon_code":  "fa fa-file-zip-o",
-        "menu_icon_name":  "file-zip-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-files-o",
-        "menu_icon_name":  "files-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-film",
-        "menu_icon_name":  "film",
-        "menu_icon_name_alternate":  "TheaterComedy"
-    },
-    {
-        "menu_icon_code":  "fa fa-filter",
-        "menu_icon_name":  "filter",
-        "menu_icon_name_alternate":  "FilterList"
-    },
-    {
-        "menu_icon_code":  "fa fa-fire",
-        "menu_icon_name":  "fire",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-fire-extinguisher",
-        "menu_icon_name":  "fire-extinguisher",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-firefox",
-        "menu_icon_name":  "firefox",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-first-order",
-        "menu_icon_name":  "first-order",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-flag",
-        "menu_icon_name":  "flag",
-        "menu_icon_name_alternate":  "Flag"
-    },
-    {
-        "menu_icon_code":  "fa fa-flag-checkered",
-        "menu_icon_name":  "flag-checkered",
-        "menu_icon_name_alternate":  "FlagCheckered"
-    },
-    {
-        "menu_icon_code":  "fa fa-flag-o",
-        "menu_icon_name":  "flag-o",
-        "menu_icon_name_alternate":  "Flag"
-    },
-    {
-        "menu_icon_code":  "fa fa-flash",
-        "menu_icon_name":  "flash",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-flask",
-        "menu_icon_name":  "flask",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-flickr",
-        "menu_icon_name":  "flickr",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-floppy-o",
-        "menu_icon_name":  "floppy-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-folder",
-        "menu_icon_name":  "folder",
-        "menu_icon_name_alternate":  "Folder"
-    },
-    {
-        "menu_icon_code":  "fa fa-folder-o",
-        "menu_icon_name":  "folder-o",
-        "menu_icon_name_alternate":  "Folder"
-    },
-    {
-        "menu_icon_code":  "fa fa-folder-open",
-        "menu_icon_name":  "folder-open",
-        "menu_icon_name_alternate":  "FolderOpen"
-    },
-    {
-        "menu_icon_code":  "fa fa-folder-open-o",
-        "menu_icon_name":  "folder-open-o",
-        "menu_icon_name_alternate":  "FolderOpen"
-    },
-    {
-        "menu_icon_code":  "fa fa-font",
-        "menu_icon_name":  "font",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-font-awesome",
-        "menu_icon_name":  "font-awesome",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-fonticons",
-        "menu_icon_name":  "fonticons",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-fort-awesome",
-        "menu_icon_name":  "fort-awesome",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-forumbee",
-        "menu_icon_name":  "forumbee",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-forward",
-        "menu_icon_name":  "forward",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-foursquare",
-        "menu_icon_name":  "foursquare",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-free-code-camp",
-        "menu_icon_name":  "free-code-camp",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-frown-o",
-        "menu_icon_name":  "frown-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-futbol-o",
-        "menu_icon_name":  "futbol-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-gamepad",
-        "menu_icon_name":  "gamepad",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-gavel",
-        "menu_icon_name":  "gavel",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-gbp",
-        "menu_icon_name":  "gbp",
-        "menu_icon_name_alternate":  "Gbp"
-    },
-    {
-        "menu_icon_code":  "fa fa-ge",
-        "menu_icon_name":  "ge",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-gear",
-        "menu_icon_name":  "gear",
-        "menu_icon_name_alternate":  "Settings"
-    },
-    {
-        "menu_icon_code":  "fa fa-gears",
-        "menu_icon_name":  "gears",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-genderless",
-        "menu_icon_name":  "genderless",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-get-pocket",
-        "menu_icon_name":  "get-pocket",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-gg",
-        "menu_icon_name":  "gg",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-gg-circle",
-        "menu_icon_name":  "gg-circle",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-gift",
-        "menu_icon_name":  "gift",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-git",
-        "menu_icon_name":  "git",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-git-square",
-        "menu_icon_name":  "git-square",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-github",
-        "menu_icon_name":  "github",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-github-alt",
-        "menu_icon_name":  "github-alt",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-github-square",
-        "menu_icon_name":  "github-square",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-gitlab",
-        "menu_icon_name":  "gitlab",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-gittip",
-        "menu_icon_name":  "gittip",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-glass",
-        "menu_icon_name":  "glass",
-        "menu_icon_name_alternate":  "LocalDrink"
-    },
-    {
-        "menu_icon_code":  "fa fa-glide",
-        "menu_icon_name":  "glide",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-glide-g",
-        "menu_icon_name":  "glide-g",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-globe",
-        "menu_icon_name":  "globe",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-google",
-        "menu_icon_name":  "google",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-google-plus",
-        "menu_icon_name":  "google-plus",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-google-plus-circle",
-        "menu_icon_name":  "google-plus-circle",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-google-plus-official",
-        "menu_icon_name":  "google-plus-official",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-google-plus-square",
-        "menu_icon_name":  "google-plus-square",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-google-wallet",
-        "menu_icon_name":  "google-wallet",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-graduation-cap",
-        "menu_icon_name":  "graduation-cap",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-gratipay",
-        "menu_icon_name":  "gratipay",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-grav",
-        "menu_icon_name":  "grav",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-group",
-        "menu_icon_name":  "group",
-        "menu_icon_name_alternate":  "Groups"
-    },
-    {
-        "menu_icon_code":  "fa fa-h-square",
-        "menu_icon_name":  "h-square",
-        "menu_icon_name_alternate":  "H"
-    },
-    {
-        "menu_icon_code":  "fa fa-hacker-news",
-        "menu_icon_name":  "hacker-news",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-hand-grab-o",
-        "menu_icon_name":  "hand-grab-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-hand-lizard-o",
-        "menu_icon_name":  "hand-lizard-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-hand-o-down",
-        "menu_icon_name":  "hand-o-down",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-hand-o-left",
-        "menu_icon_name":  "hand-o-left",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-hand-o-right",
-        "menu_icon_name":  "hand-o-right",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-hand-o-up",
-        "menu_icon_name":  "hand-o-up",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-hand-paper-o",
-        "menu_icon_name":  "hand-paper-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-hand-peace-o",
-        "menu_icon_name":  "hand-peace-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-hand-pointer-o",
-        "menu_icon_name":  "hand-pointer-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-hand-rock-o",
-        "menu_icon_name":  "hand-rock-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-hand-scissors-o",
-        "menu_icon_name":  "hand-scissors-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-hand-spock-o",
-        "menu_icon_name":  "hand-spock-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-hand-stop-o",
-        "menu_icon_name":  "hand-stop-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-handshake-o",
-        "menu_icon_name":  "handshake-o",
-        "menu_icon_name_alternate":  "SupervisedUserCircle"
-    },
-    {
-        "menu_icon_code":  "fa fa-hard-of-hearing",
-        "menu_icon_name":  "hard-of-hearing",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-hashtag",
-        "menu_icon_name":  "hashtag",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-hdd-o",
-        "menu_icon_name":  "hdd-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-header",
-        "menu_icon_name":  "header",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-headphones",
-        "menu_icon_name":  "headphones",
-        "menu_icon_name_alternate":  "Headphones"
-    },
-    {
-        "menu_icon_code":  "fa fa-heart",
-        "menu_icon_name":  "heart",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-heart-o",
-        "menu_icon_name":  "heart-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-heartbeat",
-        "menu_icon_name":  "heartbeat",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-history",
-        "menu_icon_name":  "history",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-home",
-        "menu_icon_name":  "home",
-        "menu_icon_name_alternate":  "Home"
-    },
-    {
-        "menu_icon_code":  "fa fa-hospital-o",
-        "menu_icon_name":  "hospital-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-hotel",
-        "menu_icon_name":  "hotel",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-hourglass",
-        "menu_icon_name":  "hourglass",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-hourglass-1",
-        "menu_icon_name":  "hourglass-1",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-hourglass-2",
-        "menu_icon_name":  "hourglass-2",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-hourglass-3",
-        "menu_icon_name":  "hourglass-3",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-hourglass-end",
-        "menu_icon_name":  "hourglass-end",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-hourglass-half",
-        "menu_icon_name":  "hourglass-half",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-hourglass-o",
-        "menu_icon_name":  "hourglass-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-hourglass-start",
-        "menu_icon_name":  "hourglass-start",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-houzz",
-        "menu_icon_name":  "houzz",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-html5",
-        "menu_icon_name":  "html5",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-i-cursor",
-        "menu_icon_name":  "i-cursor",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-id-badge",
-        "menu_icon_name":  "id-badge",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-id-card",
-        "menu_icon_name":  "id-card",
-        "menu_icon_name_alternate":  "Badge"
-    },
-    {
-        "menu_icon_code":  "fa fa-id-card-o",
-        "menu_icon_name":  "id-card-o",
-        "menu_icon_name_alternate":  "Badge"
-    },
-    {
-        "menu_icon_code":  "fa fa-ils",
-        "menu_icon_name":  "ils",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-image",
-        "menu_icon_name":  "image",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-imdb",
-        "menu_icon_name":  "imdb",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-inbox",
-        "menu_icon_name":  "inbox",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-indent",
-        "menu_icon_name":  "indent",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-industry",
-        "menu_icon_name":  "industry",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-info",
-        "menu_icon_name":  "info",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-info-circle",
-        "menu_icon_name":  "info-circle",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-inr",
-        "menu_icon_name":  "inr",
-        "menu_icon_name_alternate":  "CurrencyRupee"
-    },
-    {
-        "menu_icon_code":  "fa fa-instagram",
-        "menu_icon_name":  "instagram",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-institution",
-        "menu_icon_name":  "institution",
-        "menu_icon_name_alternate":  "AccountBalance"
-    },
-    {
-        "menu_icon_code":  "fa fa-internet-explorer",
-        "menu_icon_name":  "internet-explorer",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-intersex",
-        "menu_icon_name":  "intersex",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-ioxhost",
-        "menu_icon_name":  "ioxhost",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-italic",
-        "menu_icon_name":  "italic",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-joomla",
-        "menu_icon_name":  "joomla",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-jpy",
-        "menu_icon_name":  "jpy",
-        "menu_icon_name_alternate":  "CurrencyYen"
-    },
-    {
-        "menu_icon_code":  "fa fa-jsfiddle",
-        "menu_icon_name":  "jsfiddle",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-key",
-        "menu_icon_name":  "key",
-        "menu_icon_name_alternate":  "Key"
-    },
-    {
-        "menu_icon_code":  "fa fa-keyboard-o",
-        "menu_icon_name":  "keyboard-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-krw",
-        "menu_icon_name":  "krw",
-        "menu_icon_name_alternate":  "CurrencyWon"
-    },
-    {
-        "menu_icon_code":  "fa fa-language",
-        "menu_icon_name":  "language",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-laptop",
-        "menu_icon_name":  "laptop",
-        "menu_icon_name_alternate":  "Laptop"
-    },
-    {
-        "menu_icon_code":  "fa fa-lastfm",
-        "menu_icon_name":  "lastfm",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-lastfm-square",
-        "menu_icon_name":  "lastfm-square",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-leaf",
-        "menu_icon_name":  "leaf",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-leanpub",
-        "menu_icon_name":  "leanpub",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-legal",
-        "menu_icon_name":  "legal",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-lemon-o",
-        "menu_icon_name":  "lemon-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-level-down",
-        "menu_icon_name":  "level-down",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-level-up",
-        "menu_icon_name":  "level-up",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-life-bouy",
-        "menu_icon_name":  "life-bouy",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-life-buoy",
-        "menu_icon_name":  "life-buoy",
-        "menu_icon_name_alternate":  "Lifebuoy"
-    },
-    {
-        "menu_icon_code":  "fa fa-life-ring",
-        "menu_icon_name":  "life-ring",
-        "menu_icon_name_alternate":  "LifeRing"
-    },
-    {
-        "menu_icon_code":  "fa fa-life-saver",
-        "menu_icon_name":  "life-saver",
-        "menu_icon_name_alternate":  "LifeRing"
-    },
-    {
-        "menu_icon_code":  "fa fa-lightbulb-o",
-        "menu_icon_name":  "lightbulb-o",
-        "menu_icon_name_alternate":  "Lightbulb"
-    },
-    {
-        "menu_icon_code":  "fa fa-line-chart",
-        "menu_icon_name":  "line-chart",
-        "menu_icon_name_alternate":  "ShowChart"
-    },
-    {
-        "menu_icon_code":  "fa fa-link",
-        "menu_icon_name":  "link",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-linkedin",
-        "menu_icon_name":  "linkedin",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-linkedin-square",
-        "menu_icon_name":  "linkedin-square",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-linode",
-        "menu_icon_name":  "linode",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-linux",
-        "menu_icon_name":  "linux",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-list",
-        "menu_icon_name":  "list",
-        "menu_icon_name_alternate":  "List"
-    },
-    {
-        "menu_icon_code":  "fa fa-list-alt",
-        "menu_icon_name":  "list-alt",
-        "menu_icon_name_alternate":  "ListAlt"
-    },
-    {
-        "menu_icon_code":  "fa fa-list-ol",
-        "menu_icon_name":  "list-ol",
-        "menu_icon_name_alternate":  "FormatListNumbered"
-    },
-    {
-        "menu_icon_code":  "fa fa-list-ul",
-        "menu_icon_name":  "list-ul",
-        "menu_icon_name_alternate":  "FormatListBulleted"
-    },
-    {
-        "menu_icon_code":  "fa fa-location-arrow",
-        "menu_icon_name":  "location-arrow",
-        "menu_icon_name_alternate":  "LocationOn"
-    },
-    {
-        "menu_icon_code":  "fa fa-lock",
-        "menu_icon_name":  "lock",
-        "menu_icon_name_alternate":  "Lock"
-    },
-    {
-        "menu_icon_code":  "fa fa-long-arrow-down",
-        "menu_icon_name":  "long-arrow-down",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-long-arrow-left",
-        "menu_icon_name":  "long-arrow-left",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-long-arrow-right",
-        "menu_icon_name":  "long-arrow-right",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-long-arrow-up",
-        "menu_icon_name":  "long-arrow-up",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-low-vision",
-        "menu_icon_name":  "low-vision",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-magic",
-        "menu_icon_name":  "magic",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-magnet",
-        "menu_icon_name":  "magnet",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-mail-forward",
-        "menu_icon_name":  "mail-forward",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-mail-reply",
-        "menu_icon_name":  "mail-reply",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-mail-reply-all",
-        "menu_icon_name":  "mail-reply-all",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-male",
-        "menu_icon_name":  "male",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-map",
-        "menu_icon_name":  "map",
-        "menu_icon_name_alternate":  "Map"
-    },
-    {
-        "menu_icon_code":  "fa fa-map-marker",
-        "menu_icon_name":  "map-marker",
-        "menu_icon_name_alternate":  "LocationOn"
-    },
-    {
-        "menu_icon_code":  "fa fa-map-o",
-        "menu_icon_name":  "map-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-map-pin",
-        "menu_icon_name":  "map-pin",
-        "menu_icon_name_alternate":  "PinDrop"
-    },
-    {
-        "menu_icon_code":  "fa fa-map-signs",
-        "menu_icon_name":  "map-signs",
-        "menu_icon_name_alternate":  "Signpost"
-    },
-    {
-        "menu_icon_code":  "fa fa-mars",
-        "menu_icon_name":  "mars",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-mars-double",
-        "menu_icon_name":  "mars-double",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-mars-stroke",
-        "menu_icon_name":  "mars-stroke",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-mars-stroke-h",
-        "menu_icon_name":  "mars-stroke-h",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-mars-stroke-v",
-        "menu_icon_name":  "mars-stroke-v",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-maxcdn",
-        "menu_icon_name":  "maxcdn",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-meanpath",
-        "menu_icon_name":  "meanpath",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-medium",
-        "menu_icon_name":  "medium",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-medkit",
-        "menu_icon_name":  "medkit",
-        "menu_icon_name_alternate":  "MedicalServices"
-    },
-    {
-        "menu_icon_code":  "fa fa-meetup",
-        "menu_icon_name":  "meetup",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-meh-o",
-        "menu_icon_name":  "meh-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-mercury",
-        "menu_icon_name":  "mercury",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-microchip",
-        "menu_icon_name":  "microchip",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-microphone",
-        "menu_icon_name":  "microphone",
-        "menu_icon_name_alternate":  "Mic"
-    },
-    {
-        "menu_icon_code":  "fa fa-microphone-slash",
-        "menu_icon_name":  "microphone-slash",
-        "menu_icon_name_alternate":  "MicOff"
-    },
-    {
-        "menu_icon_code":  "fa fa-minus",
-        "menu_icon_name":  "minus",
-        "menu_icon_name_alternate":  "Remove"
-    },
-    {
-        "menu_icon_code":  "fa fa-minus-circle",
-        "menu_icon_name":  "minus-circle",
-        "menu_icon_name_alternate":  "RemoveCircle"
-    },
-    {
-        "menu_icon_code":  "fa fa-minus-square",
-        "menu_icon_name":  "minus-square",
-        "menu_icon_name_alternate":  "RemoveSquare"
-    },
-    {
-        "menu_icon_code":  "fa fa-minus-square-o",
-        "menu_icon_name":  "minus-square-o",
-        "menu_icon_name_alternate":  "RemoveSquare"
-    },
-    {
-        "menu_icon_code":  "fa fa-mixcloud",
-        "menu_icon_name":  "mixcloud",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-mobile",
-        "menu_icon_name":  "mobile",
-        "menu_icon_name_alternate":  "PhoneAndroid"
-    },
-    {
-        "menu_icon_code":  "fa fa-mobile-phone",
-        "menu_icon_name":  "mobile-phone",
-        "menu_icon_name_alternate":  "PhoneAndroid"
-    },
-    {
-        "menu_icon_code":  "fa fa-modx",
-        "menu_icon_name":  "modx",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-money",
-        "menu_icon_name":  "money",
-        "menu_icon_name_alternate":  "Money"
-    },
-    {
-        "menu_icon_code":  "fa fa-moon-o",
-        "menu_icon_name":  "moon-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-mortar-board",
-        "menu_icon_name":  "mortar-board",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-motorcycle",
-        "menu_icon_name":  "motorcycle",
-        "menu_icon_name_alternate":  "Motorcycle"
-    },
-    {
-        "menu_icon_code":  "fa fa-mouse-pointer",
-        "menu_icon_name":  "mouse-pointer",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-music",
-        "menu_icon_name":  "music",
-        "menu_icon_name_alternate":  "MusicNote"
-    },
-    {
-        "menu_icon_code":  "fa fa-navicon",
-        "menu_icon_name":  "navicon",
-        "menu_icon_name_alternate":  "Menu"
-    },
-    {
-        "menu_icon_code":  "fa fa-neuter",
-        "menu_icon_name":  "neuter",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-newspaper-o",
-        "menu_icon_name":  "newspaper-o",
-        "menu_icon_name_alternate":  "Newspaper"
-    },
-    {
-        "menu_icon_code":  "fa fa-object-group",
-        "menu_icon_name":  "object-group",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-object-ungroup",
-        "menu_icon_name":  "object-ungroup",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-odnoklassniki",
-        "menu_icon_name":  "odnoklassniki",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-odnoklassniki-square",
-        "menu_icon_name":  "odnoklassniki-square",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-opencart",
-        "menu_icon_name":  "opencart",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-openid",
-        "menu_icon_name":  "openid",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-opera",
-        "menu_icon_name":  "opera",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-optin-monster",
-        "menu_icon_name":  "optin-monster",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-outdent",
-        "menu_icon_name":  "outdent",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-pagelines",
-        "menu_icon_name":  "pagelines",
-        "menu_icon_name_alternate":  "MenuBook"
-    },
-    {
-        "menu_icon_code":  "fa fa-paint-brush",
-        "menu_icon_name":  "paint-brush",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-paper-plane",
-        "menu_icon_name":  "paper-plane",
-        "menu_icon_name_alternate":  "Send"
-    },
-    {
-        "menu_icon_code":  "fa fa-paper-plane-o",
-        "menu_icon_name":  "paper-plane-o",
-        "menu_icon_name_alternate":  "Send"
-    },
-    {
-        "menu_icon_code":  "fa fa-paperclip",
-        "menu_icon_name":  "paperclip",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-paragraph",
-        "menu_icon_name":  "paragraph",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-paste",
-        "menu_icon_name":  "paste",
-        "menu_icon_name_alternate":  "ContentPaste"
-    },
-    {
-        "menu_icon_code":  "fa fa-pause",
-        "menu_icon_name":  "pause",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-pause-circle",
-        "menu_icon_name":  "pause-circle",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-pause-circle-o",
-        "menu_icon_name":  "pause-circle-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-paw",
-        "menu_icon_name":  "paw",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-paypal",
-        "menu_icon_name":  "paypal",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-pencil",
-        "menu_icon_name":  "pencil",
-        "menu_icon_name_alternate":  "Edit"
-    },
-    {
-        "menu_icon_code":  "fa fa-pencil-square",
-        "menu_icon_name":  "pencil-square",
-        "menu_icon_name_alternate":  "EditSquare"
-    },
-    {
-        "menu_icon_code":  "fa fa-pencil-square-o",
-        "menu_icon_name":  "pencil-square-o",
-        "menu_icon_name_alternate":  "EditSquare"
-    },
-    {
-        "menu_icon_code":  "fa fa-percent",
-        "menu_icon_name":  "percent",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-phone",
-        "menu_icon_name":  "phone",
-        "menu_icon_name_alternate":  "Phone"
-    },
-    {
-        "menu_icon_code":  "fa fa-phone-square",
-        "menu_icon_name":  "phone-square",
-        "menu_icon_name_alternate":  "PhoneSquare"
-    },
-    {
-        "menu_icon_code":  "fa fa-photo",
-        "menu_icon_name":  "photo",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-picture-o",
-        "menu_icon_name":  "picture-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-pie-chart",
-        "menu_icon_name":  "pie-chart",
-        "menu_icon_name_alternate":  "PieChart"
-    },
-    {
-        "menu_icon_code":  "fa fa-pied-piper-alt",
-        "menu_icon_name":  "pied-piper-alt",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-pied-piper-pp",
-        "menu_icon_name":  "pied-piper-pp",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-pinterest",
-        "menu_icon_name":  "pinterest",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-pinterest-p",
-        "menu_icon_name":  "pinterest-p",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-pinterest-square",
-        "menu_icon_name":  "pinterest-square",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-plane",
-        "menu_icon_name":  "plane",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-play",
-        "menu_icon_name":  "play",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-play-circle",
-        "menu_icon_name":  "play-circle",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-play-circle-o",
-        "menu_icon_name":  "play-circle-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-plug",
-        "menu_icon_name":  "plug",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-plus",
-        "menu_icon_name":  "plus",
-        "menu_icon_name_alternate":  "Add"
-    },
-    {
-        "menu_icon_code":  "fa fa-plus-circle",
-        "menu_icon_name":  "plus-circle",
-        "menu_icon_name_alternate":  "AddCircle"
-    },
-    {
-        "menu_icon_code":  "fa fa-plus-square",
-        "menu_icon_name":  "plus-square",
-        "menu_icon_name_alternate":  "AddSquare"
-    },
-    {
-        "menu_icon_code":  "fa fa-plus-square-o",
-        "menu_icon_name":  "plus-square-o",
-        "menu_icon_name_alternate":  "AddSquare"
-    },
-    {
-        "menu_icon_code":  "fa fa-podcast",
-        "menu_icon_name":  "podcast",
-        "menu_icon_name_alternate":  "Podcasts"
-    },
-    {
-        "menu_icon_code":  "fa fa-power-off",
-        "menu_icon_name":  "power-off",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-print",
-        "menu_icon_name":  "print",
-        "menu_icon_name_alternate":  "Print"
-    },
-    {
-        "menu_icon_code":  "fa fa-product-hunt",
-        "menu_icon_name":  "product-hunt",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-puzzle-piece",
-        "menu_icon_name":  "puzzle-piece",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-qq",
-        "menu_icon_name":  "qq",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-qrcode",
-        "menu_icon_name":  "qrcode",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-question",
-        "menu_icon_name":  "question",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-question-circle",
-        "menu_icon_name":  "question-circle",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-question-circle-o",
-        "menu_icon_name":  "question-circle-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-quora",
-        "menu_icon_name":  "quora",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-quote-left",
-        "menu_icon_name":  "quote-left",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-quote-right",
-        "menu_icon_name":  "quote-right",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-ra",
-        "menu_icon_name":  "ra",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-random",
-        "menu_icon_name":  "random",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-ravelry",
-        "menu_icon_name":  "ravelry",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-rebel",
-        "menu_icon_name":  "rebel",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-recycle",
-        "menu_icon_name":  "recycle",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-reddit",
-        "menu_icon_name":  "reddit",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-reddit-alien",
-        "menu_icon_name":  "reddit-alien",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-reddit-square",
-        "menu_icon_name":  "reddit-square",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-refresh",
-        "menu_icon_name":  "refresh",
-        "menu_icon_name_alternate":  "Refresh"
-    },
-    {
-        "menu_icon_code":  "fa fa-registered",
-        "menu_icon_name":  "registered",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-remove",
-        "menu_icon_name":  "remove",
-        "menu_icon_name_alternate":  "Close"
-    },
-    {
-        "menu_icon_code":  "fa fa-renren",
-        "menu_icon_name":  "renren",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-reorder",
-        "menu_icon_name":  "reorder",
-        "menu_icon_name_alternate":  "Menu"
-    },
-    {
-        "menu_icon_code":  "fa fa-repeat",
-        "menu_icon_name":  "repeat",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-reply",
-        "menu_icon_name":  "reply",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-reply-all",
-        "menu_icon_name":  "reply-all",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-resistance",
-        "menu_icon_name":  "resistance",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-retweet",
-        "menu_icon_name":  "retweet",
-        "menu_icon_name_alternate":  "Repeat"
-    },
-    {
-        "menu_icon_code":  "fa fa-rmb",
-        "menu_icon_name":  "rmb",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-road",
-        "menu_icon_name":  "road",
-        "menu_icon_name_alternate":  "Road"
-    },
-    {
-        "menu_icon_code":  "fa fa-rocket",
-        "menu_icon_name":  "rocket",
-        "menu_icon_name_alternate":  "RocketLaunch"
-    },
-    {
-        "menu_icon_code":  "fa fa-rotate-left",
-        "menu_icon_name":  "rotate-left",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-rotate-right",
-        "menu_icon_name":  "rotate-right",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-rouble",
-        "menu_icon_name":  "rouble",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-rss",
-        "menu_icon_name":  "rss",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-rss-square",
-        "menu_icon_name":  "rss-square",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-rub",
-        "menu_icon_name":  "rub",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-ruble",
-        "menu_icon_name":  "ruble",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-rupee",
-        "menu_icon_name":  "rupee",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-s15",
-        "menu_icon_name":  "s15",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-safari",
-        "menu_icon_name":  "safari",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-save",
-        "menu_icon_name":  "save",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-scissors",
-        "menu_icon_name":  "scissors",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-scribd",
-        "menu_icon_name":  "scribd",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-search",
-        "menu_icon_name":  "search",
-        "menu_icon_name_alternate":  "Search"
-    },
-    {
-        "menu_icon_code":  "fa fa-search-minus",
-        "menu_icon_name":  "search-minus",
-        "menu_icon_name_alternate":  "SearchMinus"
-    },
-    {
-        "menu_icon_code":  "fa fa-search-plus",
-        "menu_icon_name":  "search-plus",
-        "menu_icon_name_alternate":  "SearchPlus"
-    },
-    {
-        "menu_icon_code":  "fa fa-sellsy",
-        "menu_icon_name":  "sellsy",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-send",
-        "menu_icon_name":  "send",
-        "menu_icon_name_alternate":  "Send"
-    },
-    {
-        "menu_icon_code":  "fa fa-send-o",
-        "menu_icon_name":  "send-o",
-        "menu_icon_name_alternate":  "Send"
-    },
-    {
-        "menu_icon_code":  "fa fa-server",
-        "menu_icon_name":  "server",
-        "menu_icon_name_alternate":  "Dns"
-    },
-    {
-        "menu_icon_code":  "fa fa-share",
-        "menu_icon_name":  "share",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-share-alt",
-        "menu_icon_name":  "share-alt",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-share-alt-square",
-        "menu_icon_name":  "share-alt-square",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-share-square",
-        "menu_icon_name":  "share-square",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-share-square-o",
-        "menu_icon_name":  "share-square-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-shekel",
-        "menu_icon_name":  "shekel",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-sheqel",
-        "menu_icon_name":  "sheqel",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-shield",
-        "menu_icon_name":  "shield",
-        "menu_icon_name_alternate":  "Shield"
-    },
-    {
-        "menu_icon_code":  "fa fa-ship",
-        "menu_icon_name":  "ship",
-        "menu_icon_name_alternate":  "Ship"
-    },
-    {
-        "menu_icon_code":  "fa fa-shirtsinbulk",
-        "menu_icon_name":  "shirtsinbulk",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-shopping-bag",
-        "menu_icon_name":  "shopping-bag",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-shopping-basket",
-        "menu_icon_name":  "shopping-basket",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-shopping-cart",
-        "menu_icon_name":  "shopping-cart",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-shower",
-        "menu_icon_name":  "shower",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-sign-in",
-        "menu_icon_name":  "sign-in",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-sign-language",
-        "menu_icon_name":  "sign-language",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-sign-out",
-        "menu_icon_name":  "sign-out",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-signal",
-        "menu_icon_name":  "signal",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-signing",
-        "menu_icon_name":  "signing",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-simplybuilt",
-        "menu_icon_name":  "simplybuilt",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-sitemap",
-        "menu_icon_name":  "sitemap",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-skyatlas",
-        "menu_icon_name":  "skyatlas",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-skype",
-        "menu_icon_name":  "skype",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-slack",
-        "menu_icon_name":  "slack",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-sliders",
-        "menu_icon_name":  "sliders",
-        "menu_icon_name_alternate":  "Tune"
-    },
-    {
-        "menu_icon_code":  "fa fa-slideshare",
-        "menu_icon_name":  "slideshare",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-smile-o",
-        "menu_icon_name":  "smile-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-snapchat",
-        "menu_icon_name":  "snapchat",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-snapchat-ghost",
-        "menu_icon_name":  "snapchat-ghost",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-snapchat-square",
-        "menu_icon_name":  "snapchat-square",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-snowflake-o",
-        "menu_icon_name":  "snowflake-o",
-        "menu_icon_name_alternate":  "AcUnit"
-    },
-    {
-        "menu_icon_code":  "fa fa-soccer-ball-o",
-        "menu_icon_name":  "soccer-ball-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-sort",
-        "menu_icon_name":  "sort",
-        "menu_icon_name_alternate":  "Sort"
-    },
-    {
-        "menu_icon_code":  "fa fa-sort-alpha-asc",
-        "menu_icon_name":  "sort-alpha-asc",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-sort-alpha-desc",
-        "menu_icon_name":  "sort-alpha-desc",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-sort-amount-asc",
-        "menu_icon_name":  "sort-amount-asc",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-sort-amount-desc",
-        "menu_icon_name":  "sort-amount-desc",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-sort-asc",
-        "menu_icon_name":  "sort-asc",
-        "menu_icon_name_alternate":  "SortAscending"
-    },
-    {
-        "menu_icon_code":  "fa fa-sort-desc",
-        "menu_icon_name":  "sort-desc",
-        "menu_icon_name_alternate":  "SortDescending"
-    },
-    {
-        "menu_icon_code":  "fa fa-sort-down",
-        "menu_icon_name":  "sort-down",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-sort-numeric-asc",
-        "menu_icon_name":  "sort-numeric-asc",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-sort-numeric-desc",
-        "menu_icon_name":  "sort-numeric-desc",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-sort-up",
-        "menu_icon_name":  "sort-up",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-soundcloud",
-        "menu_icon_name":  "soundcloud",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-space-shuttle",
-        "menu_icon_name":  "space-shuttle",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-spinner",
-        "menu_icon_name":  "spinner",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-spoon",
-        "menu_icon_name":  "spoon",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-spotify",
-        "menu_icon_name":  "spotify",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-square",
-        "menu_icon_name":  "square",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-square-o",
-        "menu_icon_name":  "square-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-stack-exchange",
-        "menu_icon_name":  "stack-exchange",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-stack-overflow",
-        "menu_icon_name":  "stack-overflow",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-star",
-        "menu_icon_name":  "star",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-star-half",
-        "menu_icon_name":  "star-half",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-star-half-empty",
-        "menu_icon_name":  "star-half-empty",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-star-half-full",
-        "menu_icon_name":  "star-half-full",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-star-half-o",
-        "menu_icon_name":  "star-half-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-star-o",
-        "menu_icon_name":  "star-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-steam",
-        "menu_icon_name":  "steam",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-steam-square",
-        "menu_icon_name":  "steam-square",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-step-backward",
-        "menu_icon_name":  "step-backward",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-step-forward",
-        "menu_icon_name":  "step-forward",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-stethoscope",
-        "menu_icon_name":  "stethoscope",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-sticky-note",
-        "menu_icon_name":  "sticky-note",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-sticky-note-o",
-        "menu_icon_name":  "sticky-note-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-stop",
-        "menu_icon_name":  "stop",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-stop-circle",
-        "menu_icon_name":  "stop-circle",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-stop-circle-o",
-        "menu_icon_name":  "stop-circle-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-street-view",
-        "menu_icon_name":  "street-view",
-        "menu_icon_name_alternate":  "Streetview"
-    },
-    {
-        "menu_icon_code":  "fa fa-strikethrough",
-        "menu_icon_name":  "strikethrough",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-stumbleupon",
-        "menu_icon_name":  "stumbleupon",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-stumbleupon-circle",
-        "menu_icon_name":  "stumbleupon-circle",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-subscript",
-        "menu_icon_name":  "subscript",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-subway",
-        "menu_icon_name":  "subway",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-suitcase",
-        "menu_icon_name":  "suitcase",
-        "menu_icon_name_alternate":  "Work"
-    },
-    {
-        "menu_icon_code":  "fa fa-sun-o",
-        "menu_icon_name":  "sun-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-superpowers",
-        "menu_icon_name":  "superpowers",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-superscript",
-        "menu_icon_name":  "superscript",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-support",
-        "menu_icon_name":  "support",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-table",
-        "menu_icon_name":  "table",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-tablet",
-        "menu_icon_name":  "tablet",
-        "menu_icon_name_alternate":  "Tablet"
-    },
-    {
-        "menu_icon_code":  "fa fa-tachometer",
-        "menu_icon_name":  "tachometer",
-        "menu_icon_name_alternate":  "Speed"
-    },
-    {
-        "menu_icon_code":  "fa fa-tag",
-        "menu_icon_name":  "tag",
-        "menu_icon_name_alternate":  "Label"
-    },
-    {
-        "menu_icon_code":  "fa fa-tags",
-        "menu_icon_name":  "tags",
-        "menu_icon_name_alternate":  "Labels"
-    },
-    {
-        "menu_icon_code":  "fa fa-tasks",
-        "menu_icon_name":  "tasks",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-taxi",
-        "menu_icon_name":  "taxi",
-        "menu_icon_name_alternate":  "Taxi"
-    },
-    {
-        "menu_icon_code":  "fa fa-telegram",
-        "menu_icon_name":  "telegram",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-television",
-        "menu_icon_name":  "television",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-tencent-weibo",
-        "menu_icon_name":  "tencent-weibo",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-terminal",
-        "menu_icon_name":  "terminal",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-text-height",
-        "menu_icon_name":  "text-height",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-text-width",
-        "menu_icon_name":  "text-width",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-th",
-        "menu_icon_name":  "th",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-th-large",
-        "menu_icon_name":  "th-large",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-th-list",
-        "menu_icon_name":  "th-list",
-        "menu_icon_name_alternate":  "Checklist"
-    },
-    {
-        "menu_icon_code":  "fa fa-themeisle",
-        "menu_icon_name":  "themeisle",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-thermometer",
-        "menu_icon_name":  "thermometer",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-thermometer-0",
-        "menu_icon_name":  "thermometer-0",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-thermometer-1",
-        "menu_icon_name":  "thermometer-1",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-thermometer-2",
-        "menu_icon_name":  "thermometer-2",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-thermometer-3",
-        "menu_icon_name":  "thermometer-3",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-thermometer-4",
-        "menu_icon_name":  "thermometer-4",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-thermometer-empty",
-        "menu_icon_name":  "thermometer-empty",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-thermometer-full",
-        "menu_icon_name":  "thermometer-full",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-thermometer-half",
-        "menu_icon_name":  "thermometer-half",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-thermometer-quarter",
-        "menu_icon_name":  "thermometer-quarter",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-thermometer-three-quarters",
-        "menu_icon_name":  "thermometer-three-quarters",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-thumb-tack",
-        "menu_icon_name":  "thumb-tack",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-thumbs-down",
-        "menu_icon_name":  "thumbs-down",
-        "menu_icon_name_alternate":  "ThumbDown"
-    },
-    {
-        "menu_icon_code":  "fa fa-thumbs-o-down",
-        "menu_icon_name":  "thumbs-o-down",
-        "menu_icon_name_alternate":  "ThumbDown"
-    },
-    {
-        "menu_icon_code":  "fa fa-thumbs-o-up",
-        "menu_icon_name":  "thumbs-o-up",
-        "menu_icon_name_alternate":  "ThumbUp"
-    },
-    {
-        "menu_icon_code":  "fa fa-thumbs-up",
-        "menu_icon_name":  "thumbs-up",
-        "menu_icon_name_alternate":  "ThumbUp"
-    },
-    {
-        "menu_icon_code":  "fa fa-ticket",
-        "menu_icon_name":  "ticket",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-times",
-        "menu_icon_name":  "times",
-        "menu_icon_name_alternate":  "Close"
-    },
-    {
-        "menu_icon_code":  "fa fa-times-circle",
-        "menu_icon_name":  "times-circle",
-        "menu_icon_name_alternate":  "CloseCircle"
-    },
-    {
-        "menu_icon_code":  "fa fa-times-circle-o",
-        "menu_icon_name":  "times-circle-o",
-        "menu_icon_name_alternate":  "CloseCircle"
-    },
-    {
-        "menu_icon_code":  "fa fa-times-rectangle",
-        "menu_icon_name":  "times-rectangle",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-times-rectangle-o",
-        "menu_icon_name":  "times-rectangle-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-tint",
-        "menu_icon_name":  "tint",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-toggle-down",
-        "menu_icon_name":  "toggle-down",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-toggle-left",
-        "menu_icon_name":  "toggle-left",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-toggle-off",
-        "menu_icon_name":  "toggle-off",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-toggle-on",
-        "menu_icon_name":  "toggle-on",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-toggle-right",
-        "menu_icon_name":  "toggle-right",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-toggle-up",
-        "menu_icon_name":  "toggle-up",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-trademark",
-        "menu_icon_name":  "trademark",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-train",
-        "menu_icon_name":  "train",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-transgender",
-        "menu_icon_name":  "transgender",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-transgender-alt",
-        "menu_icon_name":  "transgender-alt",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-trash",
-        "menu_icon_name":  "trash",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-trash-o",
-        "menu_icon_name":  "trash-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-tree",
-        "menu_icon_name":  "tree",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-trello",
-        "menu_icon_name":  "trello",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-tripadvisor",
-        "menu_icon_name":  "tripadvisor",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-trophy",
-        "menu_icon_name":  "trophy",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-truck",
-        "menu_icon_name":  "truck",
-        "menu_icon_name_alternate":  "LocalShipping"
-    },
-    {
-        "menu_icon_code":  "fa fa-try",
-        "menu_icon_name":  "try",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-tty",
-        "menu_icon_name":  "tty",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-tumblr",
-        "menu_icon_name":  "tumblr",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-tumblr-square",
-        "menu_icon_name":  "tumblr-square",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-turkish-lira",
-        "menu_icon_name":  "turkish-lira",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-tv",
-        "menu_icon_name":  "tv",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-twitch",
-        "menu_icon_name":  "twitch",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-twitter",
-        "menu_icon_name":  "twitter",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-twitter-square",
-        "menu_icon_name":  "twitter-square",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-umbrella",
-        "menu_icon_name":  "umbrella",
-        "menu_icon_name_alternate":  "Umbrella"
-    },
-    {
-        "menu_icon_code":  "fa fa-underline",
-        "menu_icon_name":  "underline",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-undo",
-        "menu_icon_name":  "undo",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-universal-access",
-        "menu_icon_name":  "universal-access",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-university",
-        "menu_icon_name":  "university",
-        "menu_icon_name_alternate":  "AccountBalance"
-    },
-    {
-        "menu_icon_code":  "fa fa-unlink",
-        "menu_icon_name":  "unlink",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-unlock",
-        "menu_icon_name":  "unlock",
-        "menu_icon_name_alternate":  "Unlock"
-    },
-    {
-        "menu_icon_code":  "fa fa-unlock-alt",
-        "menu_icon_name":  "unlock-alt",
-        "menu_icon_name_alternate":  "UnlockAlternative"
-    },
-    {
-        "menu_icon_code":  "fa fa-unsorted",
-        "menu_icon_name":  "unsorted",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-upload",
-        "menu_icon_name":  "upload",
-        "menu_icon_name_alternate":  "Upload"
-    },
-    {
-        "menu_icon_code":  "fa fa-usb",
-        "menu_icon_name":  "usb",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-usd",
-        "menu_icon_name":  "usd",
-        "menu_icon_name_alternate":  "AttachMoney"
-    },
-    {
-        "menu_icon_code":  "fa fa-user",
-        "menu_icon_name":  "user",
-        "menu_icon_name_alternate":  "Person"
-    },
-    {
-        "menu_icon_code":  "fa fa-user-circle",
-        "menu_icon_name":  "user-circle",
-        "menu_icon_name_alternate":  "EmojiPeople"
-    },
-    {
-        "menu_icon_code":  "fa fa-user-circle-o",
-        "menu_icon_name":  "user-circle-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-user-md",
-        "menu_icon_name":  "user-md",
-        "menu_icon_name_alternate":  "MedicalServices"
-    },
-    {
-        "menu_icon_code":  "fa fa-user-o",
-        "menu_icon_name":  "user-o",
-        "menu_icon_name_alternate":  "Hail"
-    },
-    {
-        "menu_icon_code":  "fa fa-user-plus",
-        "menu_icon_name":  "user-plus",
-        "menu_icon_name_alternate":  "PersonAdd"
-    },
-    {
-        "menu_icon_code":  "fa fa-user-secret",
-        "menu_icon_name":  "user-secret",
-        "menu_icon_name_alternate":  "Shield"
-    },
-    {
-        "menu_icon_code":  "fa fa-user-times",
-        "menu_icon_name":  "user-times",
-        "menu_icon_name_alternate":  "PersonRemove"
-    },
-    {
-        "menu_icon_code":  "fa fa-users",
-        "menu_icon_name":  "users",
-        "menu_icon_name_alternate":  "People"
-    },
-    {
-        "menu_icon_code":  "fa fa-vcard",
-        "menu_icon_name":  "vcard",
-        "menu_icon_name_alternate":  "ContactMail"
-    },
-    {
-        "menu_icon_code":  "fa fa-vcard-o",
-        "menu_icon_name":  "vcard-o",
-        "menu_icon_name_alternate":  "ContactMail"
-    },
-    {
-        "menu_icon_code":  "fa fa-venus",
-        "menu_icon_name":  "venus",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-venus-double",
-        "menu_icon_name":  "venus-double",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-venus-mars",
-        "menu_icon_name":  "venus-mars",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-viacoin",
-        "menu_icon_name":  "viacoin",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-viadeo",
-        "menu_icon_name":  "viadeo",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-viadeo-square",
-        "menu_icon_name":  "viadeo-square",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-video-camera",
-        "menu_icon_name":  "video-camera",
-        "menu_icon_name_alternate":  "Videocam"
-    },
-    {
-        "menu_icon_code":  "fa fa-vimeo",
-        "menu_icon_name":  "vimeo",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-vimeo-square",
-        "menu_icon_name":  "vimeo-square",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-vine",
-        "menu_icon_name":  "vine",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-vk",
-        "menu_icon_name":  "vk",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-volume-control-phone",
-        "menu_icon_name":  "volume-control-phone",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-volume-down",
-        "menu_icon_name":  "volume-down",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-volume-off",
-        "menu_icon_name":  "volume-off",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-volume-up",
-        "menu_icon_name":  "volume-up",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-warning",
-        "menu_icon_name":  "warning",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-wechat",
-        "menu_icon_name":  "wechat",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-weibo",
-        "menu_icon_name":  "weibo",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-weixin",
-        "menu_icon_name":  "weixin",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-whatsapp",
-        "menu_icon_name":  "whatsapp",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-wheelchair",
-        "menu_icon_name":  "wheelchair",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-wheelchair-alt",
-        "menu_icon_name":  "wheelchair-alt",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-wifi",
-        "menu_icon_name":  "wifi",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-wikipedia-w",
-        "menu_icon_name":  "wikipedia-w",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-window-close",
-        "menu_icon_name":  "window-close",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-window-close-o",
-        "menu_icon_name":  "window-close-o",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-window-maximize",
-        "menu_icon_name":  "window-maximize",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-window-minimize",
-        "menu_icon_name":  "window-minimize",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-window-restore",
-        "menu_icon_name":  "window-restore",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-windows",
-        "menu_icon_name":  "windows",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-won",
-        "menu_icon_name":  "won",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-wordpress",
-        "menu_icon_name":  "wordpress",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-wpbeginner",
-        "menu_icon_name":  "wpbeginner",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-wpexplorer",
-        "menu_icon_name":  "wpexplorer",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-wpforms",
-        "menu_icon_name":  "wpforms",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-wrench",
-        "menu_icon_name":  "wrench",
-        "menu_icon_name_alternate":  "Settings"
-    },
-    {
-        "menu_icon_code":  "fa fa-xing",
-        "menu_icon_name":  "xing",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-xing-square",
-        "menu_icon_name":  "xing-square",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-y-combinator",
-        "menu_icon_name":  "y-combinator",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-y-combinator-square",
-        "menu_icon_name":  "y-combinator-square",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-yahoo",
-        "menu_icon_name":  "yahoo",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-yc",
-        "menu_icon_name":  "yc",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-yc-square",
-        "menu_icon_name":  "yc-square",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-yelp",
-        "menu_icon_name":  "yelp",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-yen",
-        "menu_icon_name":  "yen",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-yoast",
-        "menu_icon_name":  "yoast",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-youtube",
-        "menu_icon_name":  "youtube",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-youtube-play",
-        "menu_icon_name":  "youtube-play",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "fa fa-youtube-square",
-        "menu_icon_name":  "youtube-square",
-        "menu_icon_name_alternate":  "Circle"
-    },
-    {
-        "menu_icon_code":  "vl_bond",
-        "menu_icon_name":  "vl bond",
-        "menu_icon_name_alternate":  "AttachMoney"
-    },
-    {
-        "menu_icon_code":  "vl_form",
-        "menu_icon_name":  "vl form",
-        "menu_icon_name_alternate":  "Description"
-    },
-    {
-        "menu_icon_code":  "vl_star",
-        "menu_icon_name":  "vl star",
-        "menu_icon_name_alternate":  "Star"
-    }
+[
+  {
+    "menu_icon_code": "AcUnit",
+    "menu_icon_name": "AC Unit",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "AccessTime",
+    "menu_icon_name": "Access Time",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "AccountBalance",
+    "menu_icon_name": "Account Balance",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Add",
+    "menu_icon_name": "Add",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "AddBox",
+    "menu_icon_name": "Add Box",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "AddCircle",
+    "menu_icon_name": "Add Circle",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "AddModerator",
+    "menu_icon_name": "Add Moderator",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "AddRoad",
+    "menu_icon_name": "Add Road",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "AdminPanelSettings",
+    "menu_icon_name": "Admin Panel Settings",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Anchor",
+    "menu_icon_name": "Anchor",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "AreaChart",
+    "menu_icon_name": "Area Chart",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "ArrowBack",
+    "menu_icon_name": "Arrow Back",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "ArrowDownward",
+    "menu_icon_name": "Arrow Downward",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "ArrowDropDown",
+    "menu_icon_name": "Arrow Drop Down",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "ArrowDropUp",
+    "menu_icon_name": "Arrow Drop Up",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "ArrowForward",
+    "menu_icon_name": "Arrow Forward",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "ArrowLeft",
+    "menu_icon_name": "Arrow Left",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "ArrowRight",
+    "menu_icon_name": "Arrow Right",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "ArrowUpward",
+    "menu_icon_name": "Arrow Upward",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Assignment",
+    "menu_icon_name": "Assignment",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "AttachMoney",
+    "menu_icon_name": "Attach Money",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "AudioFile",
+    "menu_icon_name": "Audio File",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Badge",
+    "menu_icon_name": "Badge",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "BarChart",
+    "menu_icon_name": "Bar Chart",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Bolt",
+    "menu_icon_name": "Bolt",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Book",
+    "menu_icon_name": "Book",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Bookmark",
+    "menu_icon_name": "Bookmark",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Business",
+    "menu_icon_name": "Business",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Calculate",
+    "menu_icon_name": "Calculate",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "CalendarToday",
+    "menu_icon_name": "Calendar Today",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Camera",
+    "menu_icon_name": "Camera",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Cancel",
+    "menu_icon_name": "Cancel",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Check",
+    "menu_icon_name": "Check",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "CheckBox",
+    "menu_icon_name": "Check Box",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "CheckCircle",
+    "menu_icon_name": "Check Circle",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Checklist",
+    "menu_icon_name": "Checklist",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "ChevronLeft",
+    "menu_icon_name": "Chevron Left",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "ChevronRight",
+    "menu_icon_name": "Chevron Right",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Circle",
+    "menu_icon_name": "Circle",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Close",
+    "menu_icon_name": "Close",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Cloud",
+    "menu_icon_name": "Cloud",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "CloudDownload",
+    "menu_icon_name": "Cloud Download",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "CloudUpload",
+    "menu_icon_name": "Cloud Upload",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Coffee",
+    "menu_icon_name": "Coffee",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Comment",
+    "menu_icon_name": "Comment",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "ContactMail",
+    "menu_icon_name": "Contact Mail",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Contacts",
+    "menu_icon_name": "Contacts",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "ContentPaste",
+    "menu_icon_name": "Content Paste",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "CurrencyBitcoin",
+    "menu_icon_name": "Currency Bitcoin",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "CurrencyPound",
+    "menu_icon_name": "Currency Pound",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "CurrencyRupee",
+    "menu_icon_name": "Currency Rupee",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "CurrencyYen",
+    "menu_icon_name": "Currency Yen",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "CurrencyYuan",
+    "menu_icon_name": "Currency Yuan",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Dashboard",
+    "menu_icon_name": "Dashboard",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Description",
+    "menu_icon_name": "Description",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "DesktopWindows",
+    "menu_icon_name": "Desktop Windows",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "DirectionsBike",
+    "menu_icon_name": "Directions Bike",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "DirectionsBoat",
+    "menu_icon_name": "Directions Boat",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "DirectionsBus",
+    "menu_icon_name": "Directions Bus",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "DirectionsCar",
+    "menu_icon_name": "Directions Car",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Dns",
+    "menu_icon_name": "DNS",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Download",
+    "menu_icon_name": "Download",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Edit",
+    "menu_icon_name": "Edit",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Email",
+    "menu_icon_name": "Email",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "EmojiPeople",
+    "menu_icon_name": "Emoji People",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Euro",
+    "menu_icon_name": "Euro",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "ExpandLess",
+    "menu_icon_name": "Expand Less",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "ExpandMore",
+    "menu_icon_name": "Expand More",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Explore",
+    "menu_icon_name": "Explore",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "FileCopy",
+    "menu_icon_name": "File Copy",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "FilterList",
+    "menu_icon_name": "Filter List",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Flag",
+    "menu_icon_name": "Flag",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Folder",
+    "menu_icon_name": "Folder",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "FolderOpen",
+    "menu_icon_name": "Folder Open",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "FormatListBulleted",
+    "menu_icon_name": "Format List Bulleted",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "FormatListNumbered",
+    "menu_icon_name": "Format List Numbered",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Forum",
+    "menu_icon_name": "Forum",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "GppGood",
+    "menu_icon_name": "GPP Good",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "GroupWork",
+    "menu_icon_name": "Group Work",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Groups",
+    "menu_icon_name": "Groups",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Hail",
+    "menu_icon_name": "Hail",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Headphones",
+    "menu_icon_name": "Headphones",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Home",
+    "menu_icon_name": "Home",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "IndeterminateCheckBox",
+    "menu_icon_name": "Indeterminate Check Box",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "InsertComment",
+    "menu_icon_name": "Insert Comment",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "InsertDriveFile",
+    "menu_icon_name": "Insert Drive File",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Key",
+    "menu_icon_name": "Key",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Label",
+    "menu_icon_name": "Label",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Laptop",
+    "menu_icon_name": "Laptop",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Lightbulb",
+    "menu_icon_name": "Lightbulb",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "List",
+    "menu_icon_name": "List",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "ListAlt",
+    "menu_icon_name": "List Alt",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "LocalDrink",
+    "menu_icon_name": "Local Drink",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "LocalShipping",
+    "menu_icon_name": "Local Shipping",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "LocalTaxi",
+    "menu_icon_name": "Local Taxi",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "LocationOn",
+    "menu_icon_name": "Location On",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Lock",
+    "menu_icon_name": "Lock",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "LockOpen",
+    "menu_icon_name": "Lock Open",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Mail",
+    "menu_icon_name": "Mail",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Map",
+    "menu_icon_name": "Map",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "MarkEmailRead",
+    "menu_icon_name": "Mark Email Read",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "MedicalServices",
+    "menu_icon_name": "Medical Services",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Menu",
+    "menu_icon_name": "Menu",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "MenuBook",
+    "menu_icon_name": "Menu Book",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Mic",
+    "menu_icon_name": "Mic",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "MicOff",
+    "menu_icon_name": "Mic Off",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Money",
+    "menu_icon_name": "Money",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "MoreHoriz",
+    "menu_icon_name": "More Horiz",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "MoreVert",
+    "menu_icon_name": "More Vert",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "MusicNote",
+    "menu_icon_name": "Music Note",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Newspaper",
+    "menu_icon_name": "Newspaper",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Notifications",
+    "menu_icon_name": "Notifications",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "NotificationsOff",
+    "menu_icon_name": "Notifications Off",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Paid",
+    "menu_icon_name": "Paid",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Payment",
+    "menu_icon_name": "Payment",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "People",
+    "menu_icon_name": "People",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Person",
+    "menu_icon_name": "Person",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "PersonAdd",
+    "menu_icon_name": "Person Add",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "PersonRemove",
+    "menu_icon_name": "Person Remove",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Phone",
+    "menu_icon_name": "Phone",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "PhoneAndroid",
+    "menu_icon_name": "Phone Android",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "PhotoCamera",
+    "menu_icon_name": "Photo Camera",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "PictureAsPdf",
+    "menu_icon_name": "Picture As PDF",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "PieChart",
+    "menu_icon_name": "Pie Chart",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "PinDrop",
+    "menu_icon_name": "Pin Drop",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Podcasts",
+    "menu_icon_name": "Podcasts",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Print",
+    "menu_icon_name": "Print",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Refresh",
+    "menu_icon_name": "Refresh",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Remove",
+    "menu_icon_name": "Remove",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "RemoveCircle",
+    "menu_icon_name": "Remove Circle",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Repeat",
+    "menu_icon_name": "Repeat",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Report",
+    "menu_icon_name": "Report",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Restaurant",
+    "menu_icon_name": "Restaurant",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "RocketLaunch",
+    "menu_icon_name": "Rocket Launch",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Science",
+    "menu_icon_name": "Science",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Search",
+    "menu_icon_name": "Search",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Send",
+    "menu_icon_name": "Send",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Settings",
+    "menu_icon_name": "Settings",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "SettingsApplications",
+    "menu_icon_name": "Settings Applications",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "SettingsSystemDaydream",
+    "menu_icon_name": "Settings System Daydream",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Shield",
+    "menu_icon_name": "Shield",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "ShowChart",
+    "menu_icon_name": "Show Chart",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Signpost",
+    "menu_icon_name": "Signpost",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Sort",
+    "menu_icon_name": "Sort",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Speed",
+    "menu_icon_name": "Speed",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "SportsBar",
+    "menu_icon_name": "Sports Bar",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "SportsScore",
+    "menu_icon_name": "Sports Score",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Star",
+    "menu_icon_name": "Star",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Storage",
+    "menu_icon_name": "Storage",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Streetview",
+    "menu_icon_name": "Street View",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "SupervisedUserCircle",
+    "menu_icon_name": "Supervised User Circle",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Support",
+    "menu_icon_name": "Support",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "SwapHoriz",
+    "menu_icon_name": "Swap Horiz",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "SystemUpdateAlt",
+    "menu_icon_name": "System Update Alt",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Tablet",
+    "menu_icon_name": "Tablet",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "TheaterComedy",
+    "menu_icon_name": "Theater Comedy",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "ThumbDown",
+    "menu_icon_name": "Thumb Down",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "ThumbUp",
+    "menu_icon_name": "Thumb Up",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Tune",
+    "menu_icon_name": "Tune",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "TwoWheeler",
+    "menu_icon_name": "Two Wheeler",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Umbrella",
+    "menu_icon_name": "Umbrella",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Upload",
+    "menu_icon_name": "Upload",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "VideoFile",
+    "menu_icon_name": "Video File",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Videocam",
+    "menu_icon_name": "Video Cam",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "Work",
+    "menu_icon_name": "Work",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "ZoomIn",
+    "menu_icon_name": "Zoom In",
+    "menu_icon_name_alternate": null
+  },
+  {
+    "menu_icon_code": "ZoomOut",
+    "menu_icon_name": "Zoom Out",
+    "menu_icon_name_alternate": null
+  }
 ]

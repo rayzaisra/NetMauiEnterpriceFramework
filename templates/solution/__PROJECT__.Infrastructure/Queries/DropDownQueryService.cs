@@ -38,7 +38,7 @@ public class DropDownQueryService : IDropDownService
             .Select(e => new DropdownItemDto
             {
                 Value = e.menu_icon_code,
-                Text = e.menu_icon_name_alternate ?? e.menu_icon_name ?? e.menu_icon_code,
+                Text = e.menu_icon_name ?? e.menu_icon_code,
             })
             .ToListAsync();
 

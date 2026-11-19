@@ -38,7 +38,7 @@ public class MenuQueryService : IMenuQueryService
                         ParentName = p != null ? p.menu_name : null,
                         MenuIcon = m.menu_icon,
                         MenuIconName = i != null
-                            ? (i.menu_icon_name_alternate ?? i.menu_icon_name ?? m.menu_icon)
+                            ? (i.menu_icon_name ?? m.menu_icon)
                             : m.menu_icon,
                         OrderSeq = m.order_seq,
                         ComponentType = m.component_type,
@@ -136,25 +136,20 @@ public class MenuQueryService : IMenuQueryService
             return new List<MenuItemDto>();
         }
 
-        var menus = await (from m in _context.um_menu
-                           join i in _context.enum_menu_icon
-                               on m.menu_icon equals i.menu_icon_code into icons
-                           from i in icons.DefaultIfEmpty()
-                           where menuIds.Contains(m.id) && m.isActive != false && m.isDeleted != true
-                           select new MenuItemDto
-                           {
-                               Id = m.id,
-                               MenuUnique = m.menu_unique,
-                               MenuName = m.menu_name ?? string.Empty,
-                               MenuUrl = m.menu_url,
-                               ParentLevelId = m.parent_level_id,
-                               MenuUniqueParent = m.menu_unique_parent,
-                               MenuIcon = i != null
-                                   ? (i.menu_icon_name_alternate ?? i.menu_icon_name ?? "Circle")
-                                   : "Circle",
-                               OrderSeq = m.order_seq,
-                               ComponentType = m.component_type,
-                           })
+        var menus = await _context.um_menu
+            .Where(m => menuIds.Contains(m.id) && m.isActive != false && m.isDeleted != true)
+            .Select(m => new MenuItemDto
+            {
+                Id = m.id,
+                MenuUnique = m.menu_unique,
+                MenuName = m.menu_name ?? string.Empty,
+                MenuUrl = m.menu_url,
+                ParentLevelId = m.parent_level_id,
+                MenuUniqueParent = m.menu_unique_parent,
+                MenuIcon = string.IsNullOrWhiteSpace(m.menu_icon) ? "Circle" : m.menu_icon,
+                OrderSeq = m.order_seq,
+                ComponentType = m.component_type,
+            })
             .ToListAsync(cancellationToken);
 
         var lookup = menus.ToLookup(m => m.MenuUniqueParent ?? string.Empty);

@@ -7,53 +7,54 @@ namespace __PROJECT__.Infrastructure.Data;
 
 public static class MenuSeeder
 {
-    private static readonly (string Code, string Name, string Alternate)[] Icons =
+    private static readonly (string Code, string Name)[] Icons =
     {
-        ("fa fa-gear", "gear", "Settings"),
-        ("fa fa-user-circle", "user-circle", "EmojiPeople"),
-        ("fa fa-group", "group", "Groups"),
-        ("fa fa-user-o", "user-o", "Hail"),
-        ("fa fa-pagelines", "pagelines", "MenuBook"),
-        ("fa fa-cc-jcb", "cc-jcb", "AdminPanelSettings"),
-        ("fa fa-list-ul", "list-ul", "FormatListBulleted"),
-        ("fa fa-th-list", "th-list", "Checklist"),
-        ("fa fa-cc-mastercard", "cc-mastercard", "AddModerator"),
-        ("fa fa-cc-paypal", "cc-paypal", "GppGood"),
-        ("fa fa-flag", "flag", "Flag"),
-        ("fa fa-map-pin", "map-pin", "PinDrop"),
-        ("fa fa-envelope", "envelope", "Email"),
+        ("Settings", "Settings"),
+        ("EmojiPeople", "Emoji People"),
+        ("Groups", "Groups"),
+        ("Hail", "Hail"),
+        ("MenuBook", "Menu Book"),
+        ("AdminPanelSettings", "Admin Panel Settings"),
+        ("FormatListBulleted", "Format List Bulleted"),
+        ("Checklist", "Checklist"),
+        ("AddModerator", "Add Moderator"),
+        ("GppGood", "GPP Good"),
+        ("Flag", "Flag"),
+        ("PinDrop", "Pin Drop"),
+        ("Science", "Science"),
+        ("Email", "Email"),
     };
 
     private static readonly (string Unique, string Name, string? Url, string Level, string Parent, string Icon, int Order, string? Component)[] Menus =
     {
-        ("MNT", "Setting", null, "A", "", "fa fa-gear", 1, null),
+        ("MNT", "Setting", null, "A", "", "Settings", 1, null),
 
-        ("MNT-USER", "User Maintenance", null, "B", "MNT", "fa fa-user-circle", 1, null),
-        ("MNT-GRP", "Group Maintenance", null, "B", "MNT", "fa fa-group", 2, null),
-        ("MNT-ROLE", "Role Maintenance", null, "B", "MNT", "fa fa-user-o", 3, null),
-        ("MNT-MENU", "Menu Maintenance", null, "B", "MNT", "fa fa-pagelines", 4, null),
-        ("MNT-PARAM", "Parameter Maintenance", null, "B", "MNT", "fa fa-cc-jcb", 5, null),
-        ("MNT-DEMO", "Demo Screens", null, "B", "MNT", "fa fa-flask", 6, null),
+        ("MNT-USER", "User Maintenance", null, "B", "MNT", "EmojiPeople", 1, null),
+        ("MNT-GRP", "Group Maintenance", null, "B", "MNT", "Groups", 2, null),
+        ("MNT-ROLE", "Role Maintenance", null, "B", "MNT", "Hail", 3, null),
+        ("MNT-MENU", "Menu Maintenance", null, "B", "MNT", "MenuBook", 4, null),
+        ("MNT-PARAM", "Parameter Maintenance", null, "B", "MNT", "AdminPanelSettings", 5, null),
+        ("MNT-DEMO", "Demo Screens", null, "B", "MNT", "Science", 6, null),
 
-        ("MNT-USER-LST", "List", "/dashboard/maintenance/user-list", "D", "MNT-USER", "fa fa-list-ul", 1, "__PROJECT__.Shared.Pages.Maintenance.UserList, __PROJECT__.Shared"),
-        ("MNT-USER-APR", "Approval", "/dashboard/maintenance/user-approval", "D", "MNT-USER", "fa fa-th-list", 2, "__PROJECT__.Shared.Pages.Maintenance.UserApproval, __PROJECT__.Shared"),
-        ("MNT-USER-FLAG", "User Flag", "/dashboard/maintenance/user-flag", "D", "MNT-USER", "fa fa-flag", 3, "__PROJECT__.Shared.Pages.Maintenance.UserFlag, __PROJECT__.Shared"),
+        ("MNT-USER-LST", "List", "/dashboard/maintenance/user-list", "D", "MNT-USER", "FormatListBulleted", 1, "__PROJECT__.Shared.Pages.Maintenance.UserList, __PROJECT__.Shared"),
+        ("MNT-USER-APR", "Approval", "/dashboard/maintenance/user-approval", "D", "MNT-USER", "Checklist", 2, "__PROJECT__.Shared.Pages.Maintenance.UserApproval, __PROJECT__.Shared"),
+        ("MNT-USER-FLAG", "User Flag", "/dashboard/maintenance/user-flag", "D", "MNT-USER", "Flag", 3, "__PROJECT__.Shared.Pages.Maintenance.UserFlag, __PROJECT__.Shared"),
 
-        ("MNT-GRP-LST", "List", "/dashboard/maintenance/group-list", "D", "MNT-GRP", "fa fa-list-ul", 1, "__PROJECT__.Shared.Pages.Maintenance.GroupList, __PROJECT__.Shared"),
-        ("MNT-GRP-APR", "Approval", "/dashboard/maintenance/group-approval", "D", "MNT-GRP", "fa fa-th-list", 2, "__PROJECT__.Shared.Pages.Maintenance.GroupApproval, __PROJECT__.Shared"),
+        ("MNT-GRP-LST", "List", "/dashboard/maintenance/group-list", "D", "MNT-GRP", "FormatListBulleted", 1, "__PROJECT__.Shared.Pages.Maintenance.GroupList, __PROJECT__.Shared"),
+        ("MNT-GRP-APR", "Approval", "/dashboard/maintenance/group-approval", "D", "MNT-GRP", "Checklist", 2, "__PROJECT__.Shared.Pages.Maintenance.GroupApproval, __PROJECT__.Shared"),
 
-        ("MNT-ROLE-LST", "List", "/dashboard/maintenance/role-list", "D", "MNT-ROLE", "fa fa-list-ul", 1, "__PROJECT__.Shared.Pages.Maintenance.RoleList, __PROJECT__.Shared"),
-        ("MNT-ROLE-APR", "Approval", "/dashboard/maintenance/role-approval", "D", "MNT-ROLE", "fa fa-th-list", 2, "__PROJECT__.Shared.Pages.Maintenance.RoleApproval, __PROJECT__.Shared"),
+        ("MNT-ROLE-LST", "List", "/dashboard/maintenance/role-list", "D", "MNT-ROLE", "FormatListBulleted", 1, "__PROJECT__.Shared.Pages.Maintenance.RoleList, __PROJECT__.Shared"),
+        ("MNT-ROLE-APR", "Approval", "/dashboard/maintenance/role-approval", "D", "MNT-ROLE", "Checklist", 2, "__PROJECT__.Shared.Pages.Maintenance.RoleApproval, __PROJECT__.Shared"),
 
-        ("MNT-MENU-LST", "List", "/dashboard/maintenance/menu-list", "D", "MNT-MENU", "fa fa-list-ul", 1, "__PROJECT__.Shared.Pages.Maintenance.MenuList, __PROJECT__.Shared"),
-        ("MNT-MENU-APR", "Approval", "/dashboard/maintenance/menu-approval", "D", "MNT-MENU", "fa fa-th-list", 2, "__PROJECT__.Shared.Pages.Maintenance.MenuApproval, __PROJECT__.Shared"),
-        ("MNT-MENU-MAP", "Mapping Menu", "/dashboard/maintenance/menu-map", "D", "MNT-MENU", "fa fa-map-pin", 3, "__PROJECT__.Shared.Pages.Maintenance.MenuMap, __PROJECT__.Shared"),
+        ("MNT-MENU-LST", "List", "/dashboard/maintenance/menu-list", "D", "MNT-MENU", "FormatListBulleted", 1, "__PROJECT__.Shared.Pages.Maintenance.MenuList, __PROJECT__.Shared"),
+        ("MNT-MENU-APR", "Approval", "/dashboard/maintenance/menu-approval", "D", "MNT-MENU", "Checklist", 2, "__PROJECT__.Shared.Pages.Maintenance.MenuApproval, __PROJECT__.Shared"),
+        ("MNT-MENU-MAP", "Mapping Menu", "/dashboard/maintenance/menu-map", "D", "MNT-MENU", "PinDrop", 3, "__PROJECT__.Shared.Pages.Maintenance.MenuMap, __PROJECT__.Shared"),
 
-        ("MNT-PARAM-MKR", "Maker", "/dashboard/maintenance/parameter-system/maker", "D", "MNT-PARAM", "fa fa-cc-mastercard", 1, "__PROJECT__.Shared.Pages.Maintenance.Parameter.ParameterSystem, __PROJECT__.Shared"),
-        ("MNT-PARAM-APR", "Approval", "/dashboard/maintenance/parameter-system/approval", "D", "MNT-PARAM", "fa fa-cc-paypal", 2, "__PROJECT__.Shared.Pages.Maintenance.Parameter.ParameterSystem, __PROJECT__.Shared"),
+        ("MNT-PARAM-MKR", "Maker", "/dashboard/maintenance/parameter-system/maker", "D", "MNT-PARAM", "AddModerator", 1, "__PROJECT__.Shared.Pages.Maintenance.Parameter.ParameterSystem, __PROJECT__.Shared"),
+        ("MNT-PARAM-APR", "Approval", "/dashboard/maintenance/parameter-system/approval", "D", "MNT-PARAM", "GppGood", 2, "__PROJECT__.Shared.Pages.Maintenance.Parameter.ParameterSystem, __PROJECT__.Shared"),
 
-        ("MNT-DEMO-VAL", "Default Value", "SM-DEFAULT-VALUE", "D", "MNT-DEMO", "fa fa-list-ul", 1, "DynamicScreen"),
-        ("MNT-DEMO-URL", "URL Demo", "SM-URL-DEMO", "D", "MNT-DEMO", "fa fa-map-pin", 2, "DynamicScreen"),
+        ("MNT-DEMO-VAL", "Default Value", "SM-DEFAULT-VALUE", "D", "MNT-DEMO", "FormatListBulleted", 1, "DynamicScreen"),
+        ("MNT-DEMO-URL", "URL Demo", "SM-URL-DEMO", "D", "MNT-DEMO", "PinDrop", 2, "DynamicScreen"),
     };
 
     public static async Task SeedAsync(__PROJECT__DbContext context, CancellationToken cancellationToken = default)
@@ -72,7 +73,7 @@ public static class MenuSeeder
                 {
                     menu_icon_code = icon.Code,
                     menu_icon_name = icon.Name,
-                    menu_icon_name_alternate = icon.Alternate,
+                    menu_icon_name_alternate = null,
                 }, cancellationToken);
             }
         }

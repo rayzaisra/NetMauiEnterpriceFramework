@@ -110,7 +110,7 @@ layout.
 ```text
 um_menu            menu identity, url, parent, icon, order, component type, level
 um_group_menu      maps a menu to a group (admin group code "00")
-enum_menu_icon     icon catalog (Font Awesome + Material alternate names)
+enum_menu_icon     icon catalog (menu_icon_code = MudBlazor Icons.Material.Filled name)
 tb_screen_menu     dynamic screen/list definition
 tb_screen_menu_child  dynamic modal/URL action definition
 tb_report_set      dynamic report/report list definition
@@ -118,6 +118,10 @@ tb_report_set      dynamic report/report list definition
 
 Levels: `A` = top group, `B` = menu group, `D` = leaf page. Link children
 through `menu_unique_parent` (the parent's `menu_unique`).
+
+Icon values are exact `Icons.Material.Filled` field names, for example
+`Settings`, not Font Awesome classes and not SVG markup. `menu_icon_name` is
+the display description; `menu_icon_name_alternate` stays `NULL`.
 
 ### Static Razor page menu
 

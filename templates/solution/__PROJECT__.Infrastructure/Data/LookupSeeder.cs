@@ -24,22 +24,220 @@ public static class LookupSeeder
 
     private static async Task SeedMenuIconsAsync(__PROJECT__DbContext context, CancellationToken cancellationToken)
     {
-        var existing = await context.enum_menu_icon.Select(e => e.menu_icon_code).ToHashSetAsync(cancellationToken);
         var source = ReadSeed("enum_menu_icon");
-        foreach (var item in source.RootElement.EnumerateArray())
-        {
-            var code = GetString(item, "menu_icon_code");
-            if (string.IsNullOrWhiteSpace(code) || existing.Contains(code)) continue;
-            await context.enum_menu_icon.AddAsync(new enum_menu_icon
+        var catalog = source.RootElement.EnumerateArray()
+            .Select(item => new enum_menu_icon
             {
-                menu_icon_code = code,
+                menu_icon_code = GetString(item, "menu_icon_code") ?? string.Empty,
                 menu_icon_name = GetString(item, "menu_icon_name"),
-                menu_icon_name_alternate = GetString(item, "menu_icon_name_alternate"),
-            }, cancellationToken);
-            existing.Add(code);
+                menu_icon_name_alternate = null,
+            })
+            .Where(e => !string.IsNullOrWhiteSpace(e.menu_icon_code))
+            .GroupBy(e => e.menu_icon_code, StringComparer.Ordinal)
+            .Select(e => e.First())
+            .ToList();
+
+        var catalogCodes = catalog.Select(e => e.menu_icon_code).ToHashSet(StringComparer.Ordinal);
+        var existing = await context.enum_menu_icon.ToListAsync(cancellationToken);
+        var legacy = existing
+            .Where(e => !catalogCodes.Contains(e.menu_icon_code)
+                && (IsLegacyIconCode(e.menu_icon_code) || !string.IsNullOrWhiteSpace(e.menu_icon_name_alternate)))
+            .ToList();
+
+        var map = BuildLegacyIconMap(legacy, catalogCodes);
+        await NormalizeIconReferencesAsync(context, map, catalogCodes, cancellationToken);
+
+        if (legacy.Count > 0)
+        {
+            context.enum_menu_icon.RemoveRange(legacy);
+            await context.SaveChangesAsync(cancellationToken);
         }
+
+        var existingByCode = (await context.enum_menu_icon.ToListAsync(cancellationToken))
+            .ToDictionary(e => e.menu_icon_code, StringComparer.Ordinal);
+
+        foreach (var icon in catalog)
+        {
+            if (existingByCode.TryGetValue(icon.menu_icon_code, out var row))
+            {
+                row.menu_icon_name = icon.menu_icon_name;
+                row.menu_icon_name_alternate = null;
+            }
+            else
+            {
+                await context.enum_menu_icon.AddAsync(icon, cancellationToken);
+            }
+        }
+
         await context.SaveChangesAsync(cancellationToken);
     }
+
+    private static bool IsLegacyIconCode(string code)
+        => code.StartsWith("fa ", StringComparison.OrdinalIgnoreCase)
+            || code.StartsWith("fa-", StringComparison.OrdinalIgnoreCase);
+
+    private static Dictionary<string, string> BuildLegacyIconMap(
+        IEnumerable<enum_menu_icon> legacy,
+        IReadOnlySet<string> catalogCodes)
+    {
+        var map = new Dictionary<string, string>(StringComparer.Ordinal);
+        foreach (var icon in legacy)
+        {
+            map[icon.menu_icon_code] = LegacyIconCodeAliases.TryGetValue(icon.menu_icon_code, out var direct)
+                && catalogCodes.Contains(direct)
+                    ? direct
+                    : ResolveCatalogIcon(icon.menu_icon_name_alternate, catalogCodes)
+                        ?? ResolveCatalogIcon(icon.menu_icon_name, catalogCodes)
+                        ?? "Circle";
+        }
+
+        return map;
+    }
+
+    private static string? ResolveCatalogIcon(string? candidate, IReadOnlySet<string> catalogCodes)
+    {
+        if (string.IsNullOrWhiteSpace(candidate))
+        {
+            return null;
+        }
+
+        var code = candidate.Trim();
+        if (catalogCodes.Contains(code))
+        {
+            return code;
+        }
+
+        return LegacyIconAliases.TryGetValue(code, out var alias) && catalogCodes.Contains(alias)
+            ? alias
+            : null;
+    }
+
+    private static async Task NormalizeIconReferencesAsync(
+        __PROJECT__DbContext context,
+        IReadOnlyDictionary<string, string> legacyMap,
+        IReadOnlySet<string> catalogCodes,
+        CancellationToken cancellationToken)
+    {
+        string Resolve(string? value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return "Circle";
+            }
+
+            var code = value.Trim();
+            if (catalogCodes.Contains(code))
+            {
+                return code;
+            }
+
+            if (LegacyIconCodeAliases.TryGetValue(code, out var direct) && catalogCodes.Contains(direct))
+            {
+                return direct;
+            }
+
+            if (legacyMap.TryGetValue(code, out var mapped))
+            {
+                return mapped;
+            }
+
+            if (LegacyIconAliases.TryGetValue(code, out var alias) && catalogCodes.Contains(alias))
+            {
+                return alias;
+            }
+
+            return IsLegacyIconCode(code) ? "Circle" : code;
+        }
+
+        var menus = await context.um_menu
+            .Where(e => e.menu_icon != null)
+            .ToListAsync(cancellationToken);
+        foreach (var menu in menus)
+        {
+            menu.menu_icon = Resolve(menu.menu_icon);
+        }
+
+        var cards = await context.tb_parameter_system
+            .Where(e => e.icon != null)
+            .ToListAsync(cancellationToken);
+        foreach (var card in cards)
+        {
+            card.icon = Resolve(card.icon);
+        }
+
+        var payloads = await context.tb_parameter_sytem_temporary_detail
+            .Where(e => e.column_name == "menu_icon")
+            .ToListAsync(cancellationToken);
+        foreach (var payload in payloads)
+        {
+            payload.value = Resolve(payload.value);
+            payload.value_before = payload.value_before == null ? null : Resolve(payload.value_before);
+        }
+
+        await context.SaveChangesAsync(cancellationToken);
+    }
+
+    private static readonly Dictionary<string, string> LegacyIconCodeAliases = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ["fa fa-gear"] = "Settings",
+        ["fa fa-user-circle"] = "EmojiPeople",
+        ["fa fa-group"] = "Groups",
+        ["fa fa-user-o"] = "Hail",
+        ["fa fa-pagelines"] = "MenuBook",
+        ["fa fa-cc-jcb"] = "AdminPanelSettings",
+        ["fa fa-list-ul"] = "FormatListBulleted",
+        ["fa fa-th-list"] = "Checklist",
+        ["fa fa-cc-mastercard"] = "AddModerator",
+        ["fa fa-cc-paypal"] = "GppGood",
+        ["fa fa-flag"] = "Flag",
+        ["fa fa-map-pin"] = "PinDrop",
+        ["fa fa-flask"] = "Science",
+        ["fa fa-envelope"] = "Email",
+        ["fa fa-envelope-o"] = "Email",
+    };
+
+    private static readonly Dictionary<string, string> LegacyIconAliases = new(StringComparer.Ordinal)
+    {
+        ["AddSquare"] = "AddBox",
+        ["Ambulance"] = "MedicalServices",
+        ["ArrowDropLeft"] = "ArrowLeft",
+        ["ArrowDropRight"] = "ArrowRight",
+        ["Asterisk"] = "Star",
+        ["Beer"] = "SportsBar",
+        ["Bicycle"] = "DirectionsBike",
+        ["Bitcoin"] = "CurrencyBitcoin",
+        ["Bus"] = "DirectionsBus",
+        ["CameraRetro"] = "PhotoCamera",
+        ["Car"] = "DirectionsCar",
+        ["CheckSquare"] = "CheckBox",
+        ["CloseCircle"] = "Cancel",
+        ["Commenting"] = "InsertComment",
+        ["Comments"] = "Forum",
+        ["Compass"] = "Explore",
+        ["CurrencyWon"] = "Paid",
+        ["Desktop"] = "DesktopWindows",
+        ["EditSquare"] = "Edit",
+        ["FlagCheckered"] = "SportsScore",
+        ["Gbp"] = "CurrencyPound",
+        ["H"] = "Circle",
+        ["Labels"] = "Label",
+        ["LifeRing"] = "Support",
+        ["Lifebuoy"] = "Support",
+        ["MailOpen"] = "MarkEmailRead",
+        ["MailSquare"] = "Email",
+        ["Motorcycle"] = "TwoWheeler",
+        ["PhoneSquare"] = "Phone",
+        ["RemoveSquare"] = "IndeterminateCheckBox",
+        ["Road"] = "AddRoad",
+        ["SearchMinus"] = "ZoomOut",
+        ["SearchPlus"] = "ZoomIn",
+        ["Ship"] = "DirectionsBoat",
+        ["SortAscending"] = "Sort",
+        ["SortDescending"] = "Sort",
+        ["Taxi"] = "LocalTaxi",
+        ["Unlock"] = "LockOpen",
+        ["UnlockAlternative"] = "LockOpen",
+    };
 
     private static async Task SeedStatusApprovalsAsync(__PROJECT__DbContext context, CancellationToken cancellationToken)
     {

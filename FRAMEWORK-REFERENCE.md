@@ -549,6 +549,12 @@ Menus are database-driven, not hardcoded in the layout:
 
 - `um_menu` stores menu identity, URL, parent, icon, order, component type,
   and level.
+- `um_menu.menu_icon`, `tb_parameter_system.icon`, and
+  `enum_menu_icon.menu_icon_code` store exact MudBlazor
+  `Icons.Material.Filled` field names such as `Settings`. Do not store Font
+  Awesome classes or SVG markup there. `menu_icon_name` is the display
+  description; `menu_icon_name_alternate` must stay `NULL`. `MenuIconResolver`
+  resolves the stored name to the MudBlazor SVG value at render time.
 - `um_group_menu` maps menus to groups.
 - Parent levels use `A`/`B`/`D` constants in `Domain.Enums.Const.ParentLevel`.
 - Menu hierarchy is returned by query services and rendered by

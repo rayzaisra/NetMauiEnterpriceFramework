@@ -26,7 +26,7 @@ BEGIN
     DECLARE @sql nvarchar(max) = N'
         SELECT m.id AS Id, m.menu_unique AS MenuUnique, m.menu_name AS MenuName, m.menu_url AS MenuUrl,
                m.parent_level_id AS ParentLevelId, m.menu_unique_parent AS MenuUniqueParent,
-               p.menu_name AS ParentName, m.menu_icon AS MenuIcon, i.menu_icon_name_alternate AS MenuIconName,
+               p.menu_name AS ParentName, m.menu_icon AS MenuIcon, i.menu_icon_name AS MenuIconName,
                m.order_seq AS OrderSeq, m.component_type AS ComponentType, m.is_active AS IsActive, m.status_approval AS StatusApproval
         FROM dbo.um_menu m
         LEFT JOIN dbo.um_menu p ON p.menu_unique = m.menu_unique_parent
