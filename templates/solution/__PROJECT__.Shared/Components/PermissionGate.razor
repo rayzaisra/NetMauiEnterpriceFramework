@@ -1,0 +1,47 @@
+@inject CurrentUserAccessService Access
+
+@if (_visible)
+{
+    @ChildContent
+}
+else
+{
+    @Fallback
+}
+
+@code {
+    [Parameter]
+    public PermissionAction? Action { get; set; }
+
+    [Parameter]
+    public IReadOnlyList<PermissionAction>? AnyOf { get; set; }
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public RenderFragment? Fallback { get; set; }
+
+    private bool _visible;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Access.EnsureLoadedAsync();
+        _visible = Evaluate();
+    }
+
+    protected override void OnParametersSet()
+    {
+        _visible = Access.IsLoaded && Evaluate();
+    }
+
+    private bool Evaluate()
+    {
+        if (AnyOf is { Count: > 0 })
+        {
+            return AnyOf.Any(Access.Can);
+        }
+
+        return Action is not { } action || Access.Can(action);
+    }
+}

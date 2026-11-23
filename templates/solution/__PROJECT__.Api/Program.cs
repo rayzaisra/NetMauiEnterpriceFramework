@@ -82,6 +82,7 @@ builder.Services.AddScoped<IEmailProviderQueryService, EmailProviderQueryService
 builder.Services.AddScoped<IParameterStagingService, ParameterStagingService>();
 builder.Services.AddScoped<IApprovalService, ApprovalService>();
 builder.Services.AddScoped<IParameterEngineService, ParameterEngineService>();
+builder.Services.AddScoped<IPermissionService, PermissionService>();
 builder.Services.AddScoped<IDynamicEngineService, DynamicEngineService>();
 builder.Services.AddScoped<IScreenMenuEditorService, ScreenMenuEditorService>();
 builder.Services.AddScoped<IUserSessionNotifier, UserSessionNotifier>();

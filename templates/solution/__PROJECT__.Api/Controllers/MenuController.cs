@@ -3,7 +3,9 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+using __PROJECT__.Api.Authorization;
 using __PROJECT__.Api.Helpers;
+using __PROJECT__.Application.Common;
 using __PROJECT__.Application.DTOs.General;
 using __PROJECT__.Application.DTOs.Menu;
 using __PROJECT__.Application.Interfaces;
@@ -49,7 +51,7 @@ public class MenuController : ControllerBase
     }
 
     [HttpPost("list")]
-    [Authorize(Roles = "00")]
+    [RequireMenuAccess(PermissionAction.Load, "MNT-MENU-LST")]
     public async Task<IActionResult> GetList([FromBody] DataTableRequestDto request)
     {
         var result = await _menuManagementService.GetListAsync(request);
@@ -57,7 +59,7 @@ public class MenuController : ControllerBase
     }
 
     [HttpGet("detail/{id:long}")]
-    [Authorize(Roles = "00")]
+    [RequireMenuAccess(PermissionAction.Load, "MNT-MENU-LST")]
     public async Task<IActionResult> GetDetail(long id)
     {
         var menu = await _menuManagementService.GetByIdAsync(id);
@@ -67,32 +69,32 @@ public class MenuController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = "00")]
+    [RequireMenuAccess(PermissionAction.AddEdit, "MNT-MENU-LST")]
     public async Task<IActionResult> Create([FromBody] MenuEditDto dto)
         => ToActionResult(await _menuManagementService.CreateAsync(dto));
 
     [HttpPut("{id:long}")]
-    [Authorize(Roles = "00")]
+    [RequireMenuAccess(PermissionAction.AddEdit, "MNT-MENU-LST")]
     public async Task<IActionResult> Update(long id, [FromBody] MenuEditDto dto)
         => ToActionResult(await _menuManagementService.UpdateAsync(id, dto));
 
     [HttpDelete("{id:long}")]
-    [Authorize(Roles = "00")]
+    [RequireMenuAccess(PermissionAction.Delete, "MNT-MENU-LST")]
     public async Task<IActionResult> Delete(long id)
         => ToActionResult(await _menuManagementService.DeleteAsync(id));
 
     [HttpGet("tree")]
-    [Authorize(Roles = "00")]
+    [RequireMenuAccess(PermissionAction.Load, "MNT-MENU-LST", "MNT-MENU-MAP")]
     public async Task<IActionResult> GetTree()
         => Ok(ApiResponseFactory.Success(await _menuManagementService.GetTreeAsync(), "Menu tree retrieved successfully"));
 
     [HttpGet("assigned/{groupId}")]
-    [Authorize(Roles = "00")]
+    [RequireMenuAccess(PermissionAction.Load, "MNT-MENU-MAP")]
     public async Task<IActionResult> GetAssigned(string groupId)
         => Ok(ApiResponseFactory.Success(await _menuManagementService.GetAssignedMenuIdsAsync(groupId), "Assigned menus retrieved successfully"));
 
     [HttpPost("save-map")]
-    [Authorize(Roles = "00")]
+    [RequireMenuAccess(PermissionAction.AddEdit, "MNT-MENU-MAP")]
     public async Task<IActionResult> SaveMap([FromBody] MenuMapDto dto)
         => ToActionResult(await _menuManagementService.SaveMenuMapAsync(dto));
 

@@ -1,7 +1,6 @@
 @page "/dashboard/maintenance/user-flag"
 @layout AuthenticatedLayout
 @attribute [Authorize]
-@attribute [Authorize(Roles = "00")]
 @inject SettingApiService SettingApi
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
@@ -39,7 +38,9 @@
                           Class="user-search" />
         </ToolBarContent>
         <HeaderContent>
-            <MudTh Style="text-align:center;">Actions</MudTh>
+            <PermissionGate AnyOf="PermissionSets.AddEdit">
+                <MudTh Style="text-align:center;">Actions</MudTh>
+            </PermissionGate>
             <MudTh><MudTableSortLabel T="UserFlagDto" SortLabel="userid">User Id</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel T="UserFlagDto" SortLabel="fullname">Full Name</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel T="UserFlagDto" SortLabel="islogin">Is Login</MudTableSortLabel></MudTh>
@@ -51,16 +52,18 @@
             <MudTh><MudTableSortLabel T="UserFlagDto" SortLabel="comment">Comment</MudTableSortLabel></MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd DataLabel="Actions" Style="text-align:center; white-space:nowrap;">
-                <MudIconButton Icon="@Icons.Material.Filled.LockOpen"
-                               Size="Size.Small"
-                               Color="Color.Primary"
-                               OnClick="@(_ => UnlockAsync(context))" />
-                <MudIconButton Icon="@Icons.Material.Filled.LockReset"
-                               Size="Size.Small"
-                               Color="Color.Secondary"
-                               OnClick="@(_ => ResetPasswordAsync(context))" />
-            </MudTd>
+            <PermissionGate AnyOf="PermissionSets.AddEdit">
+                <MudTd DataLabel="Actions" Style="text-align:center; white-space:nowrap;">
+                    <MudIconButton Icon="@Icons.Material.Filled.LockOpen"
+                                   Size="Size.Small"
+                                   Color="Color.Primary"
+                                   OnClick="@(_ => UnlockAsync(context))" />
+                    <MudIconButton Icon="@Icons.Material.Filled.LockReset"
+                                   Size="Size.Small"
+                                   Color="Color.Secondary"
+                                   OnClick="@(_ => ResetPasswordAsync(context))" />
+                </MudTd>
+            </PermissionGate>
             <MudTd DataLabel="User Id">@context.UserId</MudTd>
             <MudTd DataLabel="Full Name">@context.FullName</MudTd>
             <MudTd DataLabel="Is Login">@ToYesNo(context.IsLogin)</MudTd>

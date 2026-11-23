@@ -4,7 +4,13 @@
 
 - Controllers use `[ApiController]` and `[Route("api/[controller]")]`.
 - Authenticated controllers use `[Authorize]`.
-- Administrator-only endpoints use `[Authorize(Roles = "00")]`.
+- Do not use `[Authorize(Roles = "00")]` for maintenance/business endpoints that
+  a non-`00` group may access. Use
+  `[RequireMenuAccess(PermissionAction.Action, "MENU-UNIQUE")]`; group `00`
+  bypasses it, while other groups need an active `um_group_menu` row and the
+  appropriate `um_user_group` flag.
+- Reserve `[Authorize(Roles = "00")]` for endpoints that must stay
+  super-admin-only regardless of database configuration.
 - `[AllowAnonymous]` is limited to authentication/health/bootstrap endpoints.
 - Do not accidentally expose dropdowns or lookups that contain admin data.
 - Preserve the existing response envelope (`ApiResponse<T>` /
@@ -28,6 +34,12 @@
   use IIS Express on `https://localhost:44333`. Android emulator should use the
   Kestrel profile on `0.0.0.0:7143` through `https://10.0.2.2:7143`; IIS Express
   bound only to localhost is not reliably reachable from the emulator.
+
+Permission matrix: `can_read_only` blocks every business action including
+Export/View Detail; `can_delete` grants delete; all other business actions
+require `can_add_edit`; `Load` is allowed once the menu is mapped. Group `00`
+bypasses menu mapping and all flags. Permission changes apply on the next API
+request; the UI updates after refresh/navigation.
 
 Typical controller structure (list endpoints are `POST` + `[FromBody]`, see
 `backend-api-style.md`):

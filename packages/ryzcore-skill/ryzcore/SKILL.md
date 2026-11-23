@@ -142,9 +142,11 @@ API contract:
   `BaseGeneralResponse` for transactions, `PaginatedResponse<T>` /
   `GeneralListResponseDto<T>` for lists. Never return EF entities or ad-hoc
   `{ message }` payloads.
-- Authorization is per endpoint: admin endpoints use `[Authorize(Roles = "00")]`,
-  general endpoints require login, and `[AllowAnonymous]` only for
-  authentication/health/bootstrap endpoints.
+- Authorization is per endpoint: business/maintenance endpoints use
+  `[Authorize]` plus `[RequireMenuAccess(action, menuUnique)]`; group `00`
+  bypasses it. `[Authorize(Roles = "00")]` is only for truly super-admin-only
+  endpoints. Other authenticated endpoints use `[Authorize]`, and
+  `[AllowAnonymous]` is only for authentication/health/bootstrap endpoints.
 - Do not add `tb_log_activity` writes manually; `ApiActivityMiddleware` covers
   every controller automatically.
 - Menus are database-driven. Never hardcode menu items into Web/MAUI layouts.

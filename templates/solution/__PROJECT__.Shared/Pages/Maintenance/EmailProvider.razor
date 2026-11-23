@@ -2,7 +2,6 @@
 @layout AuthenticatedLayout
 @using __PROJECT__.Application.DTOs.Email
 @attribute [Authorize]
-@attribute [Authorize(Roles = "00")]
 @inject EmailProviderApiService EmailProviderApi
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
@@ -16,9 +15,11 @@
             <h1>Email Provider</h1>
             <p>Configure SMTP or Gmail delivery for password reset and notification emails.</p>
         </div>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddAsync">
-            Add Provider
-        </MudButton>
+        <PermissionGate Action="PermissionAction.AddEdit">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddAsync">
+                Add Provider
+            </MudButton>
+        </PermissionGate>
     </div>
 
     <MudTable T="EmailProviderDto"
@@ -43,7 +44,9 @@
                           Class="user-search" />
         </ToolBarContent>
         <HeaderContent>
-            <MudTh Style="text-align:center;">Actions</MudTh>
+            <PermissionGate AnyOf="PermissionSets.EditDelete">
+                <MudTh Style="text-align:center;">Actions</MudTh>
+            </PermissionGate>
             <MudTh><MudTableSortLabel T="EmailProviderDto" SortLabel="providertype">Type</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel T="EmailProviderDto" SortLabel="providername">Name</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel T="EmailProviderDto" SortLabel="fromemail">From Email</MudTableSortLabel></MudTh>
@@ -52,21 +55,29 @@
             <MudTh><MudTableSortLabel T="EmailProviderDto" SortLabel="lasttestedat">Last Test</MudTableSortLabel></MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd DataLabel="Actions" Style="text-align:center; white-space:nowrap;">
-                <MudIconButton Icon="@Icons.Material.Filled.Send"
-                               Size="Size.Small"
-                               Color="Color.Success"
-                               Disabled="@_testingId.HasValue"
-                               OnClick="@(_ => TestAsync(context))" />
-                <MudIconButton Icon="@Icons.Material.Filled.Edit"
-                               Size="Size.Small"
-                               Color="Color.Primary"
-                               OnClick="@(_ => OpenEditAsync(context))" />
-                <MudIconButton Icon="@Icons.Material.Filled.Delete"
-                               Size="Size.Small"
-                               Color="Color.Error"
-                               OnClick="@(_ => DeleteAsync(context))" />
-            </MudTd>
+            <PermissionGate AnyOf="PermissionSets.EditDelete">
+                <MudTd DataLabel="Actions" Style="text-align:center; white-space:nowrap;">
+                    <PermissionGate Action="PermissionAction.AddEdit">
+                        <MudIconButton Icon="@Icons.Material.Filled.Send"
+                                       Size="Size.Small"
+                                       Color="Color.Success"
+                                       Disabled="@_testingId.HasValue"
+                                       OnClick="@(_ => TestAsync(context))" />
+                    </PermissionGate>
+                    <PermissionGate Action="PermissionAction.Edit">
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit"
+                                       Size="Size.Small"
+                                       Color="Color.Primary"
+                                       OnClick="@(_ => OpenEditAsync(context))" />
+                    </PermissionGate>
+                    <PermissionGate Action="PermissionAction.Delete">
+                        <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                       Size="Size.Small"
+                                       Color="Color.Error"
+                                       OnClick="@(_ => DeleteAsync(context))" />
+                    </PermissionGate>
+                </MudTd>
+            </PermissionGate>
             <MudTd DataLabel="Type">@context.ProviderType</MudTd>
             <MudTd DataLabel="Name">@context.ProviderName</MudTd>
             <MudTd DataLabel="From Email">@context.FromEmail</MudTd>

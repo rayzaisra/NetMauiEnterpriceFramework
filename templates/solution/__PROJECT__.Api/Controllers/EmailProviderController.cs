@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+using __PROJECT__.Api.Authorization;
 using __PROJECT__.Api.Helpers;
+using __PROJECT__.Application.Common;
 using __PROJECT__.Application.DTOs.Email;
 using __PROJECT__.Application.DTOs.General;
 using __PROJECT__.Application.Interfaces;
@@ -10,7 +12,8 @@ namespace __PROJECT__.Api.Controllers;
 
 [ApiController]
 [Route("api/email-provider")]
-[Authorize(Roles = "00")]
+[Authorize]
+[RequireMenuAccess(PermissionAction.Load, "MNT-PARAM-MKR")]
 public class EmailProviderController : ControllerBase
 {
     private readonly IEmailProviderService _emailProviderService;
@@ -39,6 +42,7 @@ public class EmailProviderController : ControllerBase
     }
 
     [HttpPost]
+    [RequireMenuAccess(PermissionAction.AddEdit, "MNT-PARAM-MKR")]
     public async Task<IActionResult> Save([FromBody] EmailProviderDto request)
     {
         var result = await _emailProviderService.SaveAsync(request);
@@ -47,6 +51,7 @@ public class EmailProviderController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
+    [RequireMenuAccess(PermissionAction.Delete, "MNT-PARAM-MKR")]
     public async Task<IActionResult> Delete(int id)
     {
         var result = await _emailProviderService.DeleteAsync(id);
@@ -55,6 +60,7 @@ public class EmailProviderController : ControllerBase
     }
 
     [HttpPost("{id:int}/test")]
+    [RequireMenuAccess(PermissionAction.AddEdit, "MNT-PARAM-MKR")]
     public async Task<IActionResult> Test(int id, [FromQuery] string? recipient)
     {
         try

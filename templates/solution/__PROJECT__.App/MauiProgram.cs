@@ -49,6 +49,7 @@ public static class MauiProgram
         builder.Services.AddScoped<AuthenticatingHttpHandler>();
         builder.Services.AddScoped<ApiService>();
         builder.Services.AddScoped<AuthService>();
+        builder.Services.AddScoped<CurrentUserAccessService>();
         builder.Services.AddScoped<MenuService>();
         builder.Services.AddScoped<DashboardApiService>();
         builder.Services.AddScoped<SettingApiService>();

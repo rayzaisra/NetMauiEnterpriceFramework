@@ -183,7 +183,8 @@ List endpoint (paged, `POST` + `[FromBody]`):
 ```csharp
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = "00")]
+[Authorize]
+[RequireMenuAccess(PermissionAction.Load, "MNT-USER-LST")]
 public class UserController : ControllerBase
 {
     private readonly IUserManagementService _userService;
@@ -197,6 +198,16 @@ public class UserController : ControllerBase
         return Ok(ApiResponseFactory.Page(
             result.Data, request, result.TotalCount, "Users retrieved successfully"));
     }
+
+    [HttpPost]
+    [RequireMenuAccess(PermissionAction.AddEdit, "MNT-USER-LST")]
+    public async Task<IActionResult> Create([FromBody] UserEditDto dto)
+        => ToActionResult(await _userService.CreateAsync(dto));
+
+    [HttpDelete("{userId}")]
+    [RequireMenuAccess(PermissionAction.Delete, "MNT-USER-LST")]
+    public async Task<IActionResult> Delete(string userId)
+        => ToActionResult(await _userService.DeleteAsync(userId));
 }
 ```
 
@@ -215,8 +226,12 @@ private IActionResult ToActionResult(BaseGeneralResponse result)
 ```
 
 - `[Route("api/[controller]")]`; list actions are `[HttpPost("list")]`.
-- Authorization is per endpoint when one controller serves mixed audiences, for
-  example `[Authorize(Roles = "00")]` on `groups`, `users`, `menu-icons`.
+- Authorization is per endpoint when one controller serves mixed audiences.
+  Use `[Authorize]` plus `[RequireMenuAccess(action, menuUnique)]`; reserve
+  `[Authorize(Roles = "00")]` for genuinely super-admin-only endpoints.
+- Group `00` bypasses permission filters. For non-`00` groups, `can_read_only`
+  blocks all business actions, `can_delete` grants delete, and every other
+  business action requires `can_add_edit`.
 - `[AllowAnonymous]` only for login/refresh/forgot/reset/health.
 - Single-item reads return `NotFound(ApiResponseFactory.NotFound<T>(...))`.
 - Never `return new { message = ... }` and never return a bare DTO.

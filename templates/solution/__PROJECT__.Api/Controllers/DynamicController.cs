@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using __PROJECT__.Api.Helpers;
+using __PROJECT__.Application.Common;
 using __PROJECT__.Application.DTOs.Dynamic;
 using __PROJECT__.Application.DTOs.General;
 using __PROJECT__.Application.Interfaces;
@@ -17,11 +18,16 @@ public class DynamicController : ControllerBase
 {
     private readonly IDynamicEngineService _dynamicService;
     private readonly IErrorLogService _errorLog;
+    private readonly IPermissionService _permissions;
 
-    public DynamicController(IDynamicEngineService dynamicService, IErrorLogService errorLog)
+    public DynamicController(
+        IDynamicEngineService dynamicService,
+        IErrorLogService errorLog,
+        IPermissionService permissions)
     {
         _dynamicService = dynamicService;
         _errorLog = errorLog;
+        _permissions = permissions;
     }
 
     [HttpGet("screen/{screenId}")]
@@ -81,7 +87,7 @@ public class DynamicController : ControllerBase
     [HttpGet("screen/{screenId}/child/detail")]
     public async Task<IActionResult> GetChildDetail(string screenId, [FromQuery] string key)
     {
-        if (!await _dynamicService.CanAccessScreenAsync(screenId))
+        if (!await _permissions.HasScreenAccessAsync(screenId, PermissionAction.ViewDetail))
         {
             return Forbid();
         }
@@ -103,7 +109,7 @@ public class DynamicController : ControllerBase
     [HttpPost("screen/{screenId}/child/save")]
     public async Task<IActionResult> SaveChild(string screenId, [FromBody] DynamicMutationRequestDto request)
     {
-        if (!await _dynamicService.CanAccessScreenAsync(screenId))
+        if (!await _permissions.HasScreenAccessAsync(screenId, PermissionAction.AddEdit))
         {
             return Forbid();
         }
@@ -114,7 +120,7 @@ public class DynamicController : ControllerBase
     [HttpPost("screen/{screenId}/process")]
     public async Task<IActionResult> Process(string screenId, [FromBody] DynamicMutationRequestDto request)
     {
-        if (!await _dynamicService.CanAccessScreenAsync(screenId))
+        if (!await _permissions.HasScreenAccessAsync(screenId, PermissionAction.AddEdit))
         {
             return Forbid();
         }
@@ -126,7 +132,7 @@ public class DynamicController : ControllerBase
     [RequestSizeLimit(10 * 1024 * 1024)]
     public async Task<IActionResult> ImportExcel(string screenId, IFormFile file)
     {
-        if (!await _dynamicService.CanAccessScreenAsync(screenId))
+        if (!await _permissions.HasScreenAccessAsync(screenId, PermissionAction.Import))
         {
             return Forbid();
         }
@@ -143,7 +149,7 @@ public class DynamicController : ControllerBase
     [HttpPost("screen/{screenId}/delete")]
     public async Task<IActionResult> Delete(string screenId, [FromBody] DynamicMutationRequestDto request)
     {
-        if (!await _dynamicService.CanAccessScreenAsync(screenId))
+        if (!await _permissions.HasScreenAccessAsync(screenId, PermissionAction.Delete))
         {
             return Forbid();
         }
@@ -154,7 +160,7 @@ public class DynamicController : ControllerBase
     [HttpGet("screen/{screenId}/export-txt")]
     public async Task<IActionResult> ExportTxt(string screenId, [FromQuery] string? searchTerm, [FromQuery] string? sortColumn, [FromQuery] string? sortDirection)
     {
-        if (!await _dynamicService.CanAccessScreenAsync(screenId))
+        if (!await _permissions.HasScreenAccessAsync(screenId, PermissionAction.Export))
         {
             return Forbid();
         }

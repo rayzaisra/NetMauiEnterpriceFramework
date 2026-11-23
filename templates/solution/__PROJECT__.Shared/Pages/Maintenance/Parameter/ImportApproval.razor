@@ -38,7 +38,9 @@
             <MudTh><MudTableSortLabel T="ParameterPendingListItemDto" SortLabel="summary">Summary</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel T="ParameterPendingListItemDto" SortLabel="requesterfullname">Requester</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel T="ParameterPendingListItemDto" SortLabel="createddate">Date</MudTableSortLabel></MudTh>
-            <MudTh>Actions</MudTh>
+            <PermissionGate AnyOf="PermissionSets.ApproveReject">
+                <MudTh>Actions</MudTh>
+            </PermissionGate>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="File">@context.KeyValue</MudTd>
@@ -46,10 +48,12 @@
             <MudTd DataLabel="Summary">@context.Summary</MudTd>
             <MudTd DataLabel="Requester">@context.RequesterFullName</MudTd>
             <MudTd DataLabel="Date">@context.CreatedDate?.ToString("dd MMM yyyy HH:mm")</MudTd>
-            <MudTd DataLabel="Actions">
-                <MudButton Variant="Variant.Filled" Color="Color.Success" Size="Size.Small" OnClick="@(_ => ProcessAsync(context.Id, true))">Approve</MudButton>
-                <MudButton Variant="Variant.Outlined" Color="Color.Error" Size="Size.Small" OnClick="@(_ => ProcessAsync(context.Id, false))">Reject</MudButton>
-            </MudTd>
+            <PermissionGate AnyOf="PermissionSets.ApproveReject">
+                <MudTd DataLabel="Actions">
+                    <MudButton Variant="Variant.Filled" Color="Color.Success" Size="Size.Small" OnClick="@(_ => ProcessAsync(context.Id, true))">Approve</MudButton>
+                    <MudButton Variant="Variant.Outlined" Color="Color.Error" Size="Size.Small" OnClick="@(_ => ProcessAsync(context.Id, false))">Reject</MudButton>
+                </MudTd>
+            </PermissionGate>
         </RowTemplate>
         <NoRecordsContent>
             <MudText>No pending import batches.</MudText>

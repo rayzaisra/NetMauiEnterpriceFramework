@@ -6,11 +6,14 @@ using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+using __PROJECT__.Api.Authorization;
 using __PROJECT__.Api.Helpers;
 using __PROJECT__.Api.Services;
+using __PROJECT__.Application.Common;
 using __PROJECT__.Application.DTOs.Dynamic;
 using __PROJECT__.Application.DTOs.Export;
 using __PROJECT__.Application.DTOs.General;
+using __PROJECT__.Application.Interfaces;
 
 namespace __PROJECT__.Api.Controllers;
 
@@ -23,15 +26,20 @@ public class ExportController : ControllerBase
 
     private readonly IBackgroundJobClient _jobs;
     private readonly IWebHostEnvironment _environment;
+    private readonly IPermissionService _permissions;
 
-    public ExportController(IBackgroundJobClient jobs, IWebHostEnvironment environment)
+    public ExportController(
+        IBackgroundJobClient jobs,
+        IWebHostEnvironment environment,
+        IPermissionService permissions)
     {
         _jobs = jobs;
         _environment = environment;
+        _permissions = permissions;
     }
 
     [HttpPost("users")]
-    [Authorize(Roles = "00")]
+    [RequireMenuAccess(PermissionAction.Export, "MNT-USER-LST")]
     public IActionResult QueueUsers([FromBody] DataTableRequestDto request)
     {
         var userId = CurrentUserId();
@@ -48,7 +56,7 @@ public class ExportController : ControllerBase
     }
 
     [HttpPost("groups")]
-    [Authorize(Roles = "00")]
+    [RequireMenuAccess(PermissionAction.Export, "MNT-GRP-LST")]
     public IActionResult QueueGroups([FromBody] DataTableRequestDto request)
     {
         var userId = CurrentUserId();
@@ -65,7 +73,7 @@ public class ExportController : ControllerBase
     }
 
     [HttpPost("roles")]
-    [Authorize(Roles = "00")]
+    [RequireMenuAccess(PermissionAction.Export, "MNT-ROLE-LST")]
     public IActionResult QueueRoles([FromBody] DataTableRequestDto request)
     {
         var userId = CurrentUserId();
@@ -82,7 +90,7 @@ public class ExportController : ControllerBase
     }
 
     [HttpPost("menus")]
-    [Authorize(Roles = "00")]
+    [RequireMenuAccess(PermissionAction.Export, "MNT-MENU-LST")]
     public IActionResult QueueMenus([FromBody] DataTableRequestDto request)
     {
         var userId = CurrentUserId();
@@ -99,7 +107,7 @@ public class ExportController : ControllerBase
     }
 
     [HttpPost("parameters/{tableName}")]
-    [Authorize(Roles = "00")]
+    [RequireMenuAccess(PermissionAction.Export, "MNT-PARAM-MKR")]
     public IActionResult QueueParameters(string tableName, [FromBody] DataTableRequestDto request)
     {
         var userId = CurrentUserId();
@@ -146,8 +154,13 @@ public class ExportController : ControllerBase
     }
 
     [HttpPost("report/{reportId}")]
-    public IActionResult QueueReport(string reportId, [FromBody] DynamicLoadRequestDto request)
+    public async Task<IActionResult> QueueReport(string reportId, [FromBody] DynamicLoadRequestDto request)
     {
+        if (!await _permissions.HasAccessAsync(PermissionAction.Export))
+        {
+            return Forbid();
+        }
+
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrWhiteSpace(userId))
         {
@@ -164,8 +177,13 @@ public class ExportController : ControllerBase
     }
 
     [HttpPost("screen/{screenId}")]
-    public IActionResult QueueScreen(string screenId, [FromBody] DynamicLoadRequestDto request)
+    public async Task<IActionResult> QueueScreen(string screenId, [FromBody] DynamicLoadRequestDto request)
     {
+        if (!await _permissions.HasScreenAccessAsync(screenId, PermissionAction.Export))
+        {
+            return Forbid();
+        }
+
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrWhiteSpace(userId))
         {

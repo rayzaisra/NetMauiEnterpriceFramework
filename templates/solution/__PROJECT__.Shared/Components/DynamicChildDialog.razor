@@ -36,9 +36,11 @@
     </DialogContent>
     <DialogActions>
         <MudButton Variant="Variant.Text" OnClick="@(_ => MudDialog.Cancel())">Cancel</MudButton>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="@("ryz-busy-button" + (_saving ? " is-busy" : string.Empty))" Disabled="@_saving" OnClick="@(_ => SaveAsync())">
-            @(_saving ? "Saving..." : "Save")
-        </MudButton>
+        <PermissionGate Action="PermissionAction.AddEdit">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="@("ryz-busy-button" + (_saving ? " is-busy" : string.Empty))" Disabled="@_saving" OnClick="@(_ => SaveAsync())">
+                @(_saving ? "Saving..." : "Save")
+            </MudButton>
+        </PermissionGate>
     </DialogActions>
 </MudDialog>
 

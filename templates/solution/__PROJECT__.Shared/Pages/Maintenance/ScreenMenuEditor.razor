@@ -12,7 +12,9 @@
             <h1>Screen Menu</h1>
             <p>Manage screens with child modal/URL and import process metadata.</p>
         </div>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="@(_ => OpenAddAsync())">Add Screen</MudButton>
+        <PermissionGate Action="PermissionAction.AddEdit">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="@(_ => OpenAddAsync())">Add Screen</MudButton>
+        </PermissionGate>
     </div>
 
     <div class="table-toolbar">
@@ -39,7 +41,9 @@
             <MudTh><MudTableSortLabel T="ScreenMenuListItemDto" SortLabel="screenmenuchildid">Child</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel T="ScreenMenuListItemDto" SortLabel="screenmenuimportexcelprocessid">Import</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel T="ScreenMenuListItemDto" SortLabel="isactive">Status</MudTableSortLabel></MudTh>
-            <MudTh>Actions</MudTh>
+            <PermissionGate Action="PermissionAction.Edit">
+                <MudTh>Actions</MudTh>
+            </PermissionGate>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Screen ID">@context.Id</MudTd>
@@ -56,9 +60,11 @@
                     <MudChip T="string" Size="Size.Small" Color="Color.Default">Inactive</MudChip>
                 }
             </MudTd>
-            <MudTd DataLabel="Actions">
-                <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="@(_ => OpenEditAsync(context))" />
-            </MudTd>
+            <PermissionGate Action="PermissionAction.Edit">
+                <MudTd DataLabel="Actions">
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="@(_ => OpenEditAsync(context))" />
+                </MudTd>
+            </PermissionGate>
         </RowTemplate>
         <NoRecordsContent>
             <MudText>No screen menus.</MudText>

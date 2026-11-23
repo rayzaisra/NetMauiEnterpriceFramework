@@ -11,6 +11,7 @@
 @inject ITokenStorage TokenStorage
 @inject NavigationManager Navigation
 @inject ISnackbar Snackbar
+@inject CurrentUserAccessService Access
 
 <div class="page-heading">
     <div>
@@ -121,55 +122,67 @@
 
             @if (_screen.HasButtonProcess == true)
             {
-                <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="@(_ => ProcessAsync())">Process</MudButton>
+                <PermissionGate Action="PermissionAction.AddEdit">
+                    <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="@(_ => ProcessAsync())">Process</MudButton>
+                </PermissionGate>
             }
             @if (_screen.HasButtonGenerateTxt == true)
             {
-                <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.TextSnippet" OnClick="@(_ => ExportTxtAsync())">Export TXT</MudButton>
+                <PermissionGate Action="PermissionAction.Export">
+                    <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.TextSnippet" OnClick="@(_ => ExportTxtAsync())">Export TXT</MudButton>
+                </PermissionGate>
             }
             @if (_screen.HasButtonExportExcel == true)
             {
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Download" OnClick="@(_ => QueueExportAsync())">Export Excel</MudButton>
-                <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.PictureAsPdf" OnClick="@(_ => QueuePdfExportAsync())">Export PDF</MudButton>
+                <PermissionGate Action="PermissionAction.Export">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Download" OnClick="@(_ => QueueExportAsync())">Export Excel</MudButton>
+                    <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.PictureAsPdf" OnClick="@(_ => QueuePdfExportAsync())">Export PDF</MudButton>
+                </PermissionGate>
             }
             @if (_screen.HasButtonAdd == true && _screen.Child?.Type == "modal")
             {
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="@(_ => OpenAddChildAsync())">Add</MudButton>
+                <PermissionGate Action="PermissionAction.Add">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="@(_ => OpenAddChildAsync())">Add</MudButton>
+                </PermissionGate>
             }
             @if (_screen.HasButtonImportExcel == true)
             {
-                @if (ExcelFilePicker.IsNativePickerSupported)
-                {
-                    <MudButton Variant="Variant.Outlined"
-                               Color="Color.Primary"
-                               StartIcon="@Icons.Material.Filled.UploadFile"
-                               Class="@("ryz-busy-button" + (_importing ? " is-busy" : string.Empty))"
-                               Disabled="@_importing"
-                               OnClick="@(_ => PickImportAsync())">@(_importing ? "Importing..." : "Import Excel")</MudButton>
-                }
-                else
-                {
-                    <MudFileUpload T="IBrowserFile"
-                                   Accept=".xlsx"
+                <PermissionGate Action="PermissionAction.Import">
+                    @if (ExcelFilePicker.IsNativePickerSupported)
+                    {
+                        <MudButton Variant="Variant.Outlined"
+                                   Color="Color.Primary"
+                                   StartIcon="@Icons.Material.Filled.UploadFile"
+                                   Class="@("ryz-busy-button" + (_importing ? " is-busy" : string.Empty))"
                                    Disabled="@_importing"
-                                   Class="import-excel-upload"
-                                   OnFilesChanged="ImportExcelAsync">
-                        <CustomContent Context="upload">
-                            <MudButton Variant="Variant.Outlined"
-                                       Color="Color.Primary"
-                                       StartIcon="@Icons.Material.Filled.UploadFile"
-                                       Class="@("ryz-busy-button" + (_importing ? " is-busy" : string.Empty))"
+                                   OnClick="@(_ => PickImportAsync())">@(_importing ? "Importing..." : "Import Excel")</MudButton>
+                    }
+                    else
+                    {
+                        <MudFileUpload T="IBrowserFile"
+                                       Accept=".xlsx"
                                        Disabled="@_importing"
-                                       OnClick="@(_ => upload.OpenFilePickerAsync())">
-                                @(_importing ? "Importing..." : "Import Excel")
-                            </MudButton>
-                        </CustomContent>
-                    </MudFileUpload>
-                }
+                                       Class="import-excel-upload"
+                                       OnFilesChanged="ImportExcelAsync">
+                            <CustomContent Context="upload">
+                                <MudButton Variant="Variant.Outlined"
+                                           Color="Color.Primary"
+                                           StartIcon="@Icons.Material.Filled.UploadFile"
+                                           Class="@("ryz-busy-button" + (_importing ? " is-busy" : string.Empty))"
+                                           Disabled="@_importing"
+                                           OnClick="@(_ => upload.OpenFilePickerAsync())">
+                                    @(_importing ? "Importing..." : "Import Excel")
+                                </MudButton>
+                            </CustomContent>
+                        </MudFileUpload>
+                    }
+                </PermissionGate>
             }
             @if (_screen.HasButtonDelete == true)
             {
-                <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete" Disabled="@(_selectedRows.Count == 0)" OnClick="@(_ => DeleteSelectedAsync())">Delete</MudButton>
+                <PermissionGate Action="PermissionAction.Delete">
+                    <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete" Disabled="@(_selectedRows.Count == 0)" OnClick="@(_ => DeleteSelectedAsync())">Delete</MudButton>
+                </PermissionGate>
             }
         </div>
 
@@ -180,13 +193,15 @@
                   Dense="true"
                   Breakpoint="Breakpoint.Sm"
                   Elevation="0"
-                  MultiSelection="@(_screen.HasButtonDelete == true)"
+                  MultiSelection="@(_screen.HasButtonDelete == true && Access.Can(PermissionAction.Delete))"
                   @bind-SelectedItems="_selectedRows"
                   SelectOnRowClick="false">
             <HeaderContent>
                 @if (ShowActions)
                 {
-                    <MudTh>Actions</MudTh>
+                    <PermissionGate AnyOf="PermissionSets.ActionRow">
+                        <MudTh>Actions</MudTh>
+                    </PermissionGate>
                 }
                 @foreach (var column in Columns)
                 {
@@ -196,20 +211,28 @@
             <RowTemplate>
                 @if (ShowActions)
                 {
-                    <MudTd DataLabel="Actions">
-                        @if (_screen?.Child?.Type == "url")
-                        {
-                            <MudIconButton Icon="@Icons.Material.Filled.OpenInNew" Size="Size.Small" OnClick="@(_ => OpenUrlAction(context))" />
-                        }
-                        @if (_screen?.HasActionRow == true && _screen.Child?.Type == "modal")
-                        {
-                            <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="@(_ => OpenEditChildAsync(context))" />
-                        }
-                        @if (_screen?.HasButtonDelete == true)
-                        {
-                            <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error" OnClick="@(_ => DeleteRowAsync(context))" />
-                        }
-                    </MudTd>
+                    <PermissionGate AnyOf="PermissionSets.ActionRow">
+                        <MudTd DataLabel="Actions">
+                            @if (_screen?.Child?.Type == "url")
+                            {
+                                <PermissionGate Action="PermissionAction.ViewDetail">
+                                    <MudIconButton Icon="@Icons.Material.Filled.OpenInNew" Size="Size.Small" OnClick="@(_ => OpenUrlAction(context))" />
+                                </PermissionGate>
+                            }
+                            @if (_screen?.HasActionRow == true && _screen.Child?.Type == "modal")
+                            {
+                                <PermissionGate Action="PermissionAction.Edit">
+                                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="@(_ => OpenEditChildAsync(context))" />
+                                </PermissionGate>
+                            }
+                            @if (_screen?.HasButtonDelete == true)
+                            {
+                                <PermissionGate Action="PermissionAction.Delete">
+                                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error" OnClick="@(_ => DeleteRowAsync(context))" />
+                                </PermissionGate>
+                            }
+                        </MudTd>
+                    </PermissionGate>
                 }
                 @foreach (var column in Columns)
                 {
@@ -253,6 +276,7 @@
 
     protected override async Task OnParametersSetAsync()
     {
+        await Access.EnsureLoadedAsync();
         _screen = null;
         _result = null;
         _filters.Clear();

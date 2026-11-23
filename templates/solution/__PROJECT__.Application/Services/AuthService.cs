@@ -378,8 +378,8 @@ public class AuthService : IAuthService
             LastPasswordChangeDate = user.last_password_change_date,
             LastIpAddress = flag?.ip_address,
             CanAddEdit = isSuperAdmin || userGroup?.can_add_edit == true,
-            CanDelete = userGroup?.can_delete == true,
-            CanReadOnly = userGroup?.can_read_only == true,
+            CanDelete = isSuperAdmin || userGroup?.can_delete == true,
+            CanReadOnly = !isSuperAdmin && userGroup?.can_read_only == true,
             IsActive = user.isActive == true,
         };
     }

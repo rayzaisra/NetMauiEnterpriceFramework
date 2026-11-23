@@ -498,7 +498,14 @@ remain specific and intentional.
 
 - Controllers use `[ApiController]` and `[Route("api/[controller]")]`.
 - Authenticated controllers use `[Authorize]`.
-- Administrator-only endpoints use `[Authorize(Roles = "00")]`.
+- Do **not** use `[Authorize(Roles = "00")]` for maintenance or business
+  endpoints that a non-`00` group may access. Roles are static claims and cannot
+  represent database menu mappings or the three `um_user_group` flags.
+- Use `[RequireMenuAccess(PermissionAction.Action, "MENU-UNIQUE")]` for
+  menu-scoped endpoints. Group `00` bypasses the filter; every other group needs
+  an active `um_group_menu` row and the appropriate flag.
+- Keep `[Authorize(Roles = "00")]` only on endpoints that must remain
+  super-admin-only regardless of database configuration.
 - `[AllowAnonymous]` is limited to authentication/health/bootstrap endpoints.
 - Do not accidentally expose dropdowns or lookups that contain admin data.
 - Preserve the existing response envelope (`ApiResponse<T>` /
@@ -543,6 +550,84 @@ public class ExampleController : ControllerBase
 }
 ```
 
+### 8.1 Menu-scoped action permissions
+
+Authorization has two layers:
+
+1. **Menu mapping** (`um_group_menu`) decides which pages/modules a group can
+   open.
+2. **Group flags** (`um_user_group`) decide which actions are allowed inside
+   those pages.
+
+Group `00` is the super administrator and bypasses both layers. Other groups are
+evaluated by `IPermissionService`/`PermissionRules`:
+
+| Condition | Result |
+|---|---|
+| `can_read_only = true` | All business actions denied, including Export and View Detail. Load/search/paging remain allowed. |
+| `can_add_edit = true` | Add, Edit, Import, Upload, Export, View Detail, Approve, Reject, Submit, Save, Process, Reset Password, and Unlock are allowed. |
+| `can_delete = true` | Delete and bulk delete are allowed. |
+| `can_add_edit = false`, `can_delete = true` | Delete-only UI: only delete actions appear. |
+| `PermissionAction.Load` | Allowed whenever the menu is mapped (subject to `can_read_only`, which does not block reads). |
+
+Endpoint pattern:
+
+```csharp
+[ApiController]
+[Route("api/[controller]")]
+[Authorize]
+[RequireMenuAccess(PermissionAction.Load, "MNT-USER-LST")]
+public class UserController : ControllerBase
+{
+    [HttpPost("list")]
+    public async Task<IActionResult> GetList([FromBody] DataTableRequestDto request) { ... }
+
+    [HttpPost]
+    [RequireMenuAccess(PermissionAction.AddEdit, "MNT-USER-LST")]
+    public async Task<IActionResult> Create([FromBody] UserEditDto dto) { ... }
+
+    [HttpDelete("{userId}")]
+    [RequireMenuAccess(PermissionAction.Delete, "MNT-USER-LST")]
+    public async Task<IActionResult> Delete(string userId) { ... }
+}
+```
+
+Rules:
+
+- Pass multiple menu uniques when one endpoint serves more than one page, for
+  example parameter maker/approval endpoints:
+  `RequireMenuAccess(PermissionAction.Load, "MNT-PARAM-MKR", "MNT-PARAM-APR")`.
+- Dynamic screens use `IPermissionService.HasScreenAccessAsync(screenId, action)`
+  because their menu identity is `um_menu.menu_url`, not `menu_unique`.
+- Permission changes are read from the database per request. The API responds
+  immediately; the client UI reflects the change after refresh/navigation.
+  This is not token revocation or forced logout.
+- Do not add per-page permission matrices. Use the three flags plus menu
+  mapping; if a future action is truly different, add a `PermissionAction` and
+  document the mapping in `PermissionRules`.
+
+Client pattern:
+
+```razor
+<PermissionGate Action="PermissionAction.AddEdit">
+    <MudButton ...>Add</MudButton>
+</PermissionGate>
+
+<PermissionGate AnyOf="PermissionSets.EditDelete">
+    <MudTh>Actions</MudTh>
+</PermissionGate>
+```
+
+- Gate page action groups, row-action columns/cells, bulk actions, import/export,
+  approval controls, and dialog save buttons.
+- Keep search, load, sort, paging, refresh, cancel/close, navigation, profile,
+  theme, and logout ungated.
+- The sidebar only exposes menus returned by `GET api/menu`; do not hardcode
+  maintenance menu items for non-`00` groups.
+- New business pages must use the same `PermissionGate` pattern. Blazor cannot
+  transparently intercept every raw `MudButton`, so the gate is mandatory at the
+  action site.
+
 ## 9. Dynamic menus, screens, and parameters
 
 Menus are database-driven, not hardcoded in the layout:
@@ -561,6 +646,13 @@ Menus are database-driven, not hardcoded in the layout:
   `RecursiveMenuItem`/the authenticated layout.
 - The sidebar can therefore grow dynamically. Do not hardcode menu items into
   Web or MAUI layouts.
+- The framework flow guide is the custom page
+  `/dashboard/documentation/framework-flows`. It is readable by every
+  authenticated user. The `DOC` root is rendered as the fixed top-bar `Docs`
+  menu, not in the sidebar; its `DOC-FLOW` child is the `Framework Flows`
+  dropdown item. `MenuSeeder.EnsureDocumentationMenuAsync` creates both rows for
+  existing databases and maps them to every active group; it is idempotent and
+  must remain safe to run on every seed.
 
 `DynamicComponentResolver` maps component names such as `DynamicScreen`,
 `DynamicReport`, and `DynamicUrlView` to shared Razor pages.

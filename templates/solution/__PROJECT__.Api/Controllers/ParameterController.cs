@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+using __PROJECT__.Api.Authorization;
 using __PROJECT__.Api.Helpers;
+using __PROJECT__.Application.Common;
 using __PROJECT__.Application.DTOs.General;
 using __PROJECT__.Application.DTOs.Parameter;
 using __PROJECT__.Application.Interfaces;
@@ -11,7 +13,7 @@ namespace __PROJECT__.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = "00")]
+[Authorize]
 public class ParameterController : ControllerBase
 {
     private readonly IParameterEngineService _parameterService;
@@ -25,6 +27,7 @@ public class ParameterController : ControllerBase
 
     [HttpGet("systems")]
     [HttpGet("cards")]
+    [RequireMenuAccess(PermissionAction.Load, "MNT-PARAM-MKR", "MNT-PARAM-APR")]
     public async Task<IActionResult> GetSystems()
     {
         var cards = await _parameterService.GetCardsAsync();
@@ -33,6 +36,7 @@ public class ParameterController : ControllerBase
 
     [HttpGet("{tableName}/fields")]
     [HttpGet("fields/{tableName}")]
+    [RequireMenuAccess(PermissionAction.Load, "MNT-PARAM-MKR", "MNT-PARAM-APR")]
     public async Task<IActionResult> GetFields(string tableName)
     {
         try
@@ -48,6 +52,7 @@ public class ParameterController : ControllerBase
     }
 
     [HttpGet("{tableName}/options")]
+    [RequireMenuAccess(PermissionAction.Load, "MNT-PARAM-MKR", "MNT-PARAM-APR")]
     public async Task<IActionResult> GetOptions(string tableName)
     {
         try
@@ -63,6 +68,7 @@ public class ParameterController : ControllerBase
     }
 
     [HttpPost("approval-list/{tableName}")]
+    [RequireMenuAccess(PermissionAction.Load, "MNT-PARAM-APR")]
     public async Task<IActionResult> GetApprovalRows(string tableName, [FromBody] DataTableRequestDto request)
     {
         try
@@ -78,6 +84,7 @@ public class ParameterController : ControllerBase
     }
 
     [HttpPost("{tableName}/list")]
+    [RequireMenuAccess(PermissionAction.Load, "MNT-PARAM-MKR", "MNT-PARAM-APR")]
     public async Task<IActionResult> GetList(string tableName, [FromBody] DataTableRequestDto request)
     {
         try
@@ -107,6 +114,7 @@ public class ParameterController : ControllerBase
     }
 
     [HttpGet("{tableName}/detail")]
+    [RequireMenuAccess(PermissionAction.ViewDetail, "MNT-PARAM-MKR", "MNT-PARAM-APR")]
     public async Task<IActionResult> GetDetail(string tableName, [FromQuery] string? key)
     {
         try
@@ -124,14 +132,17 @@ public class ParameterController : ControllerBase
     }
 
     [HttpPost("save")]
+    [RequireMenuAccess(PermissionAction.AddEdit, "MNT-PARAM-MKR")]
     public async Task<IActionResult> Save([FromBody] ParameterSaveRequestDto request)
         => ToActionResult(await _parameterService.SaveAsync(request));
 
     [HttpDelete("{tableName}")]
+    [RequireMenuAccess(PermissionAction.Delete, "MNT-PARAM-MKR")]
     public async Task<IActionResult> Delete(string tableName, [FromQuery] string? key)
         => ToActionResult(await _parameterService.DeleteAsync(tableName, key));
 
     [HttpPost("pending/list")]
+    [RequireMenuAccess(PermissionAction.Load, "MNT-PARAM-APR")]
     public async Task<IActionResult> GetPending([FromBody] ParameterPendingRequestDto request)
     {
         var result = await _parameterService.GetPendingAsync(request);
@@ -147,10 +158,12 @@ public class ParameterController : ControllerBase
     }
 
     [HttpPost("pending/{id:guid}/approve")]
+    [RequireMenuAccess(PermissionAction.Approve, "MNT-PARAM-APR")]
     public async Task<IActionResult> Approve(Guid id)
         => ToActionResult(await _parameterService.ApproveAsync(id));
 
     [HttpPost("pending/{id:guid}/reject")]
+    [RequireMenuAccess(PermissionAction.Reject, "MNT-PARAM-APR")]
     public async Task<IActionResult> Reject(Guid id)
         => ToActionResult(await _parameterService.RejectAsync(id));
 

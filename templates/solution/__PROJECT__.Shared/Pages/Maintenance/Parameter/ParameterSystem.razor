@@ -24,19 +24,23 @@
         </div>
         @if (IsMakerView)
         {
-            <div class="d-flex gap-2">
-                <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.FileDownload" Class="@("ryz-busy-button" + (_exporting ? " is-busy" : string.Empty))" Disabled="@_exporting" OnClick="ExportMakerAsync">
-                    @(_exporting ? "Exporting..." : "Export Excel")
-                </MudButton>
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="@(_ => OpenAddAsync())">Add</MudButton>
-            </div>
+            <PermissionGate Action="PermissionAction.AddEdit">
+                <div class="d-flex gap-2">
+                    <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.FileDownload" Class="@("ryz-busy-button" + (_exporting ? " is-busy" : string.Empty))" Disabled="@_exporting" OnClick="ExportMakerAsync">
+                        @(_exporting ? "Exporting..." : "Export Excel")
+                    </MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="@(_ => OpenAddAsync())">Add</MudButton>
+                </div>
+            </PermissionGate>
         }
         else if (IsApprovalView)
         {
-            <div class="d-flex gap-2">
-                <MudButton Variant="Variant.Outlined" Color="Color.Success" StartIcon="@Icons.Material.Filled.DoneAll" OnClick="ApproveAll">Approve All</MudButton>
-                <MudButton Variant="Variant.Outlined" Color="Color.Error" StartIcon="@Icons.Material.Filled.DoNotDisturb" OnClick="RejectAll">Reject All</MudButton>
-            </div>
+            <PermissionGate Action="PermissionAction.Approve">
+                <div class="d-flex gap-2">
+                    <MudButton Variant="Variant.Outlined" Color="Color.Success" StartIcon="@Icons.Material.Filled.DoneAll" OnClick="ApproveAll">Approve All</MudButton>
+                    <MudButton Variant="Variant.Outlined" Color="Color.Error" StartIcon="@Icons.Material.Filled.DoNotDisturb" OnClick="RejectAll">Reject All</MudButton>
+                </div>
+            </PermissionGate>
         }
     </div>
 
@@ -107,17 +111,25 @@
                               Class="user-search" />
             </ToolBarContent>
             <HeaderContent>
-                <MudTh Style="text-align:center;">Actions</MudTh>
+                <PermissionGate AnyOf="PermissionSets.EditDelete">
+                    <MudTh Style="text-align:center;">Actions</MudTh>
+                </PermissionGate>
                 @foreach (var field in _makerFields)
                 {
                     <MudTh><MudTableSortLabel T="Dictionary<string, string>" SortLabel="@field.FieldName">@(field.FieldDesc ?? field.FieldName)</MudTableSortLabel></MudTh>
                 }
             </HeaderContent>
             <RowTemplate>
-                <MudTd DataLabel="Actions" Style="text-align:center; white-space:nowrap;">
-                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Color="Color.Primary" OnClick="@(_ => OpenEditAsync(context))" />
-                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error" OnClick="@(_ => DeleteAsync(context))" />
-                </MudTd>
+                <PermissionGate AnyOf="PermissionSets.EditDelete">
+                    <MudTd DataLabel="Actions" Style="text-align:center; white-space:nowrap;">
+                        <PermissionGate Action="PermissionAction.Edit">
+                            <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Color="Color.Primary" OnClick="@(_ => OpenEditAsync(context))" />
+                        </PermissionGate>
+                        <PermissionGate Action="PermissionAction.Delete">
+                            <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error" OnClick="@(_ => DeleteAsync(context))" />
+                        </PermissionGate>
+                    </MudTd>
+                </PermissionGate>
                 @foreach (var field in _makerFields)
                 {
                     <MudTd DataLabel="@(field.FieldDesc ?? field.FieldName)">@context.GetValueOrDefault(field.FieldName)</MudTd>
@@ -161,7 +173,9 @@
                 {
                     <MudTh><MudTableSortLabel T="ParameterApprovalRowDto" SortLabel="@field.FieldName">@(field.FieldDesc?.Replace("_", " ") ?? field.FieldName)</MudTableSortLabel></MudTh>
                 }
-                <MudTh Style="text-align:center;">Action</MudTh>
+                <PermissionGate AnyOf="PermissionSets.ApproveReject">
+                    <MudTh Style="text-align:center;">Action</MudTh>
+                </PermissionGate>
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="ID Pending" Style="max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
@@ -172,13 +186,15 @@
                 {
                     <MudTd DataLabel="@(field.FieldDesc ?? field.FieldName)">@GetApprovalDisplay(field, context.Fields.GetValueOrDefault(field.FieldName))</MudTd>
                 }
-                <MudTd DataLabel="Action" Style="text-align:center;">
-                    <MudRadioGroup @bind-Value="context.Action" Class="approval-radios">
-                        <MudRadio T="int" Value="1" Color="Color.Primary">Approve</MudRadio>
-                        <MudRadio T="int" Value="2" Color="Color.Default">Pending</MudRadio>
-                        <MudRadio T="int" Value="0" Color="Color.Error">Reject</MudRadio>
-                    </MudRadioGroup>
-                </MudTd>
+                <PermissionGate AnyOf="PermissionSets.ApproveReject">
+                    <MudTd DataLabel="Action" Style="text-align:center;">
+                        <MudRadioGroup @bind-Value="context.Action" Class="approval-radios">
+                            <MudRadio T="int" Value="1" Color="Color.Primary">Approve</MudRadio>
+                            <MudRadio T="int" Value="2" Color="Color.Default">Pending</MudRadio>
+                            <MudRadio T="int" Value="0" Color="Color.Error">Reject</MudRadio>
+                        </MudRadioGroup>
+                    </MudTd>
+                </PermissionGate>
             </RowTemplate>
             <NoRecordsContent>
                 <MudText>No pending parameter requests.</MudText>
@@ -188,11 +204,13 @@
             </PagerContent>
         </MudTable>
 
-        <div class="d-flex justify-center mt-4">
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Gavel" Class="@("ryz-busy-button" + (_submittingApproval ? " is-busy" : string.Empty))" Disabled="@_submittingApproval" OnClick="SubmitApprovalsAsync">
-                @(_submittingApproval ? "Submitting..." : "Submit")
-            </MudButton>
-        </div>
+        <PermissionGate Action="PermissionAction.Approve">
+            <div class="d-flex justify-center mt-4">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Gavel" Class="@("ryz-busy-button" + (_submittingApproval ? " is-busy" : string.Empty))" Disabled="@_submittingApproval" OnClick="SubmitApprovalsAsync">
+                    @(_submittingApproval ? "Submitting..." : "Submit")
+                </MudButton>
+            </div>
+        </PermissionGate>
     }
 </MudPaper>
 

@@ -1,7 +1,6 @@
 @page "/dashboard/maintenance/menu-approval"
 @layout AuthenticatedLayout
 @attribute [Authorize]
-@attribute [Authorize(Roles = "00")]
 @inject ApprovalApiService ApprovalApi
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
@@ -14,10 +13,12 @@
         <h1>Menu Approval</h1>
         <p>Review menu creation, modification, and deletion requests.</p>
     </div>
-    <div class="d-flex gap-2">
-        <MudButton Variant="Variant.Outlined" Color="Color.Success" StartIcon="@Icons.Material.Filled.DoneAll" OnClick="ApproveAll">Approve All</MudButton>
-        <MudButton Variant="Variant.Outlined" Color="Color.Error" StartIcon="@Icons.Material.Filled.DoNotDisturb" OnClick="RejectAll">Reject All</MudButton>
-    </div>
+    <PermissionGate Action="PermissionAction.Approve">
+        <div class="d-flex gap-2">
+            <MudButton Variant="Variant.Outlined" Color="Color.Success" StartIcon="@Icons.Material.Filled.DoneAll" OnClick="ApproveAll">Approve All</MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Error" StartIcon="@Icons.Material.Filled.DoNotDisturb" OnClick="RejectAll">Reject All</MudButton>
+        </div>
+    </PermissionGate>
 </div>
 
 <MudPaper Elevation="0" Class="dashboard-card">
@@ -49,7 +50,9 @@
             <MudTh><MudTableSortLabel T="MenuApprovalListItemDto" SortLabel="menuuniqueparent">Parent</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel T="MenuApprovalListItemDto" SortLabel="approvaltype">Type</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel T="MenuApprovalListItemDto" SortLabel="requesterfullname">Requester</MudTableSortLabel></MudTh>
-            <MudTh Style="text-align:center;">Action</MudTh>
+            <PermissionGate AnyOf="PermissionSets.ApproveReject">
+                <MudTh Style="text-align:center;">Action</MudTh>
+            </PermissionGate>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Unique">@context.MenuUnique</MudTd>
@@ -58,13 +61,15 @@
             <MudTd DataLabel="Parent">@context.MenuUniqueParent</MudTd>
             <MudTd DataLabel="Type">@context.ApprovalType</MudTd>
             <MudTd DataLabel="Requester">@context.RequesterFullName</MudTd>
-            <MudTd DataLabel="Action" Style="text-align:center;">
-                <MudRadioGroup @bind-Value="context.SelectedAction" Class="approval-radios">
-                    <MudRadio T="int" Value="1" Color="Color.Primary">Approve</MudRadio>
-                    <MudRadio T="int" Value="2" Color="Color.Default">Pending</MudRadio>
-                    <MudRadio T="int" Value="0" Color="Color.Error">Reject</MudRadio>
-                </MudRadioGroup>
-            </MudTd>
+            <PermissionGate AnyOf="PermissionSets.ApproveReject">
+                <MudTd DataLabel="Action" Style="text-align:center;">
+                    <MudRadioGroup @bind-Value="context.SelectedAction" Class="approval-radios">
+                        <MudRadio T="int" Value="1" Color="Color.Primary">Approve</MudRadio>
+                        <MudRadio T="int" Value="2" Color="Color.Default">Pending</MudRadio>
+                        <MudRadio T="int" Value="0" Color="Color.Error">Reject</MudRadio>
+                    </MudRadioGroup>
+                </MudTd>
+            </PermissionGate>
         </RowTemplate>
         <NoRecordsContent>
             <MudText>No pending menu requests.</MudText>
@@ -77,11 +82,13 @@
         </PagerContent>
     </MudTable>
 
-    <div class="d-flex justify-center mt-4">
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Gavel" Class="@("ryz-busy-button" + (_submitting ? " is-busy" : string.Empty))" Disabled="@_submitting" OnClick="SubmitApprovalsAsync">
-            @(_submitting ? "Submitting..." : "Submit")
-        </MudButton>
-    </div>
+    <PermissionGate Action="PermissionAction.Approve">
+        <div class="d-flex justify-center mt-4">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Gavel" Class="@("ryz-busy-button" + (_submitting ? " is-busy" : string.Empty))" Disabled="@_submitting" OnClick="SubmitApprovalsAsync">
+                @(_submitting ? "Submitting..." : "Submit")
+            </MudButton>
+        </div>
+    </PermissionGate>
 </MudPaper>
 
 @code {
