@@ -1,0 +1,194 @@
+@page "/dashboard/documentation/framework-flows"
+@layout AuthenticatedLayout
+@attribute [Authorize]
+@using MudBlazor
+@using __PROJECT__.Shared.Pages.Documentation
+
+<MudBreadcrumbs Items="_breadcrumbs" Separator=">" Class="mb-3" />
+
+<div class="page-heading">
+    <div>
+        <div class="dashboard-kicker">Documentation</div>
+        <h1>Framework Flows</h1>
+        <p>End-to-end operating guide for users, roles, menus, parameters, approvals, and passwords.</p>
+    </div>
+</div>
+
+<MudPaper Elevation="0" Class="dashboard-card mb-4">
+    <MudText Typo="Typo.h6" Class="mb-2">Start here</MudText>
+    <MudText Typo="Typo.body2" Class="mb-3">
+        This page is readable by every signed-in user. Administrative actions require the
+        administrator group <strong>00</strong>.
+    </MudText>
+
+    <div class="d-flex flex-wrap gap-2">
+        <MudChip T="string" Size="Size.Small" Color="Color.Primary">Group 00 = administrator</MudChip>
+        <MudChip T="string" Size="Size.Small" Color="Color.Default">One role per user</MudChip>
+        <MudChip T="string" Size="Size.Small" Color="Color.Default">One pending request per item</MudChip>
+        <MudChip T="string" Size="Size.Small" Color="Color.Default">Pending = staging row exists</MudChip>
+    </div>
+
+    <MudDivider Class="my-4" />
+
+    <MudText Typo="Typo.subtitle2" Class="mb-2">Recommended order</MudText>
+    <div class="d-flex flex-wrap align-center gap-2">
+        @for (var i = 0; i < FlowOrder.Length; i++)
+        {
+            var label = FlowOrder[i];
+            <MudChip T="string" Size="Size.Small" Color="Color.Default">@label</MudChip>
+            @if (i < FlowOrder.Length - 1)
+            {
+                <MudIcon Icon="@Icons.Material.Filled.ArrowForward" Size="Size.Small" Color="Color.Default" />
+            }
+        }
+    </div>
+
+    <MudAlert Severity="Severity.Warning" Class="mt-4">
+        The permission flags Can Add/Edit, Can Delete, and Read Only are stored and displayed,
+        but the current server authorization still uses group 00 for maintenance and approval endpoints.
+    </MudAlert>
+</MudPaper>
+
+<MudPaper Elevation="0" Class="dashboard-card mb-4">
+    <MudText Typo="Typo.h6" Class="mb-2">Approval map</MudText>
+    <MudSimpleTable Dense="true" Hover="true">
+        <thead>
+            <tr>
+                <th>Flow</th>
+                <th>Approval</th>
+                <th>Staging or result</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>User</td>
+                <td>User Approval</td>
+                <td>temp_user_app_pending</td>
+            </tr>
+            <tr>
+                <td>Group</td>
+                <td>Group Approval</td>
+                <td>temp_group_app_pending</td>
+            </tr>
+            <tr>
+                <td>Role</td>
+                <td>Role Approval</td>
+                <td>tb_parameter_sytem_temporary (um_user_group)</td>
+            </tr>
+            <tr>
+                <td>Menu</td>
+                <td>Menu Approval</td>
+                <td>tb_parameter_sytem_temporary (um_menu)</td>
+            </tr>
+            <tr>
+                <td>Menu mapping</td>
+                <td>No approval</td>
+                <td>um_group_menu is replaced immediately</td>
+            </tr>
+            <tr>
+                <td>Parameter data</td>
+                <td>Parameter Approval</td>
+                <td>tb_parameter_sytem_temporary and detail rows</td>
+            </tr>
+            <tr>
+                <td>Password</td>
+                <td>No approval</td>
+                <td>um_user_app and um_user_app_flag</td>
+            </tr>
+        </tbody>
+    </MudSimpleTable>
+</MudPaper>
+
+<MudTabs Elevation="0" Rounded="true" ApplyEffectsToContainer="true" TabPanelsClass="pt-4">
+    @foreach (var flow in FrameworkFlowCatalog.Flows)
+    {
+        <MudTabPanel Text="@flow.Tab" Icon="@flow.Icon">
+            <MudText Typo="Typo.h5" Class="mb-2">@flow.Title</MudText>
+            <MudText Typo="Typo.body1" Class="mb-3">@flow.Summary</MudText>
+
+            <div class="d-flex flex-wrap gap-2 mb-3">
+                <MudChip T="string" Size="Size.Small" Color="Color.Default">@flow.Audience</MudChip>
+                <MudChip T="string" Size="Size.Small"
+                         Color="@(flow.Approval == "No approval" ? Color.Success : Color.Warning)">
+                    @flow.Approval
+                </MudChip>
+            </div>
+
+            <MudGrid Spacing="3">
+                <MudItem xs="12" md="4">
+                    <MudPaper Outlined="true" Class="pa-4">
+                        <MudText Typo="Typo.subtitle1" Class="mb-3">Prerequisites</MudText>
+                        @foreach (var prerequisite in flow.Prerequisites)
+                        {
+                            <div class="d-flex gap-2 mb-2">
+                                <MudIcon Icon="@Icons.Material.Filled.CheckCircle"
+                                         Color="Color.Primary"
+                                         Size="Size.Small" />
+                                <MudText Typo="Typo.body2">@prerequisite</MudText>
+                            </div>
+                        }
+                    </MudPaper>
+                </MudItem>
+
+                <MudItem xs="12" md="8">
+                    <MudPaper Outlined="true" Class="pa-4">
+                        <MudText Typo="Typo.subtitle1" Class="mb-3">Steps</MudText>
+                        @for (var i = 0; i < flow.Steps.Count; i++)
+                        {
+                            var step = flow.Steps[i];
+                            var stepNumber = i + 1;
+                            <div class="d-flex gap-3 mb-3">
+                                <MudChip T="string" Size="Size.Small" Color="Color.Primary">@stepNumber</MudChip>
+                                <div>
+                                    <MudText Typo="Typo.subtitle2">@step.Title</MudText>
+                                    <MudText Typo="Typo.body2">@step.Detail</MudText>
+                                </div>
+                            </div>
+                        }
+                    </MudPaper>
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudText Typo="Typo.subtitle1" Class="mb-2">Watch out</MudText>
+                    @foreach (var warning in flow.Warnings)
+                    {
+                        <MudAlert Severity="Severity.Warning" Class="mb-2">@warning</MudAlert>
+                    }
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudText Typo="Typo.subtitle1" Class="mb-2">Technical reference</MudText>
+                    <MudPaper Outlined="true" Class="pa-4">
+                        @foreach (var line in flow.Technical)
+                        {
+                            <MudText Typo="Typo.body2" Class="mb-1">
+                                <code>@line</code>
+                            </MudText>
+                        }
+                    </MudPaper>
+                </MudItem>
+            </MudGrid>
+        </MudTabPanel>
+    }
+</MudTabs>
+
+@code {
+    private readonly List<BreadcrumbItem> _breadcrumbs = new()
+    {
+        new BreadcrumbItem("Dashboard", href: "/dashboard"),
+        new BreadcrumbItem("Documentation", href: null, disabled: true),
+        new BreadcrumbItem("Framework Flows", href: null, disabled: true),
+    };
+
+    private static readonly string[] FlowOrder =
+    {
+        "Group",
+        "User",
+        "Role",
+        "Menus",
+        "Login",
+        "Parameter",
+        "Maker / Approval",
+        "Password",
+    };
+}

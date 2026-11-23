@@ -35,6 +35,23 @@
                        Class="app-drawer-toggle ml-2"
                        aria-label="@(DrawerToggleState ? "Collapse navigation" : "Expand navigation")"
                        OnClick="@(_ => ToggleDrawer())" />
+        @if (_docsMenu is { Children.Count: > 0 })
+        {
+            <MudMenu AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopLeft">
+                <ActivatorContent Context="docsMenu">
+                    <MudButton Variant="Variant.Text"
+                               Color="Color.Primary"
+                               Class="app-docs-button"
+                               OnClick="@(_ => docsMenu.ToggleAsync())">Docs</MudButton>
+                </ActivatorContent>
+                <ChildContent>
+                    @foreach (var docsPage in _docsMenu.Children.OrderBy(item => item.OrderSeq))
+                    {
+                        <MudMenuItem OnClick="@(() => OpenMenu(docsPage))">@docsPage.MenuName</MudMenuItem>
+                    }
+                </ChildContent>
+            </MudMenu>
+        }
         <MudSpacer />
         <div class="search-wrapper" @onclick:stopPropagation="true">
             <div class="search-box">
@@ -323,6 +340,7 @@
     private bool _searchOpen;
     private List<MenuSearchResult> _filteredResults = new();
     private List<MenuItemDto> _menuItems = new();
+    private MenuItemDto? _docsMenu;
     private List<NotificationDto> _notifications = new();
     private HubConnection? _hub;
     private bool _pendingTabAnimation;
@@ -332,7 +350,11 @@
     protected override async Task OnInitializedAsync()
     {
         TabService.OnTabsChanged += OnTabsChanged;
-        _menuItems = await MenuService.GetUserMenuAsync();
+        var menus = await MenuService.GetUserMenuAsync();
+        _docsMenu = menus.FirstOrDefault(e => string.Equals(e.MenuUnique, "DOC", StringComparison.OrdinalIgnoreCase));
+        _menuItems = menus
+            .Where(e => !string.Equals(e.MenuUnique, "DOC", StringComparison.OrdinalIgnoreCase))
+            .ToList();
 
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         _userName = authState.User.Identity?.Name;
@@ -704,9 +726,10 @@
     private void OnSearchChanged()
     {
         _searchOpen = true;
+        var searchMenus = _docsMenu == null ? _menuItems : _menuItems.Append(_docsMenu);
         _filteredResults = string.IsNullOrWhiteSpace(_searchTerm)
             ? new List<MenuSearchResult>()
-            : FlattenWithPath(_menuItems)
+            : FlattenWithPath(searchMenus)
                 .Where(m => !string.IsNullOrWhiteSpace(m.Item.ComponentType)
                             && (m.Item.MenuName.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase)
                                 || m.Path.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase)))

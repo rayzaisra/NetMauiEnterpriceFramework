@@ -123,6 +123,13 @@ Icon values are exact `Icons.Material.Filled` field names, for example
 `Settings`, not Font Awesome classes and not SVG markup. `menu_icon_name` is
 the display description; `menu_icon_name_alternate` stays `NULL`.
 
+The framework flow guide is a custom page at
+`/dashboard/documentation/framework-flows`, readable by every authenticated
+user. Its `DOC` root is shown as the fixed top-bar `Docs` menu, with
+`DOC-FLOW` as the `Framework Flows` dropdown item. Both rows are ensured by
+`MenuSeeder.EnsureDocumentationMenuAsync` so existing databases receive the
+menu without relying on the initial `MNT` seed.
+
 ### Static Razor page menu
 
 1. Add the page under `Shared/Pages/...`.

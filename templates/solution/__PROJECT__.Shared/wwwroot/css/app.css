@@ -1268,6 +1268,22 @@ html, body {
     color: var(--mud-palette-appbar-text) !important;
 }
 
+.app-docs-button {
+    min-height: 36px;
+    margin-left: 8px;
+    padding: 0 14px;
+    border-radius: 10px;
+    text-transform: none;
+    font-weight: 700;
+    letter-spacing: 0;
+    color: var(--mud-palette-primary) !important;
+    background: color-mix(in srgb, var(--mud-palette-primary) 12%, transparent) !important;
+}
+
+.app-docs-button:hover {
+    background: color-mix(in srgb, var(--mud-palette-primary) 20%, transparent) !important;
+}
+
 .enterprise-tabs {
     background: var(--mud-palette-surface);
     border: 0;

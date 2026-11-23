@@ -7,6 +7,11 @@ namespace __PROJECT__.Infrastructure.Data;
 
 public static class MenuSeeder
 {
+    private const string DocumentationUnique = "DOC";
+    private const string DocumentationPageUnique = "DOC-FLOW";
+    private const string DocumentationPageRoute = "/dashboard/documentation/framework-flows";
+    private const string DocumentationComponent = "__PROJECT__.Shared.Pages.Documentation.FrameworkFlows, __PROJECT__.Shared";
+
     private static readonly (string Code, string Name)[] Icons =
     {
         ("Settings", "Settings"),
@@ -59,6 +64,8 @@ public static class MenuSeeder
 
     public static async Task SeedAsync(__PROJECT__DbContext context, CancellationToken cancellationToken = default)
     {
+        await EnsureDocumentationMenuAsync(context, cancellationToken);
+
         if (await context.um_menu.AnyAsync(e => e.menu_unique == "MNT", cancellationToken))
         {
             await RemoveEmailMenusAsync(context, cancellationToken);
@@ -122,6 +129,110 @@ public static class MenuSeeder
                 createdBy = "system",
                 createdDate = now,
             }, cancellationToken);
+        }
+
+        await context.SaveChangesAsync(cancellationToken);
+    }
+
+    private static async Task EnsureDocumentationMenuAsync(
+        __PROJECT__DbContext context,
+        CancellationToken cancellationToken)
+    {
+        var now = DateTime.Now;
+        var root = await context.um_menu
+            .FirstOrDefaultAsync(e => e.menu_unique == DocumentationUnique, cancellationToken);
+
+        if (root == null)
+        {
+            root = new um_menu
+            {
+                menu_unique = DocumentationUnique,
+                menu_name = "Docs",
+                parent_level_id = "A",
+                menu_unique_parent = string.Empty,
+                menu_icon = "MenuBook",
+                order_seq = 2,
+                statusApproval = Const.StatusApproval.APPROVED,
+                isActive = true,
+                isDeleted = false,
+                isLocked = false,
+                isDefault = false,
+                createdBy = "system",
+                createdDate = now,
+            };
+
+            await context.um_menu.AddAsync(root, cancellationToken);
+            await context.SaveChangesAsync(cancellationToken);
+        }
+        else if (!string.Equals(root.menu_name, "Docs", StringComparison.Ordinal))
+        {
+            root.menu_name = "Docs";
+        }
+
+        var page = await context.um_menu
+            .FirstOrDefaultAsync(e => e.menu_unique == DocumentationPageUnique, cancellationToken);
+
+        if (page == null)
+        {
+            page = new um_menu
+            {
+                menu_unique = DocumentationPageUnique,
+                menu_name = "Framework Flows",
+                menu_url = DocumentationPageRoute,
+                parent_level_id = "D",
+                menu_unique_parent = DocumentationUnique,
+                menu_icon = "Description",
+                order_seq = 1,
+                component_type = DocumentationComponent,
+                statusApproval = Const.StatusApproval.APPROVED,
+                isActive = true,
+                isDeleted = false,
+                isLocked = false,
+                isDefault = false,
+                createdBy = "system",
+                createdDate = now,
+            };
+
+            await context.um_menu.AddAsync(page, cancellationToken);
+            await context.SaveChangesAsync(cancellationToken);
+        }
+
+        var groupIds = await context.um_group_app
+            .Where(e => e.isActive != false && e.isDeleted != true)
+            .Select(e => e.group_id)
+            .ToListAsync(cancellationToken);
+
+        var menuIds = new[] { root.id, page.id };
+        var existing = await context.um_group_menu
+            .Where(e => e.menu_id != null && menuIds.Contains(e.menu_id.Value))
+            .Select(e => new { e.group_id, e.menu_id })
+            .ToListAsync(cancellationToken);
+        var existingPairs = existing
+            .Select(e => (GroupId: e.group_id ?? string.Empty, MenuId: e.menu_id ?? 0))
+            .ToHashSet();
+
+        foreach (var groupId in groupIds)
+        {
+            foreach (var menuId in menuIds)
+            {
+                if (existingPairs.Contains((groupId, menuId)))
+                {
+                    continue;
+                }
+
+                await context.um_group_menu.AddAsync(new um_group_menu
+                {
+                    group_id = groupId,
+                    menu_id = menuId,
+                    statusApproval = Const.StatusApproval.APPROVED,
+                    isActive = true,
+                    isDeleted = false,
+                    isLocked = false,
+                    isDefault = false,
+                    createdBy = "system",
+                    createdDate = now,
+                }, cancellationToken);
+            }
         }
 
         await context.SaveChangesAsync(cancellationToken);
