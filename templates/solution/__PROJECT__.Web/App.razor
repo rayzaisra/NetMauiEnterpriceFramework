@@ -1,10 +1,21 @@
 ﻿@using __PROJECT__.Shared.Components
 @using __PROJECT__.Shared.Layouts
 @using __PROJECT__.Shared.Pages
+@inject IJSRuntime JS
 
 <MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
+
+<div class="ryz-route-overlay" aria-hidden="true">
+    <div class="ryz-route-overlay-card" role="status" aria-live="polite">
+        <img src="images/branding/app-logo.png" alt="" />
+        <div class="ryz-route-overlay-title">Preparing workspace</div>
+        <div class="ryz-route-overlay-track">
+            <div class="ryz-route-overlay-bar"></div>
+        </div>
+    </div>
+</div>
 
 <CascadingAuthenticationState>
     <Router AppAssembly="@typeof(Login).Assembly" NotFoundPage="@typeof(ErrorPage)">
@@ -18,3 +29,15 @@
         </Found>
     </Router>
 </CascadingAuthenticationState>
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            return;
+        }
+
+        await JS.InvokeVoidAsync("ryzBootReady");
+    }
+}

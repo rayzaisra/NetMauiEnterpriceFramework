@@ -15,8 +15,6 @@ public sealed class MotionService : IAsyncDisposable
         _logger = logger;
     }
 
-    public Task PlayLoginAsync() => InvokeAsync("initLogin");
-
     public Task PlayDashboardAsync() => InvokeAsync("initDashboard");
 
     public Task PlayNotificationsAsync() => InvokeAsync("initNotifications");
@@ -24,6 +22,10 @@ public sealed class MotionService : IAsyncDisposable
     public Task PlayMobilePageAsync() => InvokeAsync("initMobilePage");
 
     public Task PlayTabPanelAsync() => InvokeAsync("playTabPanel");
+
+    public Task BeginRouteTransitionAsync() => InvokeAsync("beginRouteTransition");
+
+    public Task EndRouteTransitionAsync() => InvokeAsync("endRouteTransition");
 
     public Task PlayNotificationArrivalAsync() => InvokeAsync("playNotificationArrival");
 

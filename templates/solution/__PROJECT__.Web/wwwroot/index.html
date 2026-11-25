@@ -10,12 +10,24 @@
         (function () {
             var allowed = ["default", "fintech", "monochrome", "creative", "wellness"];
             var palette = "__THEME_PALETTE__";
+            var style = "default";
+            var mode = "light";
+            var repeat = false;
             try {
                 var saved = localStorage.getItem("enterprise-ui-palette");
                 if (saved) palette = saved;
+                var savedStyle = localStorage.getItem("enterprise-ui-style");
+                if (savedStyle) style = savedStyle;
+                var savedMode = localStorage.getItem("enterprise-ui-theme-mode");
+                if (savedMode) mode = savedMode;
+                repeat = sessionStorage.getItem("ryz-boot-seen") === "1";
+                sessionStorage.setItem("ryz-boot-seen", "1");
             } catch (e) { }
             if (allowed.indexOf(palette) < 0) palette = "default";
             document.documentElement.setAttribute("data-palette", palette);
+            document.documentElement.setAttribute("data-style", style);
+            document.documentElement.setAttribute("data-theme-mode", mode);
+            if (repeat) document.documentElement.classList.add("ryz-boot-repeat");
         })();
     </script>
     <link rel="preload" id="webassembly" />
@@ -28,13 +40,19 @@
 </head>
 
 <body>
-    <div id="app">
-        <svg class="loading-progress">
-            <circle r="40%" cx="50%" cy="50%" />
-            <circle r="40%" cx="50%" cy="50%" />
-        </svg>
-        <div class="loading-progress-text"></div>
+    <div class="ryz-boot" data-ryz-boot role="status" aria-live="polite">
+        <div class="ryz-boot-card">
+            <img src="images/branding/app-logo.png" alt="" />
+            <div class="ryz-boot-brand">__PROJECT__</div>
+            <div class="ryz-boot-stage">Starting workspace</div>
+            <div class="ryz-boot-track">
+                <div class="ryz-boot-bar" data-ryz-boot-bar></div>
+            </div>
+            <div class="ryz-boot-text"></div>
+        </div>
     </div>
+
+    <div id="app"></div>
 
     <div id="blazor-error-ui">
         An unhandled error has occurred.
@@ -45,6 +63,24 @@
     <script src="_content/MudBlazor/MudBlazor.min.js"></script>
     <script src="_framework/blazor.webassembly#[.{fingerprint}].js"></script>
     <script>
+        window.ryzBootReady = function () {
+            var root = document.documentElement;
+            if (root.classList.contains("ryz-boot-ready")) {
+                return;
+            }
+            root.classList.add("ryz-boot-ready");
+            window.setTimeout(function () {
+                var boot = document.querySelector("[data-ryz-boot]");
+                if (boot) {
+                    boot.remove();
+                }
+            }, 650);
+        };
+        window.setTimeout(function () {
+            if (window.ryzBootReady) {
+                window.ryzBootReady();
+            }
+        }, 12000);
         window.ryzMotionModule = (window.ryzMotionModule
             || import("./_content/__PROJECT__.Shared/js/ryzcore-motion.js"))
             .catch(function () { return null; });

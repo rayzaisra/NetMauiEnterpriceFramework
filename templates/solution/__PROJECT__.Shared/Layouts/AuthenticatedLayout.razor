@@ -227,12 +227,24 @@
 
                 <MudDivider Class="my-3" />
 
-                @foreach (var item in _menuItems)
+                @if (_menusLoading)
                 {
-                    <RecursiveMenuItem Item="item"
-                                       OnOpen="OpenMenu"
-                                       ActiveUrl="@ActiveUrl"
-                                       Expanded="@(_expandedParentUnique == item.MenuUnique)" />
+                    <div class="ryz-sidebar-skeleton" aria-hidden="true">
+                        @for (var row = 0; row < 7; row++)
+                        {
+                            <div class="ryz-sidebar-skeleton-row"></div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    @foreach (var item in _menuItems)
+                    {
+                        <RecursiveMenuItem Item="item"
+                                           OnOpen="OpenMenu"
+                                           ActiveUrl="@ActiveUrl"
+                                           Expanded="@(_expandedParentUnique == item.MenuUnique)" />
+                    }
                 }
             }
             else
@@ -242,17 +254,29 @@
                 </div>
                 <MudDivider Class="my-2" />
                 <div class="sidebar-rail">
-                    @for (var index = 0; index < _menuItems.Count; index++)
+                    @if (_menusLoading)
                     {
-                        var item = _menuItems[index];
-                        <button type="button"
-                                class="sidebar-rail-item"
-                                style="animation-delay:@(index * 25)ms"
-                                title="@item.MenuName"
-                                aria-label="@item.MenuName"
-                                @onclick="@(() => ExpandFromRail(item))">
-                            <MudIcon Icon="@MenuIconResolver.GetIcon(item.MenuIcon)" />
-                        </button>
+                        <div class="ryz-sidebar-rail-skeleton" aria-hidden="true">
+                            @for (var row = 0; row < 6; row++)
+                            {
+                                <span></span>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        @for (var index = 0; index < _menuItems.Count; index++)
+                        {
+                            var item = _menuItems[index];
+                            <button type="button"
+                                    class="sidebar-rail-item"
+                                    style="animation-delay:@(index * 25)ms"
+                                    title="@item.MenuName"
+                                    aria-label="@item.MenuName"
+                                    @onclick="@(() => ExpandFromRail(item))">
+                                <MudIcon Icon="@MenuIconResolver.GetIcon(item.MenuIcon)" />
+                            </button>
+                        }
                     }
                 </div>
             }
@@ -340,6 +364,7 @@
     private bool _searchOpen;
     private List<MenuSearchResult> _filteredResults = new();
     private List<MenuItemDto> _menuItems = new();
+    private bool _menusLoading = true;
     private MenuItemDto? _docsMenu;
     private List<NotificationDto> _notifications = new();
     private HubConnection? _hub;
@@ -350,26 +375,9 @@
     protected override async Task OnInitializedAsync()
     {
         TabService.OnTabsChanged += OnTabsChanged;
-        var menus = await MenuService.GetUserMenuAsync();
-        _docsMenu = menus.FirstOrDefault(e => string.Equals(e.MenuUnique, "DOC", StringComparison.OrdinalIgnoreCase));
-        _menuItems = menus
-            .Where(e => !string.Equals(e.MenuUnique, "DOC", StringComparison.OrdinalIgnoreCase))
-            .ToList();
 
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        _userName = authState.User.Identity?.Name;
-
-        try
-        {
-            _notifications = await NotificationApi.GetRecentAsync();
-            _unreadCount = await NotificationApi.GetUnreadCountAsync();
-        }
-        catch
-        {
-            // Notifications are non-blocking; the rest of the shell remains usable.
-        }
-
-        _ = StartHubAsync();
+        await ThemeService.InitializeAsync();
+        _isDarkMode = ThemeService.IsDarkMode;
 
         if (TabService.Tabs.Count == 0)
         {
@@ -377,6 +385,54 @@
         }
 
         SyncSelectedTab();
+
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        _userName = authState.User.Identity?.Name;
+
+        _ = StartHubAsync();
+        _ = LoadShellDataAsync();
+    }
+
+    private async Task LoadShellDataAsync()
+    {
+        var menuTask = MenuService.GetUserMenuAsync();
+        var notificationsTask = LoadNotificationsAsync();
+
+        try
+        {
+            var menus = await menuTask;
+            _docsMenu = menus.FirstOrDefault(e => string.Equals(e.MenuUnique, "DOC", StringComparison.OrdinalIgnoreCase));
+            _menuItems = menus
+                .Where(e => !string.Equals(e.MenuUnique, "DOC", StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
+        catch
+        {
+            _menuItems = new List<MenuItemDto>();
+        }
+        finally
+        {
+            _menusLoading = false;
+        }
+
+        await notificationsTask;
+
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task LoadNotificationsAsync()
+    {
+        try
+        {
+            var recentTask = NotificationApi.GetRecentAsync();
+            var unreadTask = NotificationApi.GetUnreadCountAsync();
+            _notifications = await recentTask;
+            _unreadCount = await unreadTask;
+        }
+        catch
+        {
+            // Notifications are non-blocking; the rest of the shell remains usable.
+        }
     }
 
     private async Task StartHubAsync()
@@ -589,9 +645,9 @@
         if (firstRender)
         {
             await ThemeService.InitializeAsync();
-            await ThemeService.SetDarkModeAsync(_isDarkMode);
+            _isDarkMode = ThemeService.IsDarkMode;
             await Motion.InitBusyIndicatorsAsync();
-            StateHasChanged();
+            await Motion.EndRouteTransitionAsync();
 
             try
             {

@@ -492,6 +492,8 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        await ThemeService.InitializeAsync();
+
         var path = Navigation.ToBaseRelativePath(Navigation.Uri).Split('?')[0].Trim('/');
         if (path.Equals("forgot-password", StringComparison.OrdinalIgnoreCase))
         {
@@ -544,8 +546,6 @@ else
         }
 
         await ThemeService.InitializeAsync();
-        await Motion.PlayLoginAsync();
-        StateHasChanged();
     }
 
     private void ShowForgot()
@@ -687,15 +687,20 @@ else
             await TokenStorage.SetAccessTokenAsync(response.AccessToken);
             await TokenStorage.SetRefreshTokenAsync(response.RefreshToken);
             AuthStateNotifier.NotifyUserLogin(response.User.UserId);
-            Snackbar.Add("Login successful", Severity.Success);
 
             if (response.UrlDestination == "changepassword")
             {
                 Navigation.NavigateTo("/change-password", true);
             }
+            else if (IsMauiApp)
+            {
+                Navigation.NavigateTo("/maui/dashboard");
+            }
             else
             {
-                Navigation.NavigateTo(IsMauiApp ? "/maui/dashboard" : "/dashboard", true);
+                await Motion.BeginRouteTransitionAsync();
+                await Task.Delay(180);
+                Navigation.NavigateTo("/dashboard");
             }
         }
         catch (Exception ex)

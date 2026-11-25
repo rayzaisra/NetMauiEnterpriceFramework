@@ -2466,11 +2466,16 @@ body:has(.neo-brutalism) .mud-dialog .mud-switch-thumb {
     border-radius: 999px;
 }
 
-.ryz-process-progress-bar {
+.ryz-process-bar {
     width: 0;
     height: 100%;
     border-radius: inherit;
     background: linear-gradient(90deg, var(--app-accent), var(--app-warning));
+}
+
+.ryz-process-track.is-indeterminate .ryz-process-bar {
+    width: 38% !important;
+    animation: ryz-route-bar 1.25s ease-in-out infinite;
 }
 
 .ryz-process-percent {
@@ -2492,7 +2497,7 @@ body:has(.neo-brutalism) .mud-dialog .mud-switch-thumb {
     border: 2px solid var(--neo-ink);
 }
 
-.neo-brutalism .ryz-process-progress-bar {
+.neo-brutalism .ryz-process-bar {
     background: var(--app-accent);
 }
 
@@ -2528,6 +2533,443 @@ body:has(.neo-brutalism) .mud-dialog .mud-switch-thumb {
 @media (prefers-reduced-motion: reduce) {
     .ryz-process-overlay,
     .ryz-process-card {
+        animation: none;
+    }
+}
+
+/* Boot, login, route, tab, dashboard, and skeleton transitions */
+@keyframes ryz-login-in {
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes ryz-login-visual {
+    from {
+        opacity: 0;
+        transform: scale(1.045);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes ryz-tab-in {
+    from {
+        opacity: .45;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes ryz-dashboard-in {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(.99);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes ryz-shimmer {
+    from {
+        background-position: 200% 0;
+    }
+
+    to {
+        background-position: -200% 0;
+    }
+}
+
+@keyframes ryz-boot-in {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes ryz-route-bar {
+    0% {
+        transform: translateX(-110%);
+    }
+
+    55% {
+        transform: translateX(120%);
+    }
+
+    100% {
+        transform: translateX(310%);
+    }
+}
+
+/* Login form entrance is CSS-first so it starts before the first paint. */
+.login-shell .login-brand-top,
+.login-shell .login-form-panel,
+.login-shell .login-form-header,
+.login-shell .login-form-fields > *:not(.mud-button-root),
+.login-shell .login-form-panel .mud-button-root {
+    animation: ryz-login-in 380ms var(--ryz-ease-out) both;
+}
+
+.login-shell .login-brand-visual img {
+    animation: ryz-login-visual 620ms var(--ryz-ease-out) 60ms both;
+}
+
+.login-shell .login-brand-top {
+    animation-duration: 360ms;
+}
+
+.login-shell .login-form-panel {
+    animation-duration: 440ms;
+    animation-delay: 80ms;
+}
+
+.login-shell .login-form-header {
+    animation-duration: 280ms;
+    animation-delay: 220ms;
+}
+
+.login-shell .login-form-fields > *:not(.mud-button-root) {
+    animation-duration: 300ms;
+    animation-delay: 280ms;
+}
+
+.login-shell .login-form-fields > *:nth-child(2) {
+    animation-delay: 328ms;
+}
+
+.login-shell .login-form-fields > *:nth-child(3) {
+    animation-delay: 376ms;
+}
+
+.login-shell .login-form-fields > *:nth-child(4) {
+    animation-delay: 424ms;
+}
+
+.login-shell .login-form-fields > *:nth-child(5) {
+    animation-delay: 472ms;
+}
+
+.login-shell .login-form-panel .mud-button-root {
+    animation-duration: 260ms;
+    animation-delay: 420ms;
+}
+
+.maui-auth-shell .maui-auth-logo,
+.maui-auth-shell .maui-auth-heading,
+.maui-auth-shell .maui-auth-form-area,
+.maui-auth-shell .maui-auth-form-area .mud-input-control,
+.maui-auth-shell .maui-auth-submit {
+    animation: ryz-login-in 380ms var(--ryz-ease-out) both;
+}
+
+.maui-auth-shell .maui-auth-logo {
+    animation: ryz-login-visual 360ms var(--ryz-ease-out) both;
+}
+
+.maui-auth-shell .maui-auth-heading {
+    animation-delay: 100ms;
+}
+
+.maui-auth-shell .maui-auth-form-area {
+    animation-duration: 420ms;
+    animation-delay: 160ms;
+}
+
+.maui-auth-shell .maui-auth-form-area .mud-input-control {
+    animation-duration: 300ms;
+    animation-delay: 250ms;
+}
+
+.maui-auth-shell .maui-auth-submit {
+    animation-duration: 260ms;
+    animation-delay: 400ms;
+}
+
+.enterprise-tabs .mud-tab-panel.is-active,
+.ryz-tab-content.is-active {
+    animation: ryz-tab-in 300ms var(--ryz-ease-out) both;
+}
+
+.dashboard-page .dashboard-hero,
+.dashboard-page .dashboard-card,
+.bento-dashboard .bento-card {
+    animation: ryz-dashboard-in 420ms var(--ryz-ease-out) both;
+}
+
+.bento-dashboard .bento-card:nth-child(2) {
+    animation-delay: 45ms;
+}
+
+.bento-dashboard .bento-card:nth-child(3) {
+    animation-delay: 90ms;
+}
+
+.bento-dashboard .bento-card:nth-child(4) {
+    animation-delay: 135ms;
+}
+
+.bento-dashboard .bento-card:nth-child(5) {
+    animation-delay: 180ms;
+}
+
+.bento-dashboard .bento-card:nth-child(6) {
+    animation-delay: 225ms;
+}
+
+.ryz-skeleton-line,
+.ryz-sidebar-skeleton-row,
+.ryz-sidebar-rail-skeleton span,
+.ryz-bento-skeleton-line {
+    background: linear-gradient(90deg,
+        color-mix(in srgb, var(--app-soft) 55%, var(--mud-palette-surface)),
+        color-mix(in srgb, var(--app-soft) 22%, var(--mud-palette-surface)),
+        color-mix(in srgb, var(--app-soft) 55%, var(--mud-palette-surface)));
+    background-size: 200% 100%;
+    animation: ryz-shimmer 1.25s linear infinite;
+}
+
+.ryz-sidebar-skeleton {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 8px 2px;
+}
+
+.ryz-sidebar-skeleton-row {
+    height: 38px;
+    border-radius: 10px;
+}
+
+.ryz-sidebar-rail-skeleton {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+}
+
+.ryz-sidebar-rail-skeleton span {
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+}
+
+.bento-dashboard.ryz-bento-skeleton .bento-card {
+    animation: none;
+}
+
+.ryz-bento-skeleton-line {
+    height: 12px;
+    margin-top: 10px;
+    border-radius: 999px;
+}
+
+.ryz-bento-skeleton-line.is-title {
+    height: 22px;
+    width: 55%;
+    margin-top: 0;
+}
+
+.ryz-bento-skeleton-line.is-short {
+    width: 38%;
+}
+
+.ryz-boot {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    background:
+        radial-gradient(circle at 50% 20%, color-mix(in srgb, var(--app-accent) 12%, transparent), transparent 42%),
+        var(--app-bg, #f9f9ff);
+    transition: opacity 420ms ease, visibility 420ms ease;
+}
+
+html.ryz-boot-ready .ryz-boot {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.ryz-boot-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: min(340px, 100%);
+    padding: 30px 28px 24px;
+    border: 1px solid color-mix(in srgb, var(--app-accent) 18%, transparent);
+    border-radius: 18px;
+    background: var(--mud-palette-surface, #ffffff);
+    box-shadow: 0 24px 70px color-mix(in srgb, var(--app-secondary) 22%, transparent);
+    animation: ryz-boot-in 360ms var(--ryz-ease-out) both;
+}
+
+html.ryz-boot-repeat .ryz-boot-card {
+    animation: none;
+}
+
+.ryz-boot-card img {
+    width: 52px;
+    height: 52px;
+    object-fit: contain;
+}
+
+.ryz-boot-brand {
+    margin-top: 12px;
+    color: var(--mud-palette-text-primary, #111c2d);
+    font-size: 1.35rem;
+    font-weight: 800;
+    letter-spacing: -.02em;
+}
+
+.ryz-boot-stage {
+    margin-top: 6px;
+    color: var(--mud-palette-text-secondary, #64748b);
+    font-size: .84rem;
+}
+
+.ryz-boot-track {
+    width: 100%;
+    height: 7px;
+    margin-top: 22px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--app-accent) 12%, var(--app-soft));
+}
+
+.ryz-boot-bar {
+    width: var(--blazor-load-percentage, 0%);
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--app-accent), var(--app-warning, #e8a87c));
+    transition: width 180ms ease;
+}
+
+.ryz-boot-text {
+    min-height: 1.1em;
+    margin-top: 8px;
+    color: var(--app-accent);
+    font-size: .76rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.ryz-boot-text::after {
+    content: var(--blazor-load-percentage-text, "Loading");
+}
+
+.ryz-route-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1900;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    background: color-mix(in srgb, var(--app-secondary) 28%, transparent);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 180ms ease, visibility 180ms ease;
+}
+
+html.ryz-route-transition .ryz-route-overlay {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.ryz-route-overlay-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: min(300px, 100%);
+    padding: 26px 24px 22px;
+    border: 1px solid color-mix(in srgb, var(--app-accent) 18%, transparent);
+    border-radius: 16px;
+    background: var(--mud-palette-surface, #ffffff);
+    box-shadow: 0 20px 55px color-mix(in srgb, var(--app-secondary) 24%, transparent);
+}
+
+.ryz-route-overlay-card img {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+}
+
+.ryz-route-overlay-title {
+    margin-top: 10px;
+    color: var(--mud-palette-text-primary, #111c2d);
+    font-size: .96rem;
+    font-weight: 700;
+}
+
+.ryz-route-overlay-track {
+    width: 100%;
+    height: 5px;
+    margin-top: 18px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--app-accent) 12%, var(--app-soft));
+}
+
+.ryz-route-overlay-bar {
+    width: 36%;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--app-accent), var(--app-warning, #e8a87c));
+    animation: ryz-route-bar 1.15s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .login-shell .login-brand-top,
+    .login-shell .login-brand-visual img,
+    .login-shell .login-form-panel,
+    .login-shell .login-form-header,
+    .login-shell .login-form-fields > *,
+    .login-shell .login-form-panel .mud-button-root,
+    .maui-auth-shell .maui-auth-logo,
+    .maui-auth-shell .maui-auth-heading,
+    .maui-auth-shell .maui-auth-form-area,
+    .maui-auth-shell .maui-auth-form-area .mud-input-control,
+    .maui-auth-shell .maui-auth-submit,
+    .enterprise-tabs .mud-tab-panel.is-active,
+    .ryz-tab-content.is-active,
+    .dashboard-page .dashboard-hero,
+    .dashboard-page .dashboard-card,
+    .bento-dashboard .bento-card,
+    .ryz-boot-card,
+    .ryz-route-overlay-bar {
+        animation: none;
+    }
+
+    .ryz-sidebar-skeleton-row,
+    .ryz-sidebar-rail-skeleton span,
+    .ryz-skeleton-line,
+    .ryz-bento-skeleton-line {
         animation: none;
     }
 }

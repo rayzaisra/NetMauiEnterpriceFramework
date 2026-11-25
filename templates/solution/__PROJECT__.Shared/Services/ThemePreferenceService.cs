@@ -10,6 +10,7 @@ public class ThemePreferenceService
 {
     private const string StyleStorageKey = "enterprise-ui-style";
     private const string PaletteStorageKey = "enterprise-ui-palette";
+    private const string ThemeModeStorageKey = "enterprise-ui-theme-mode";
     private const string ThemeModeAttribute = "data-theme-mode";
 
     private readonly IJSRuntime _js;
@@ -25,6 +26,7 @@ public class ThemePreferenceService
 
     public string Style { get; private set; }
     public string Palette { get; private set; }
+    public bool IsDarkMode => _isDarkMode;
     public bool IsNeoBrutalism => Style == "neo";
     public string ShellClass => $"{(IsNeoBrutalism ? "neo-brutalism" : "classic-ui")} palette-{Palette}";
     public string PaletteClass => $"palette-{Palette}";
@@ -47,6 +49,7 @@ public class ThemePreferenceService
         {
             var savedStyle = await _js.InvokeAsync<string?>("localStorage.getItem", StyleStorageKey);
             var savedPalette = await _js.InvokeAsync<string?>("localStorage.getItem", PaletteStorageKey);
+            var savedMode = await _js.InvokeAsync<string?>("localStorage.getItem", ThemeModeStorageKey);
 
             if (!string.IsNullOrWhiteSpace(savedStyle))
             {
@@ -57,10 +60,13 @@ public class ThemePreferenceService
             {
                 Palette = ThemeCatalog.NormalizePalette(savedPalette);
             }
+
+            _isDarkMode = string.Equals(savedMode, "dark", StringComparison.OrdinalIgnoreCase);
         }
         catch
         {
-            // Storage can be unavailable during prerender; keep the generated defaults.
+            // Storage can be unavailable during prerender; allow a later retry.
+            _initialized = false;
         }
 
         await ApplyDocumentAttributesAsync();
@@ -90,6 +96,7 @@ public class ThemePreferenceService
     public async Task SetDarkModeAsync(bool isDark)
     {
         _isDarkMode = isDark;
+        await PersistAsync(ThemeModeStorageKey, isDark ? "dark" : "light");
         await ApplyDocumentAttributesAsync();
     }
 
