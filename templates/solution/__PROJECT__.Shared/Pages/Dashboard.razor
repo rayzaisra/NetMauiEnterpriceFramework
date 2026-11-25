@@ -5,16 +5,55 @@
 
 <MudContainer MaxWidth="MaxWidth.False" Class="pa-0 dashboard-page">
     <MudPaper Elevation="0" Class="dashboard-hero">
-        <div>
-            <div class="dashboard-kicker">Enterprise Portal</div>
+        <div class="dashboard-hero-copy">
+            <div class="dashboard-kicker">RyzCore / Enterprise Coding Framework</div>
             <h1>Hello, @_displayName</h1>
-            <p>Welcome back. Use the sidebar to open a module, or start building your business flow.</p>
+            <p class="dashboard-manifesto">@Manifesto</p>
+            <p class="dashboard-support">Open a module from the sidebar. Core enterprise plumbing is already in place, so your next tab can move straight to business work.</p>
+            <div class="dashboard-hero-actions">
+                <span class="dashboard-proof-chip">Proven core patterns</span>
+                <span class="dashboard-proof-chip">Tab workspace</span>
+                <span class="dashboard-proof-chip">Business-ready foundation</span>
+            </div>
         </div>
-        <MudIcon Icon="@Icons.Material.Filled.WavingHand" Class="dashboard-hero-icon" />
+
+        <div class="dashboard-hero-signal" aria-hidden="true">
+            <div class="dashboard-signal-label">Business Tab Snap</div>
+            <div class="dashboard-signal-track">
+                <span class="dashboard-signal-node">Pattern</span>
+                <span class="dashboard-signal-arrow"></span>
+                <span class="dashboard-signal-node is-active">Business</span>
+            </div>
+            <div class="dashboard-signal-caption">From proven pattern to business tab in one focused move.</div>
+        </div>
     </MudPaper>
+
+    <div class="dashboard-proof-grid">
+        @foreach (var proof in ProofCards)
+        {
+            <MudPaper Elevation="0" Class="dashboard-card dashboard-proof-card">
+                <div class="dashboard-proof-icon">
+                    <MudIcon Icon="@proof.Icon" />
+                </div>
+                <div class="dashboard-proof-kicker">@proof.Kicker</div>
+                <h3>@proof.Title</h3>
+                <p>@proof.Description</p>
+            </MudPaper>
+        }
+    </div>
 </MudContainer>
 
 @code {
+    private const string Manifesto =
+        "RyzCore merupakan framework coding yang dikembangkan berdasarkan pengalaman panjang dalam pengembangan aplikasi perusahaan. Dengan menyediakan pola-pola inti yang telah terbukti melalui penggunaan berulang, RyzCore dirancang untuk memangkas waktu development dan mempercepat tim dalam memenuhi kebutuhan bisnis.";
+
+    private static readonly ProofCard[] ProofCards =
+    [
+        new("Auth & access", "Login, roles, and permissions are ready", "Authentication, authorization, and access control are already wired so teams do not rebuild the gate before business work.", Icons.Material.Filled.VerifiedUser),
+        new("Operational patterns", "Menu mapping and parameter master", "Reusable enterprise patterns keep common setup consistent across projects, from navigation structure to configurable parameters.", Icons.Material.Filled.AccountTree),
+        new("Tab workspace", "Stay in flow, switch by context", "The workspace keeps work in main-content tabs, so teams can move between modules without losing operational momentum.", Icons.Material.Filled.Tab),
+    ];
+
     private string _displayName = "Administrator";
 
     protected override async Task OnInitializedAsync()
@@ -26,4 +65,6 @@
             _displayName = name;
         }
     }
+
+    private sealed record ProofCard(string Kicker, string Title, string Description, string Icon);
 }

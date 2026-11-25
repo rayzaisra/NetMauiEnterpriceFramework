@@ -284,7 +284,9 @@
     </MudDrawer>
 
     <MudMainContent>
+        <a href="#ryz-main-content" class="ryz-skip-link">Skip to main content</a>
         <MudContainer MaxWidth="MaxWidth.False" Class="app-main-container">
+            <main id="ryz-main-content" class="ryz-main-content" tabindex="-1">
             @if (TabService.Tabs.Count > 0)
             {
                 <MudTabs @bind-ActivePanelIndex="_selectedTabIndex"
@@ -303,9 +305,11 @@
                                     <span class="tab-header-actions" @onclick:stopPropagation="true">
                                         <MudIconButton Icon="@Icons.Material.Filled.Refresh"
                                                        Size="Size.Small"
+                                                       aria-label="@($"Refresh {tab.Title}")"
                                                        OnClick="@(_ => RefreshTab(tab))" />
                                         <MudIconButton Icon="@Icons.Material.Filled.Close"
                                                        Size="Size.Small"
+                                                       aria-label="@($"Close {tab.Title}")"
                                                        OnClick="@(_ => CloseTab(tab))" />
                                     </span>
                                 </div>
@@ -315,14 +319,16 @@
                                     var componentType = GetComponentType(tab);
                                 }
 
-                                @if (componentType != null)
-                                {
-                                    <DynamicComponent Type="componentType" Parameters="tab.Parameters" @key="tab.RefreshKey" />
-                                }
-                                else
-                                {
-                                    <MudAlert Severity="Severity.Info" Class="mt-4">This module is not implemented yet.</MudAlert>
-                                }
+                                <div class="ryz-tab-panel" @key="tab.RefreshKey">
+                                    @if (componentType != null)
+                                    {
+                                        <DynamicComponent Type="componentType" Parameters="tab.Parameters" />
+                                    }
+                                    else
+                                    {
+                                        <MudAlert Severity="Severity.Info" Class="mt-4">This module is not implemented yet.</MudAlert>
+                                    }
+                                </div>
                             </ChildContent>
                         </MudTabPanel>
                     }
@@ -332,6 +338,7 @@
             {
                 <MudAlert Severity="Severity.Info">Select a menu to start.</MudAlert>
             }
+            </main>
         </MudContainer>
     </MudMainContent>
 </MudLayout>
@@ -556,6 +563,7 @@
 
         _pendingTabAnimation = true;
     }
+
 
     private void SyncSelectedTab()
     {

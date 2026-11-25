@@ -43,7 +43,7 @@ function run(key, build) {
 }
 
 function visibleTabPanel() {
-    return Array.from(document.querySelectorAll(".enterprise-tabs .mud-tab-panel"))
+    return Array.from(document.querySelectorAll(".enterprise-tabs .ryz-tab-panel"))
         .find((panel) => {
             const style = window.getComputedStyle(panel);
             return style.display !== "none"

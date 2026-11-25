@@ -4,13 +4,18 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="RyzCore is an enterprise coding framework built from long experience in enterprise application development. Proven core patterns cut development time and help teams move straight to business needs." />
+    <meta name="theme-color" content="#004481" />
+    <meta property="og:title" content="__PROJECT__ - RyzCore Workspace" />
+    <meta property="og:description" content="Proven enterprise patterns for faster delivery. Build business, not plumbing." />
+    <meta property="og:type" content="website" />
     <title>__PROJECT__</title>
     <base href="/" />
     <script>
         (function () {
             var allowed = ["default", "fintech", "monochrome", "creative", "wellness"];
             var palette = "__THEME_PALETTE__";
-            var style = "default";
+            var style = "__THEME_STYLE__";
             var mode = "light";
             var repeat = false;
             try {
@@ -24,6 +29,7 @@
                 sessionStorage.setItem("ryz-boot-seen", "1");
             } catch (e) { }
             if (allowed.indexOf(palette) < 0) palette = "default";
+            if (style !== "default" && style !== "neo") style = "default";
             document.documentElement.setAttribute("data-palette", palette);
             document.documentElement.setAttribute("data-style", style);
             document.documentElement.setAttribute("data-theme-mode", mode);
@@ -44,7 +50,8 @@
         <div class="ryz-boot-card">
             <img src="images/branding/app-logo.png" alt="" />
             <div class="ryz-boot-brand">__PROJECT__</div>
-            <div class="ryz-boot-stage">Starting workspace</div>
+            <div class="ryz-boot-kicker">Enterprise Coding Framework</div>
+            <div class="ryz-boot-stage">Loading proven patterns</div>
             <div class="ryz-boot-track">
                 <div class="ryz-boot-bar" data-ryz-boot-bar></div>
             </div>

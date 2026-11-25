@@ -230,7 +230,7 @@ else
                 </div>
                 <div>
                     <div class="login-brand-name">@BrandName</div>
-                    <div class="login-brand-subtitle">Enterprise Portal</div>
+                    <div class="login-brand-subtitle">Enterprise Coding Framework</div>
                 </div>
             </div>
 
@@ -238,6 +238,17 @@ else
                 <img src="/images/login/login-illustration.png"
                      alt="Enterprise workspace illustration"
                      loading="eager" />
+            </div>
+
+            <div class="login-brand-copy">
+                <h1>Built on bedrock</h1>
+                <p>@BrandManifesto</p>
+                <div class="login-brand-proof" aria-label="Framework capabilities">
+                    <span class="login-brand-proof-chip">Authentication</span>
+                    <span class="login-brand-proof-chip">Menu mapping</span>
+                    <span class="login-brand-proof-chip">Parameter master</span>
+                    <span class="login-brand-proof-chip">Approval workflow</span>
+                </div>
             </div>
         </MudPaper>
     </section>
@@ -442,12 +453,19 @@ else
 
 @code {
     private const string BrandName = "__PROJECT__";
+    private const string BrandManifesto =
+        "RyzCore merupakan framework coding yang dikembangkan berdasarkan pengalaman panjang dalam pengembangan aplikasi perusahaan. Dengan menyediakan pola-pola inti yang telah terbukti melalui penggunaan berulang, RyzCore dirancang untuk memangkas waktu development dan mempercepat tim dalam memenuhi kebutuhan bisnis.";
     private static bool IsMauiApp => !OperatingSystem.IsBrowser();
     private string LoginPageClass => $"login-page {(ThemeService.IsNeoBrutalism ? "neo-brutalism" : "classic-login")} palette-{ThemeService.Palette}";
     private string MauiHeaderTitle => _requiresPasswordChange ? "Reset Password" : HeaderTitle;
     private string MauiHeaderSubtitle => _requiresPasswordChange
         ? "Set a new password for your account."
-        : HeaderSubtitle;
+        : _mode switch
+        {
+            LoginMode.Forgot => "Enter your username or email. If the account is registered, reset instructions will be sent.",
+            LoginMode.Reset => "Choose a new password for your account.",
+            _ => "Enter your credentials to continue.",
+        };
 
     [SupplyParameterFromQuery(Name = "token")]
     public string? Token { get; set; }
@@ -487,7 +505,7 @@ else
         {
             LoginMode.Forgot => "Enter your username or email. If the account is registered, reset instructions will be sent.",
             LoginMode.Reset => "Choose a new password for your account.",
-            _ => "Please enter your credentials to access your account.",
+            _ => "Enter your credentials to continue.",
         };
 
     protected override async Task OnInitializedAsync()
