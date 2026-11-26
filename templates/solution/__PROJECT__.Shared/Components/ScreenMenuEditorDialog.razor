@@ -1,132 +1,134 @@
 @inject ScreenMenuApiService ScreenMenuApi
 @inject ISnackbar Snackbar
+@inject LanguageService L
+@implements IDisposable
 
 <MudDialog Class="screen-editor-dialog">
     <TitleContent>
-        <MudText Typo="Typo.h6">@(IsEdit ? "Edit Screen Menu" : "Add Screen Menu")</MudText>
+        <MudText Typo="Typo.h6">@(IsEdit ? L["EditScreenMenu"] : L["AddScreenMenu"])</MudText>
     </TitleContent>
     <DialogContent>
         <MudTabs Elevation="0" Rounded="true" ApplyEffectsToContainer="true" TabPanelsClass="pt-4">
-            <MudTabPanel Text="Screen">
+            <MudTabPanel Text="@L["ScreenTab"]">
                 <MudGrid Spacing="3">
                     <MudItem xs="12" md="4">
-                        <MudTextField @bind-Value="_model.Id" Label="Screen ID" Variant="Variant.Outlined" Required="true" Disabled="@IsEdit" />
+                        <MudTextField @bind-Value="_model.Id" Label="@L["ScreenId"]" Variant="Variant.Outlined" Required="true" Disabled="@IsEdit" />
                     </MudItem>
                     <MudItem xs="12" md="8">
-                        <MudTextField @bind-Value="_model.Description" Label="Description" Variant="Variant.Outlined" Required="true" />
+                        <MudTextField @bind-Value="_model.Description" Label="@L["Description"]" Variant="Variant.Outlined" Required="true" />
                     </MudItem>
                     <MudItem xs="12">
                         <div class="d-flex flex-wrap gap-3">
-                            <MudSwitch T="bool" @bind-Value="_model.HasButtonLoad" Label="Load" Color="Color.Primary" />
-                            <MudSwitch T="bool" @bind-Value="_model.HasButtonProcess" Label="Process" Color="Color.Primary" />
-                            <MudSwitch T="bool" @bind-Value="_model.HasButtonGenerateTxt" Label="Generate TXT" Color="Color.Primary" />
-                            <MudSwitch T="bool" @bind-Value="_model.HasButtonExportExcel" Label="Export Excel" Color="Color.Primary" />
-                            <MudSwitch T="bool" @bind-Value="_model.HasButtonAdd" Label="Add" Color="Color.Primary" />
-                            <MudSwitch T="bool" @bind-Value="_model.HasButtonDelete" Label="Delete" Color="Color.Primary" />
-                            <MudSwitch T="bool" @bind-Value="_model.HasActionRow" Label="Action Row" Color="Color.Primary" />
-                            <MudSwitch T="bool" @bind-Value="_model.HasButtonImportExcel" Label="Import Excel" Color="Color.Primary" />
-                            <MudSwitch T="bool" @bind-Value="_model.IsActive" Label="Active" Color="Color.Primary" />
+                            <MudSwitch T="bool" @bind-Value="_model.HasButtonLoad" Label="@L["Load"]" Color="Color.Primary" />
+                            <MudSwitch T="bool" @bind-Value="_model.HasButtonProcess" Label="@L["Process"]" Color="Color.Primary" />
+                            <MudSwitch T="bool" @bind-Value="_model.HasButtonGenerateTxt" Label="@L["GenerateTxt"]" Color="Color.Primary" />
+                            <MudSwitch T="bool" @bind-Value="_model.HasButtonExportExcel" Label="@L["ExportExcel"]" Color="Color.Primary" />
+                            <MudSwitch T="bool" @bind-Value="_model.HasButtonAdd" Label="@L["Add"]" Color="Color.Primary" />
+                            <MudSwitch T="bool" @bind-Value="_model.HasButtonDelete" Label="@L["Delete"]" Color="Color.Primary" />
+                            <MudSwitch T="bool" @bind-Value="_model.HasActionRow" Label="@L["ActionRow"]" Color="Color.Primary" />
+                            <MudSwitch T="bool" @bind-Value="_model.HasButtonImportExcel" Label="@L["ImportExcel"]" Color="Color.Primary" />
+                            <MudSwitch T="bool" @bind-Value="_model.IsActive" Label="@L["Active"]" Color="Color.Primary" />
                         </div>
                     </MudItem>
                     <MudItem xs="12">
-                        <MudTextField @bind-Value="_model.FieldFilter" Label="field_filter" Variant="Variant.Outlined" Lines="2" />
+                        <MudTextField @bind-Value="_model.FieldFilter" Label="@L["FieldFilter"]" Variant="Variant.Outlined" Lines="2" />
                     </MudItem>
                     <MudItem xs="12" md="6">
-                        <MudTextField @bind-Value="_model.QueryLoad" Label="query_load" Variant="Variant.Outlined" Lines="3" />
+                        <MudTextField @bind-Value="_model.QueryLoad" Label="@L["QueryLoad"]" Variant="Variant.Outlined" Lines="3" />
                     </MudItem>
                     <MudItem xs="12" md="6">
-                        <MudTextField @bind-Value="_model.QueryLoadParam" Label="query_load_param" Variant="Variant.Outlined" Lines="3" />
+                        <MudTextField @bind-Value="_model.QueryLoadParam" Label="@L["QueryLoadParam"]" Variant="Variant.Outlined" Lines="3" />
                     </MudItem>
                     <MudItem xs="12" md="6">
-                        <MudTextField @bind-Value="_model.QueryProcess" Label="query_process" Variant="Variant.Outlined" Lines="2" />
+                        <MudTextField @bind-Value="_model.QueryProcess" Label="@L["QueryProcess"]" Variant="Variant.Outlined" Lines="2" />
                     </MudItem>
                     <MudItem xs="12" md="6">
-                        <MudTextField @bind-Value="_model.QueryProcessParam" Label="query_process_param" Variant="Variant.Outlined" Lines="2" />
+                        <MudTextField @bind-Value="_model.QueryProcessParam" Label="@L["QueryProcessParam"]" Variant="Variant.Outlined" Lines="2" />
                     </MudItem>
                     <MudItem xs="12" md="6">
-                        <MudTextField @bind-Value="_model.QueryExportTxt" Label="query_export_txt" Variant="Variant.Outlined" Lines="2" />
+                        <MudTextField @bind-Value="_model.QueryExportTxt" Label="@L["QueryExportTxt"]" Variant="Variant.Outlined" Lines="2" />
                     </MudItem>
                     <MudItem xs="12" md="6">
-                        <MudTextField @bind-Value="_model.QueryExportTxtParam" Label="query_export_txt_param" Variant="Variant.Outlined" Lines="2" />
+                        <MudTextField @bind-Value="_model.QueryExportTxtParam" Label="@L["QueryExportTxtParam"]" Variant="Variant.Outlined" Lines="2" />
                     </MudItem>
                     <MudItem xs="12" md="6">
-                        <MudTextField @bind-Value="_model.QueryDelete" Label="query_delete" Variant="Variant.Outlined" Lines="2" />
+                        <MudTextField @bind-Value="_model.QueryDelete" Label="@L["QueryDelete"]" Variant="Variant.Outlined" Lines="2" />
                     </MudItem>
                     <MudItem xs="12" md="6">
-                        <MudTextField @bind-Value="_model.QueryDeleteParam" Label="query_delete_param" Variant="Variant.Outlined" Lines="2" />
+                        <MudTextField @bind-Value="_model.QueryDeleteParam" Label="@L["QueryDeleteParam"]" Variant="Variant.Outlined" Lines="2" />
                     </MudItem>
                 </MudGrid>
             </MudTabPanel>
 
-            <MudTabPanel Text="Child">
+            <MudTabPanel Text="@L["ChildTab"]">
                 <div class="d-flex align-items-center gap-3 mb-3">
-                    <MudSwitch T="bool" @bind-Value="_hasChild" Color="Color.Primary" Label="Enable child" />
+                    <MudSwitch T="bool" @bind-Value="_hasChild" Color="Color.Primary" Label="@L["EnableChild"]" />
                 </div>
                 @if (_hasChild)
                 {
                     <MudGrid Spacing="3">
                         <MudItem xs="12" md="4">
-                            <MudTextField @bind-Value="_child.ScreenMenuChildId" Label="Child ID" Variant="Variant.Outlined" Required="true" />
+                            <MudTextField @bind-Value="_child.ScreenMenuChildId" Label="@L["ChildId"]" Variant="Variant.Outlined" Required="true" />
                         </MudItem>
                         <MudItem xs="12" md="5">
-                            <MudTextField @bind-Value="_child.Description" Label="Description" Variant="Variant.Outlined" />
+                            <MudTextField @bind-Value="_child.Description" Label="@L["Description"]" Variant="Variant.Outlined" />
                         </MudItem>
                         <MudItem xs="12" md="3">
-                            <MudSelect T="string" @bind-Value="_child.Type" Label="Type" Variant="Variant.Outlined" Clearable="true">
+                            <MudSelect T="string" @bind-Value="_child.Type" Label="@L["Type"]" Variant="Variant.Outlined" Clearable="true">
                                 <MudSelectItem Value="@("modal")">modal</MudSelectItem>
                                 <MudSelectItem Value="@("url")">url</MudSelectItem>
                             </MudSelect>
                         </MudItem>
                         <MudItem xs="12" md="6">
-                            <MudTextField @bind-Value="_child.UrlAction" Label="url_action" Variant="Variant.Outlined" />
+                            <MudTextField @bind-Value="_child.UrlAction" Label="@L["UrlAction"]" Variant="Variant.Outlined" />
                         </MudItem>
                         <MudItem xs="12" md="6">
-                            <MudTextField @bind-Value="_child.UrlActionParam" Label="url_action_param" Variant="Variant.Outlined" />
+                            <MudTextField @bind-Value="_child.UrlActionParam" Label="@L["UrlActionParam"]" Variant="Variant.Outlined" />
                         </MudItem>
                         <MudItem xs="12">
-                            <MudTextField @bind-Value="_child.ModalField" Label="modal_field" Variant="Variant.Outlined" Lines="2" />
+                            <MudTextField @bind-Value="_child.ModalField" Label="@L["ModalField"]" Variant="Variant.Outlined" Lines="2" />
                         </MudItem>
                         <MudItem xs="12" md="6">
-                            <MudTextField @bind-Value="_child.ModalDetailFieldQuery" Label="modal_detail_field_query" Variant="Variant.Outlined" Lines="3" />
+                            <MudTextField @bind-Value="_child.ModalDetailFieldQuery" Label="@L["ModalDetailFieldQuery"]" Variant="Variant.Outlined" Lines="3" />
                         </MudItem>
                         <MudItem xs="12" md="6">
-                            <MudTextField @bind-Value="_child.ModalDetailFieldQueryParam" Label="modal_detail_field_query_param" Variant="Variant.Outlined" Lines="3" />
+                            <MudTextField @bind-Value="_child.ModalDetailFieldQueryParam" Label="@L["ModalDetailFieldQueryParam"]" Variant="Variant.Outlined" Lines="3" />
                         </MudItem>
                         <MudItem xs="12" md="6">
-                            <MudTextField @bind-Value="_child.ModalSaveProcessQuery" Label="modal_save_process_query" Variant="Variant.Outlined" Lines="3" />
+                            <MudTextField @bind-Value="_child.ModalSaveProcessQuery" Label="@L["ModalSaveProcessQuery"]" Variant="Variant.Outlined" Lines="3" />
                         </MudItem>
                         <MudItem xs="12" md="6">
-                            <MudTextField @bind-Value="_child.ModalSaveProcessQueryParam" Label="modal_save_process_query_param" Variant="Variant.Outlined" Lines="3" />
+                            <MudTextField @bind-Value="_child.ModalSaveProcessQueryParam" Label="@L["ModalSaveProcessQueryParam"]" Variant="Variant.Outlined" Lines="3" />
                         </MudItem>
                         <MudItem xs="12">
-                            <MudSwitch T="bool" @bind-Value="_child.IsActive" Label="Active" Color="Color.Primary" />
+                            <MudSwitch T="bool" @bind-Value="_child.IsActive" Label="@L["Active"]" Color="Color.Primary" />
                         </MudItem>
                     </MudGrid>
                 }
             </MudTabPanel>
 
-            <MudTabPanel Text="Import Excel">
+            <MudTabPanel Text="@L["ImportExcelTab"]">
                 <div class="d-flex align-items-center gap-3 mb-3">
-                    <MudSwitch T="bool" @bind-Value="_hasImport" Color="Color.Primary" Label="Enable import process" />
+                    <MudSwitch T="bool" @bind-Value="_hasImport" Color="Color.Primary" Label="@L["EnableImportProcess"]" />
                 </div>
                 @if (_hasImport)
                 {
                     <MudGrid Spacing="3">
                         <MudItem xs="12" md="4">
-                            <MudTextField @bind-Value="_import.ScreenMenuImportExcelProcessId" Label="Import Process ID" Variant="Variant.Outlined" Required="true" />
+                            <MudTextField @bind-Value="_import.ScreenMenuImportExcelProcessId" Label="@L["ImportProcessId"]" Variant="Variant.Outlined" Required="true" />
                         </MudItem>
                         <MudItem xs="12" md="8">
-                            <MudTextField @bind-Value="_import.Description" Label="Description" Variant="Variant.Outlined" />
+                            <MudTextField @bind-Value="_import.Description" Label="@L["Description"]" Variant="Variant.Outlined" />
                         </MudItem>
                         <MudItem xs="12" md="6">
-                            <MudTextField @bind-Value="_import.TableName" Label="Table Name" Variant="Variant.Outlined" />
+                            <MudTextField @bind-Value="_import.TableName" Label="@L["TableName"]" Variant="Variant.Outlined" />
                         </MudItem>
                         <MudItem xs="12" md="6">
-                            <MudTextField @bind-Value="_import.FieldInput" Label="Field Input" Variant="Variant.Outlined" />
+                            <MudTextField @bind-Value="_import.FieldInput" Label="@L["FieldInput"]" Variant="Variant.Outlined" />
                         </MudItem>
                         <MudItem xs="12" Class="d-flex gap-3">
-                            <MudSwitch T="bool" @bind-Value="_import.WithApproval" Label="With Approval" Color="Color.Primary" />
-                            <MudSwitch T="bool" @bind-Value="_import.IsActive" Label="Active" Color="Color.Primary" />
+                            <MudSwitch T="bool" @bind-Value="_import.WithApproval" Label="@L["WithApproval"]" Color="Color.Primary" />
+                            <MudSwitch T="bool" @bind-Value="_import.IsActive" Label="@L["Active"]" Color="Color.Primary" />
                         </MudItem>
                     </MudGrid>
                 }
@@ -134,9 +136,9 @@
         </MudTabs>
     </DialogContent>
     <DialogActions>
-        <MudButton Variant="Variant.Text" OnClick="@(_ => MudDialog.Cancel())">Cancel</MudButton>
+        <MudButton Variant="Variant.Text" OnClick="@(_ => MudDialog.Cancel())">@L["Cancel"]</MudButton>
         <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="@("ryz-busy-button" + (_saving ? " is-busy" : string.Empty))" Disabled="@_saving" OnClick="@(_ => SaveAsync())">
-            @(_saving ? "Saving..." : "Send for Approval")
+            @(_saving ? L["Saving"] : L["SendForApproval"])
         </MudButton>
     </DialogActions>
 </MudDialog>
@@ -159,6 +161,7 @@
 
     protected override void OnInitialized()
     {
+        L.OnChange += HandleLanguageChanged;
         if (Screen == null)
         {
             return;
@@ -196,12 +199,12 @@
             var result = await ScreenMenuApi.StageAsync(_model);
             if (result.Success)
             {
-                Snackbar.Add(result.Message ?? "Sent for approval.", Severity.Success);
+                Snackbar.Add(result.Message ?? L["SentForApproval"], Severity.Success);
                 MudDialog.Close(DialogResult.Ok(true));
             }
             else
             {
-                Snackbar.Add(result.Message ?? "Save failed.", Severity.Error);
+                Snackbar.Add(result.Message ?? L["SaveFailed"], Severity.Error);
             }
         }
         finally
@@ -209,4 +212,8 @@
             _saving = false;
         }
     }
+
+    private void HandleLanguageChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose() => L.OnChange -= HandleLanguageChanged;
 }

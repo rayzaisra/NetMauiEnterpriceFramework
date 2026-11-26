@@ -1,22 +1,24 @@
 @page "/dashboard/maintenance/menu-map"
 @layout AuthenticatedLayout
 @attribute [Authorize]
+@implements IDisposable
 @inject SettingApiService SettingApi
 @inject ISnackbar Snackbar
+@inject LanguageService L
 
 <MudBreadcrumbs Items="_breadcrumbs" Separator=">" Class="mb-3" />
 
 <div class="page-heading">
     <div>
-        <div class="dashboard-kicker">Maintenance</div>
-        <h1>Mapping Menu</h1>
-        <p>Assign menus to a group.</p>
+        <div class="dashboard-kicker">@L["Maintenance"]</div>
+        <h1>@L["MappingMenu"]</h1>
+        <p>@L["AssignMenusToGroup"]</p>
     </div>
     <PermissionGate Action="PermissionAction.AddEdit">
         <div class="d-flex gap-2">
-            <MudButton Variant="Variant.Outlined" Color="Color.Default" OnClick="ResetDefaults">Reset Defaults</MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Default" OnClick="ResetDefaults">@L["ResetDefaults"]</MudButton>
             <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" Class="@("ryz-busy-button" + (_saving ? " is-busy" : string.Empty))" Disabled="@_saving" OnClick="SaveAsync">
-                @(_saving ? "Saving..." : "Save Changes")
+                @(_saving ? L["Saving"] : L["SaveChanges"])
             </MudButton>
         </div>
     </PermissionGate>
@@ -25,11 +27,11 @@
 <MudGrid Spacing="3">
     <MudItem xs="12" md="4">
         <MudPaper Elevation="0" Class="mapping-panel">
-            <MudText Typo="Typo.body2" Class="font-weight-bold mb-2">Group ID</MudText>
+            <MudText Typo="Typo.body2" Class="font-weight-bold mb-2">@L["GroupIdLabel"]</MudText>
             <MudSelect T="string"
                        @bind-Value="_groupId"
                        @bind-Value:after="LoadGroupAsync"
-                       Label="Select Group"
+                       Label="@L["SelectGroup"]"
                        Variant="Variant.Outlined"
                        FullWidth="true"
                        Clearable="true">
@@ -42,8 +44,8 @@
 
         <MudPaper Elevation="0" Class="mapping-panel mt-4">
             <div class="d-flex justify-content-between align-items-center">
-                <MudText Typo="Typo.body2" Class="font-weight-bold">Main Modules</MudText>
-                <MudChip T="string" Size="Size.Small" Color="Color.Primary">@(_allMenus?.Count ?? 0) Total</MudChip>
+                <MudText Typo="Typo.body2" Class="font-weight-bold">@L["MainModules"]</MudText>
+                <MudChip T="string" Size="Size.Small" Color="Color.Primary">@(_allMenus?.Count ?? 0) @L["Total"]</MudChip>
             </div>
             <MudDivider Class="my-2" />
 
@@ -68,7 +70,7 @@
     <MudItem xs="12" md="8">
         <MudPaper Elevation="0" Class="mapping-panel mapping-tree-panel">
             <MudText Typo="Typo.h6" Class="font-weight-bold mb-4">
-                Menu Structure: @(_selectedGroupName ?? "Select a group")
+                @L.Format("MenuStructure", _selectedGroupName ?? L["SelectAGroup"])
             </MudText>
 
             @if (_filteredTree != null)
@@ -78,7 +80,7 @@
             else
             {
                 <MudText Typo="Typo.body2" Color="Color.Secondary" Class="text-center pa-8">
-                    Select a group and a module to display its menu tree.
+                    @L["SelectGroupAndModule"]
                 </MudText>
             }
         </MudPaper>
@@ -86,12 +88,12 @@
 </MudGrid>
 
 @code {
-    private readonly List<BreadcrumbItem> _breadcrumbs =
-    [
-        new("Dashboard", href: "/dashboard"),
-        new("Maintenance", href: null),
-        new("Mapping Menu", href: null, disabled: true),
-    ];
+    private List<BreadcrumbItem> _breadcrumbs => new()
+    {
+        new(L["Dashboard"], href: "/dashboard"),
+        new(L["Maintenance"], href: null),
+        new(L["MappingMenu"], href: null, disabled: true),
+    };
 
     private List<DropdownItemDto> _groups = new();
     private List<MenuTreeItemDto>? _allMenus;
@@ -101,6 +103,8 @@
     private string? _selectedGroupName;
     private string? _selectedModuleUnique;
     private bool _saving;
+
+    protected override void OnInitialized() => L.OnChange += HandleLanguageChanged;
 
     protected override async Task OnInitializedAsync()
     {
@@ -166,7 +170,7 @@
 
         if (string.IsNullOrWhiteSpace(_groupId))
         {
-            Snackbar.Add("Please select a group first.", Severity.Warning);
+            Snackbar.Add(L["PleaseSelectGroupFirst"], Severity.Warning);
             return;
         }
 
@@ -179,7 +183,7 @@
                 MenuIds = _selectedIds.ToList(),
             });
 
-            Snackbar.Add(result.Message ?? "Save failed.", result.Success ? Severity.Success : Severity.Error);
+            Snackbar.Add(result.Message ?? L["SaveFailed"], result.Success ? Severity.Success : Severity.Error);
             if (result.Success)
             {
                 await LoadGroupAsync();
@@ -195,7 +199,7 @@
     {
         _selectedIds.Clear();
         StateHasChanged();
-        Snackbar.Add("Selections cleared.", Severity.Info);
+        Snackbar.Add(L["SelectionsCleared"], Severity.Info);
     }
 
     private int CountTotal(MenuTreeItemDto node)
@@ -229,4 +233,8 @@
             }
         }
     }
+
+    private void HandleLanguageChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose() => L.OnChange -= HandleLanguageChanged;
 }

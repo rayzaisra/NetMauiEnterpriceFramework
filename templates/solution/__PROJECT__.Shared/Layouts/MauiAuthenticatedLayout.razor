@@ -1,5 +1,7 @@
 @inherits LayoutComponentBase
+@implements IDisposable
 @inject ThemePreferenceService ThemeService
+@inject LanguageService L
 @inject MotionService Motion
 
 @if (ThemeService.Palette == "default")
@@ -18,6 +20,8 @@ else
 </div>
 
 @code {
+    protected override void OnInitialized() => L.OnChange += HandleLanguageChanged;
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (!firstRender)
@@ -26,7 +30,12 @@ else
         }
 
         await ThemeService.InitializeAsync();
+        await L.InitializeAsync();
         await Motion.InitBusyIndicatorsAsync();
         StateHasChanged();
     }
+
+    private void HandleLanguageChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose() => L.OnChange -= HandleLanguageChanged;
 }

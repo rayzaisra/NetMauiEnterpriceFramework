@@ -1,5 +1,7 @@
 @inject SettingApiService SettingApi
 @inject ISnackbar Snackbar
+@inject LanguageService L
+@implements IDisposable
 
 <MudDialog>
     <TitleContent>
@@ -8,19 +10,19 @@
     <DialogContent>
         <MudGrid Spacing="3">
             <MudItem xs="12" md="6">
-                <MudTextField @bind-Value="_model.MenuUnique" Label="Menu Unique" Variant="Variant.Outlined" Required="true" />
+                <MudTextField @bind-Value="_model.MenuUnique" Label="@L["UniqueColumn"]" Variant="Variant.Outlined" Required="true" />
             </MudItem>
             <MudItem xs="12" md="6">
-                <MudTextField @bind-Value="_model.MenuName" Label="Menu Name" Variant="Variant.Outlined" Required="true" />
+                <MudTextField @bind-Value="_model.MenuName" Label="@L["NameColumn"]" Variant="Variant.Outlined" Required="true" />
             </MudItem>
             <MudItem xs="12" md="6">
-                <MudTextField @bind-Value="_model.MenuUrl" Label="Menu URL" Variant="Variant.Outlined" />
+                <MudTextField @bind-Value="_model.MenuUrl" Label="@L["UrlColumn"]" Variant="Variant.Outlined" />
             </MudItem>
             <MudItem xs="12" md="6">
-                <MudTextField @bind-Value="_model.ComponentType" Label="Component Type" Variant="Variant.Outlined" />
+                <MudTextField @bind-Value="_model.ComponentType" Label="@L["ComponentType"]" Variant="Variant.Outlined" />
             </MudItem>
             <MudItem xs="12" md="6">
-                <MudSelect T="string" @bind-Value="_model.ParentLevelId" Label="Parent Level" Variant="Variant.Outlined" Clearable="true">
+                <MudSelect T="string" @bind-Value="_model.ParentLevelId" Label="@L["LevelColumn"]" Variant="Variant.Outlined" Clearable="true">
                     @foreach (var level in _levels)
                     {
                         <MudSelectItem Value="@level.Value">@level.Text</MudSelectItem>
@@ -28,8 +30,8 @@
                 </MudSelect>
             </MudItem>
             <MudItem xs="12" md="6">
-                <MudSelect T="string" @bind-Value="_model.MenuUniqueParent" Label="Parent Menu" Variant="Variant.Outlined" Clearable="true">
-                    <MudSelectItem Value="@string.Empty">— No parent —</MudSelectItem>
+                <MudSelect T="string" @bind-Value="_model.MenuUniqueParent" Label="@L["ParentColumn"]" Variant="Variant.Outlined" Clearable="true">
+                    <MudSelectItem Value="@string.Empty">@L["NoParent"]</MudSelectItem>
                     @foreach (var parent in _parentMenus)
                     {
                         <MudSelectItem Value="@parent.MenuUnique">@parent.MenuName (@parent.MenuUnique)</MudSelectItem>
@@ -37,7 +39,7 @@
                 </MudSelect>
             </MudItem>
             <MudItem xs="12" md="6">
-                <MudSelect T="string" @bind-Value="_model.MenuIcon" Label="Icon" Variant="Variant.Outlined" Clearable="true">
+                <MudSelect T="string" @bind-Value="_model.MenuIcon" Label="@L["Icon"]" Variant="Variant.Outlined" Clearable="true">
                     @foreach (var icon in _icons)
                     {
                         <MudSelectItem Value="@icon.Value">@icon.Text</MudSelectItem>
@@ -45,17 +47,17 @@
                 </MudSelect>
             </MudItem>
             <MudItem xs="12" md="6">
-                <MudNumericField T="int?" @bind-Value="_model.OrderSeq" Label="Order Sequence" Variant="Variant.Outlined" />
+                <MudNumericField T="int?" @bind-Value="_model.OrderSeq" Label="@L["OrderColumn"]" Variant="Variant.Outlined" />
             </MudItem>
             <MudItem xs="12">
-                <MudSwitch T="bool" @bind-Value="_model.IsActive" Color="Color.Primary" Label="Active" />
+                <MudSwitch T="bool" @bind-Value="_model.IsActive" Color="Color.Primary" Label="@L["Active"]" />
             </MudItem>
         </MudGrid>
     </DialogContent>
     <DialogActions>
-        <MudButton Variant="Variant.Text" OnClick="@(_ => MudDialog.Cancel())">Cancel</MudButton>
+        <MudButton Variant="Variant.Text" OnClick="@(_ => MudDialog.Cancel())">@L["Cancel"]</MudButton>
         <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="@("ryz-busy-button" + (_saving ? " is-busy" : string.Empty))" Disabled="@_saving" OnClick="@(_ => SubmitAsync())">
-            @(_saving ? "Saving..." : "Save")
+            @(_saving ? L["Saving"] : L["Save"])
         </MudButton>
     </DialogActions>
 </MudDialog>
@@ -74,10 +76,11 @@
     private bool _saving;
 
     private bool IsEdit => Menu != null;
-    private string Title => IsEdit ? "Edit Menu" : "Add Menu";
+    private string Title => IsEdit ? L["EditMenu"] : L["AddMenu"];
 
     protected override async Task OnInitializedAsync()
     {
+        L.OnChange += HandleLanguageChanged;
         _levels = await SettingApi.GetMenuParentLevelsAsync();
         _icons = await SettingApi.GetMenuIconsAsync();
         var tree = await SettingApi.GetMenuTreeAsync();
@@ -112,7 +115,7 @@
 
         if (string.IsNullOrWhiteSpace(_model.MenuUnique) || string.IsNullOrWhiteSpace(_model.MenuName))
         {
-            Snackbar.Add("Menu unique and name are required.", Severity.Warning);
+            Snackbar.Add(L["MenuUniqueAndNameRequired"], Severity.Warning);
             return;
         }
 
@@ -125,12 +128,12 @@
 
             if (result.Success)
             {
-                Snackbar.Add(result.Message ?? "Saved.", Severity.Success);
+                Snackbar.Add(result.Message ?? L["Saved"], Severity.Success);
                 MudDialog.Close(DialogResult.Ok(true));
             }
             else
             {
-                Snackbar.Add(result.Message ?? "Save failed.", Severity.Error);
+                Snackbar.Add(result.Message ?? L["SaveFailed"], Severity.Error);
             }
         }
         finally
@@ -150,4 +153,8 @@
             }
         }
     }
+
+    private void HandleLanguageChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose() => L.OnChange -= HandleLanguageChanged;
 }

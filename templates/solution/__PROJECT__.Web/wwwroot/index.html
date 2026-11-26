@@ -17,6 +17,7 @@
             var palette = "__THEME_PALETTE__";
             var style = "__THEME_STYLE__";
             var mode = "light";
+            var language = "en";
             var repeat = false;
             try {
                 var saved = localStorage.getItem("enterprise-ui-palette");
@@ -25,14 +26,19 @@
                 if (savedStyle) style = savedStyle;
                 var savedMode = localStorage.getItem("enterprise-ui-theme-mode");
                 if (savedMode) mode = savedMode;
+                var savedLanguage = localStorage.getItem("enterprise-ui-language");
+                if (savedLanguage) language = savedLanguage;
                 repeat = sessionStorage.getItem("ryz-boot-seen") === "1";
                 sessionStorage.setItem("ryz-boot-seen", "1");
             } catch (e) { }
             if (allowed.indexOf(palette) < 0) palette = "default";
             if (style !== "default" && style !== "neo") style = "default";
+            if (language !== "id" && language !== "en") language = "en";
             document.documentElement.setAttribute("data-palette", palette);
             document.documentElement.setAttribute("data-style", style);
             document.documentElement.setAttribute("data-theme-mode", mode);
+            document.documentElement.setAttribute("data-language", language);
+            document.documentElement.setAttribute("lang", language);
             if (repeat) document.documentElement.classList.add("ryz-boot-repeat");
         })();
     </script>
@@ -51,7 +57,7 @@
             <img src="images/branding/app-logo.png" alt="" />
             <div class="ryz-boot-brand">__PROJECT__</div>
             <div class="ryz-boot-kicker">Enterprise Coding Framework</div>
-            <div class="ryz-boot-stage">Loading proven patterns</div>
+            <div class="ryz-boot-stage" data-i18n-en="Loading proven patterns" data-i18n-id="Memuat pola terbukti">Loading proven patterns</div>
             <div class="ryz-boot-track">
                 <div class="ryz-boot-bar" data-ryz-boot-bar></div>
             </div>
@@ -70,6 +76,15 @@
     <script src="_content/MudBlazor/MudBlazor.min.js"></script>
     <script src="_framework/blazor.webassembly#[.{fingerprint}].js"></script>
     <script>
+        (function () {
+            var lang = document.documentElement.getAttribute("data-language") || "en";
+            var nodes = document.querySelectorAll("[data-i18n-en]");
+            for (var i = 0; i < nodes.length; i++) {
+                var node = nodes[i];
+                var text = lang === "id" ? node.getAttribute("data-i18n-id") : node.getAttribute("data-i18n-en");
+                if (text) node.textContent = text;
+            }
+        })();
         window.ryzBootReady = function () {
             var root = document.documentElement;
             if (root.classList.contains("ryz-boot-ready")) {

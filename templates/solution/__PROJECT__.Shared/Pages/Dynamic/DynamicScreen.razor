@@ -1,6 +1,7 @@
 @page "/dynamic/screen/{ScreenId}"
 @layout AuthenticatedLayout
 @attribute [Authorize]
+@implements IDisposable
 @using System.Text.Json
 @using System.Text.RegularExpressions
 @inject DynamicApiService DynamicApi
@@ -12,12 +13,13 @@
 @inject NavigationManager Navigation
 @inject ISnackbar Snackbar
 @inject CurrentUserAccessService Access
+@inject LanguageService L
 
 <div class="page-heading">
     <div>
-        <div class="dashboard-kicker">Dynamic Screen</div>
+        <div class="dashboard-kicker">@L["DynamicScreen"]</div>
         <h1>@(_screen?.Description ?? ScreenId)</h1>
-        <p>Metadata-driven screen from <code>tb_screen_menu</code>.</p>
+        <p>@L["DynamicScreenSubtitle"]</p>
     </div>
 </div>
 
@@ -31,7 +33,7 @@
     <MudPaper Elevation="0" Class="dynamic-filter-card">
         <div class="dynamic-filter-header" @onclick="ToggleFilter">
             <MudIcon Icon="@Icons.Material.Filled.FilterList" Color="Color.Primary" />
-            <MudText Typo="Typo.h6">Filter Pencarian</MudText>
+            <MudText Typo="Typo.h6">@L["SearchFilter"]</MudText>
             <MudSpacer />
             <MudIcon Icon="@(_filterOpen ? Icons.Material.Filled.ExpandLess : Icons.Material.Filled.ExpandMore)"
                      Size="Size.Small"
@@ -81,7 +83,7 @@
                 }
 
                 <MudItem xs="12" sm="6" md="3">
-                    <MudSelect T="string" @bind-Value="_sortColumn" Label="Sort by" Variant="Variant.Outlined" Margin="Margin.Dense" Clearable="true">
+                    <MudSelect T="string" @bind-Value="_sortColumn" Label="@L["SortBy"]" Variant="Variant.Outlined" Margin="Margin.Dense" Clearable="true">
                         @foreach (var column in Columns)
                         {
                             <MudSelectItem Value="@column">@column</MudSelectItem>
@@ -89,17 +91,17 @@
                     </MudSelect>
                 </MudItem>
                 <MudItem xs="12" sm="6" md="3">
-                    <MudSelect T="string" @bind-Value="_sortDirection" Label="Direction" Variant="Variant.Outlined" Margin="Margin.Dense" Clearable="true">
-                        <MudSelectItem Value="@("asc")">Ascending</MudSelectItem>
-                        <MudSelectItem Value="@("desc")">Descending</MudSelectItem>
+                    <MudSelect T="string" @bind-Value="_sortDirection" Label="@L["Direction"]" Variant="Variant.Outlined" Margin="Margin.Dense" Clearable="true">
+                        <MudSelectItem Value="@("asc")">@L["Ascending"]</MudSelectItem>
+                        <MudSelectItem Value="@("desc")">@L["Descending"]</MudSelectItem>
                     </MudSelect>
                 </MudItem>
                 <MudItem xs="12" md="6" Class="d-flex align-items-center gap-2">
                     @if (_screen.HasButtonLoad == true)
                     {
-                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(_ => ReloadAsync())">Load</MudButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(_ => ReloadAsync())">@L["Load"]</MudButton>
                     }
-                    <MudButton Variant="Variant.Outlined" Color="Color.Default" OnClick="@(_ => ClearFiltersAsync())">Clear</MudButton>
+                    <MudButton Variant="Variant.Outlined" Color="Color.Default" OnClick="@(_ => ClearFiltersAsync())">@L["Clear"]</MudButton>
                 </MudItem>
             </MudGrid>
         }
@@ -112,7 +114,7 @@
                 <MudTextField T="string"
                               Value="_search"
                               ValueChanged="OnSearchChanged"
-                              Placeholder="Search data..."
+                              Placeholder="@L["SearchData"]"
                               Variant="Variant.Outlined"
                               Margin="Margin.Dense"
                               Immediate="true"
@@ -123,26 +125,26 @@
             @if (_screen.HasButtonProcess == true)
             {
                 <PermissionGate Action="PermissionAction.AddEdit">
-                    <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="@(_ => ProcessAsync())">Process</MudButton>
+                    <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="@(_ => ProcessAsync())">@L["Process"]</MudButton>
                 </PermissionGate>
             }
             @if (_screen.HasButtonGenerateTxt == true)
             {
                 <PermissionGate Action="PermissionAction.Export">
-                    <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.TextSnippet" OnClick="@(_ => ExportTxtAsync())">Export TXT</MudButton>
+                    <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.TextSnippet" OnClick="@(_ => ExportTxtAsync())">@L["ExportTxt"]</MudButton>
                 </PermissionGate>
             }
             @if (_screen.HasButtonExportExcel == true)
             {
                 <PermissionGate Action="PermissionAction.Export">
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Download" OnClick="@(_ => QueueExportAsync())">Export Excel</MudButton>
-                    <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.PictureAsPdf" OnClick="@(_ => QueuePdfExportAsync())">Export PDF</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Download" OnClick="@(_ => QueueExportAsync())">@L["ExportExcel"]</MudButton>
+                    <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.PictureAsPdf" OnClick="@(_ => QueuePdfExportAsync())">@L["ExportPdf"]</MudButton>
                 </PermissionGate>
             }
             @if (_screen.HasButtonAdd == true && _screen.Child?.Type == "modal")
             {
                 <PermissionGate Action="PermissionAction.Add">
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="@(_ => OpenAddChildAsync())">Add</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="@(_ => OpenAddChildAsync())">@L["Add"]</MudButton>
                 </PermissionGate>
             }
             @if (_screen.HasButtonImportExcel == true)
@@ -155,7 +157,7 @@
                                    StartIcon="@Icons.Material.Filled.UploadFile"
                                    Class="@("ryz-busy-button" + (_importing ? " is-busy" : string.Empty))"
                                    Disabled="@_importing"
-                                   OnClick="@(_ => PickImportAsync())">@(_importing ? "Importing..." : "Import Excel")</MudButton>
+                                   OnClick="@(_ => PickImportAsync())">@(_importing ? L["Importing"] : L["ImportExcel"])</MudButton>
                     }
                     else
                     {
@@ -171,7 +173,7 @@
                                            Class="@("ryz-busy-button" + (_importing ? " is-busy" : string.Empty))"
                                            Disabled="@_importing"
                                            OnClick="@(_ => upload.OpenFilePickerAsync())">
-                                    @(_importing ? "Importing..." : "Import Excel")
+                                    @(_importing ? L["Importing"] : L["ImportExcel"])
                                 </MudButton>
                             </CustomContent>
                         </MudFileUpload>
@@ -181,7 +183,7 @@
             @if (_screen.HasButtonDelete == true)
             {
                 <PermissionGate Action="PermissionAction.Delete">
-                    <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete" Disabled="@(_selectedRows.Count == 0)" OnClick="@(_ => DeleteSelectedAsync())">Delete</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete" Disabled="@(_selectedRows.Count == 0)" OnClick="@(_ => DeleteSelectedAsync())">@L["Delete"]</MudButton>
                 </PermissionGate>
             }
         </div>
@@ -200,7 +202,7 @@
                 @if (ShowActions)
                 {
                     <PermissionGate AnyOf="PermissionSets.ActionRow">
-                        <MudTh>Actions</MudTh>
+                        <MudTh>@L["Action"]</MudTh>
                     </PermissionGate>
                 }
                 @foreach (var column in Columns)
@@ -212,7 +214,7 @@
                 @if (ShowActions)
                 {
                     <PermissionGate AnyOf="PermissionSets.ActionRow">
-                        <MudTd DataLabel="Actions">
+                        <MudTd DataLabel="@L["Action"]">
                             @if (_screen?.Child?.Type == "url")
                             {
                                 <PermissionGate Action="PermissionAction.ViewDetail">
@@ -240,13 +242,13 @@
                 }
             </RowTemplate>
             <NoRecordsContent>
-                <MudText>No data.</MudText>
+                <MudText>@L["NoData"]</MudText>
             </NoRecordsContent>
             <LoadingContent>
                 <MudProgressLinear Indeterminate="true" />
             </LoadingContent>
             <PagerContent>
-                <MudTablePager PageSizeOptions="new[] { 10, 25, 50, 100 }" />
+                <MudTablePager PageSizeOptions="new[] { 10, 25, 50, 100 }" RowsPerPageString="@L["RowsPerPage"]" InfoFormat="@L["PagerInfoFormat"]" AllItemsText="@L["AllItems"]" />
             </PagerContent>
         </MudTable>
     </MudPaper>
@@ -274,6 +276,8 @@
                                 || _screen?.HasButtonDelete == true
                                 || _screen?.Child?.Type == "url";
 
+    protected override void OnInitialized() => L.OnChange += HandleLanguageChanged;
+
     protected override async Task OnParametersSetAsync()
     {
         await Access.EnsureLoadedAsync();
@@ -285,14 +289,14 @@
 
         if (string.IsNullOrWhiteSpace(ScreenId))
         {
-            _error = "Screen id is missing.";
+            _error = L["ScreenIdMissing"];
             return;
         }
 
         _screen = await DynamicApi.GetScreenAsync(ScreenId);
         if (_screen == null)
         {
-            _error = "Screen menu not found or not approved.";
+            _error = L["ScreenMenuNotFoundApproved"];
             return;
         }
 
@@ -351,7 +355,7 @@
 
         if (response == null)
         {
-            _error = "Failed to load screen data.";
+            _error = L["FailedLoadScreenData"];
             return new TableData<Dictionary<string, object>>();
         }
 
@@ -413,7 +417,7 @@
         });
 
         Snackbar.Add(
-            result == null ? "Unable to queue export." : $"Export queued: {result.FileName}",
+            result == null ? L["UnableQueueExport"] : L.Format("ExportQueued", result.FileName),
             result == null ? Severity.Error : Severity.Success);
     }
 
@@ -430,7 +434,7 @@
         });
 
         Snackbar.Add(
-            result == null ? "Unable to queue PDF export." : $"PDF export queued: {result.FileName}",
+            result == null ? L["UnableQueuePdfExport"] : L.Format("PdfExportQueued", result.FileName),
             result == null ? Severity.Error : Severity.Success);
     }
 
@@ -438,7 +442,7 @@
     {
         if (_screen?.Child?.ModalFields.Count is null or 0)
         {
-            Snackbar.Add("Child modal metadata is empty.", Severity.Warning);
+            Snackbar.Add(L["ChildModalMetadataEmpty"], Severity.Warning);
             return;
         }
 
@@ -447,7 +451,7 @@
             ["ScreenId"] = ScreenId,
             ["Fields"] = _screen.Child.ModalFields,
         };
-        var dialog = await DialogService.ShowAsync<DynamicChildDialog>("Add Record", parameters);
+        var dialog = await DialogService.ShowAsync<DynamicChildDialog>(L["AddRecord"], parameters);
         var result = await dialog.Result;
         if (result is { Canceled: false })
         {
@@ -475,7 +479,7 @@
 
         if (!IsAllowedUrl(url))
         {
-            Snackbar.Add("URL action must be relative or HTTP(S).", Severity.Warning);
+            Snackbar.Add(L["UrlActionInvalid"], Severity.Warning);
             return;
         }
 
@@ -493,8 +497,8 @@
             .ToList();
         var value = ids.Count > 0 ? GetRowValue(row, ids[0]) : null;
         return string.IsNullOrWhiteSpace(value)
-            ? _screen?.Description ?? "Linked page"
-            : $"{_screen?.Description ?? "Linked page"} — {value}";
+            ? _screen?.Description ?? L["LinkedPage"]
+            : $"{_screen?.Description ?? L["LinkedPage"]} — {value}";
     }
 
     private static bool IsAllowedUrl(string url)
@@ -520,14 +524,14 @@
         var key = GetRowValue(row, keyField.Id);
         if (string.IsNullOrWhiteSpace(key))
         {
-            Snackbar.Add("Edit key is missing.", Severity.Warning);
+            Snackbar.Add(L["EditKeyMissing"], Severity.Warning);
             return;
         }
 
         var detail = await DynamicApi.GetChildDetailAsync(ScreenId, key);
         if (detail == null)
         {
-            Snackbar.Add("Record not found.", Severity.Warning);
+            Snackbar.Add(L["RecordNotFound"], Severity.Warning);
             return;
         }
 
@@ -537,7 +541,7 @@
             ["Fields"] = child.ModalFields,
             ["Row"] = detail,
         };
-        var dialog = await DialogService.ShowAsync<DynamicChildDialog>("Edit Record", parameters);
+        var dialog = await DialogService.ShowAsync<DynamicChildDialog>(L["EditRecord"], parameters);
         var result = await dialog.Result;
         if (result is { Canceled: false })
         {
@@ -549,11 +553,11 @@
     {
         var parameters = new DialogParameters
         {
-            ["Title"] = "Delete Record",
-            ["Message"] = "Delete this record?",
-            ["ConfirmText"] = "Delete",
+            ["Title"] = L["DeleteRecord"],
+            ["Message"] = L["DeleteThisRecord"],
+            ["ConfirmText"] = L["Delete"],
         };
-        var dialog = await DialogService.ShowAsync<ConfirmDialog>("Delete Record", parameters);
+        var dialog = await DialogService.ShowAsync<ConfirmDialog>(L["DeleteRecord"], parameters);
         var result = await dialog.Result;
         if (result is not { Canceled: false })
         {
@@ -564,7 +568,7 @@
         {
             Values = RowValues(row),
         });
-        Snackbar.Add(response.Message ?? "Delete failed.", response.Success ? Severity.Success : Severity.Error);
+        Snackbar.Add(response.Message ?? L["DeleteFailed"], response.Success ? Severity.Success : Severity.Error);
         if (response.Success)
         {
             _selectedRows.Remove(row);
@@ -577,17 +581,17 @@
     {
         if (_selectedRows.Count == 0)
         {
-            Snackbar.Add("Select at least one record.", Severity.Warning);
+            Snackbar.Add(L["SelectAtLeastOneRecord"], Severity.Warning);
             return;
         }
 
         var parameters = new DialogParameters
         {
-            ["Title"] = "Delete Selected Records",
-            ["Message"] = $"Delete {_selectedRows.Count} selected record(s)?",
-            ["ConfirmText"] = "Delete",
+            ["Title"] = L["DeleteSelectedRecords"],
+            ["Message"] = L.Format("DeleteSelectedRecordsConfirm", _selectedRows.Count),
+            ["ConfirmText"] = L["Delete"],
         };
-        var dialog = await DialogService.ShowAsync<ConfirmDialog>("Delete Selected Records", parameters);
+        var dialog = await DialogService.ShowAsync<ConfirmDialog>(L["DeleteSelectedRecords"], parameters);
         var result = await dialog.Result;
         if (result is not { Canceled: false })
         {
@@ -608,7 +612,7 @@
         }
 
         _selectedRows.Clear();
-        Snackbar.Add($"{deleted} record(s) deleted.", deleted > 0 ? Severity.Success : Severity.Error);
+        Snackbar.Add(L.Format("RecordsDeleted", deleted), deleted > 0 ? Severity.Success : Severity.Error);
         await ReloadAsync();
     }
 
@@ -629,7 +633,7 @@
                 }
             }
 
-            Snackbar.Add($"{processed} record(s) processed.", processed > 0 ? Severity.Success : Severity.Error);
+            Snackbar.Add(L.Format("RecordsProcessed", processed), processed > 0 ? Severity.Success : Severity.Error);
             await ReloadAsync();
             return;
         }
@@ -638,7 +642,7 @@
         {
             Values = new Dictionary<string, string?>(_filters, StringComparer.OrdinalIgnoreCase),
         });
-        Snackbar.Add(bulkResponse.Message ?? "Process completed.", bulkResponse.Success ? Severity.Success : Severity.Error);
+        Snackbar.Add(bulkResponse.Message ?? L["ProcessCompleted"], bulkResponse.Success ? Severity.Success : Severity.Error);
         await ReloadAsync();
     }
 
@@ -660,7 +664,7 @@
 
         if (picked.Content.Length == 0)
         {
-            Snackbar.Add("Only .xlsx files up to 10 MB are supported.", Severity.Warning);
+            Snackbar.Add(L["OnlyXlsx10MbSupported"], Severity.Warning);
             return;
         }
 
@@ -678,13 +682,13 @@
 
         if (!file.Name.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase))
         {
-            Snackbar.Add("Only .xlsx files are supported.", Severity.Warning);
+            Snackbar.Add(L["OnlyXlsxSupported"], Severity.Warning);
             return;
         }
 
         if (file.Size > 10 * 1024 * 1024)
         {
-            Snackbar.Add("Excel file exceeds 10 MB.", Severity.Warning);
+            Snackbar.Add(L["ExcelExceeds10Mb"], Severity.Warning);
             return;
         }
 
@@ -703,7 +707,7 @@
         try
         {
             var response = await DynamicApi.ImportExcelAsync(ScreenId!, stream, fileName);
-            Snackbar.Add(response.Message ?? "Import completed.", response.Success ? Severity.Success : Severity.Error);
+            Snackbar.Add(response.Message ?? L["ImportCompleted"], response.Success ? Severity.Success : Severity.Error);
             if (response.Success)
             {
                 await ReloadAsync();
@@ -772,10 +776,10 @@
         _ => null,
     };
 
-    private static string Format(object? value) => value switch
+    private string Format(object? value) => value switch
     {
         null => string.Empty,
-        bool boolean => boolean ? "Yes" : "No",
+        bool boolean => boolean ? L["Yes"] : L["No"],
         JsonElement element => element.ValueKind switch
         {
             JsonValueKind.String => element.GetString() ?? string.Empty,
@@ -784,4 +788,8 @@
         },
         _ => Convert.ToString(value) ?? string.Empty,
     };
+
+    private void HandleLanguageChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose() => L.OnChange -= HandleLanguageChanged;
 }

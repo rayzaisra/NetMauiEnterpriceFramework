@@ -1,22 +1,24 @@
 @page "/dashboard/maintenance/menu-approval"
 @layout AuthenticatedLayout
 @attribute [Authorize]
+@implements IDisposable
 @inject ApprovalApiService ApprovalApi
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
+@inject LanguageService L
 
 <MudBreadcrumbs Items="_breadcrumbs" Separator=">" Class="mb-3" />
 
 <div class="page-heading">
     <div>
-        <div class="dashboard-kicker">Approval</div>
-        <h1>Menu Approval</h1>
-        <p>Review menu creation, modification, and deletion requests.</p>
+        <div class="dashboard-kicker">@L["Approval"]</div>
+        <h1>@L["MenuApprovalTitle"]</h1>
+        <p>@L["ReviewMenuRequests"]</p>
     </div>
     <PermissionGate Action="PermissionAction.Approve">
         <div class="d-flex gap-2">
-            <MudButton Variant="Variant.Outlined" Color="Color.Success" StartIcon="@Icons.Material.Filled.DoneAll" OnClick="ApproveAll">Approve All</MudButton>
-            <MudButton Variant="Variant.Outlined" Color="Color.Error" StartIcon="@Icons.Material.Filled.DoNotDisturb" OnClick="RejectAll">Reject All</MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Success" StartIcon="@Icons.Material.Filled.DoneAll" OnClick="ApproveAll">@L["ApproveAllAction"]</MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Error" StartIcon="@Icons.Material.Filled.DoNotDisturb" OnClick="RejectAll">@L["RejectAllAction"]</MudButton>
         </div>
     </PermissionGate>
 </div>
@@ -34,8 +36,8 @@
             <MudSpacer />
             <MudTextField @bind-Value="_search"
                           @bind-Value:after="OnSearchChanged"
-                          Label="Search"
-                          Placeholder="Search request..."
+                          Label="@L["Search"]"
+                          Placeholder="@L["SearchRequest"]"
                           Variant="Variant.Outlined"
                           Margin="Margin.Dense"
                           Adornment="Adornment.End"
@@ -44,60 +46,62 @@
                           Class="approval-search" />
         </ToolBarContent>
         <HeaderContent>
-            <MudTh><MudTableSortLabel T="MenuApprovalListItemDto" SortLabel="menuunique">Unique</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel T="MenuApprovalListItemDto" SortLabel="menuname">Name</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel T="MenuApprovalListItemDto" SortLabel="menuurl">URL</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel T="MenuApprovalListItemDto" SortLabel="menuuniqueparent">Parent</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel T="MenuApprovalListItemDto" SortLabel="approvaltype">Type</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel T="MenuApprovalListItemDto" SortLabel="requesterfullname">Requester</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="MenuApprovalListItemDto" SortLabel="menuunique">@L["UniqueColumn"]</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="MenuApprovalListItemDto" SortLabel="menuname">@L["NameColumn"]</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="MenuApprovalListItemDto" SortLabel="menuurl">@L["UrlColumn"]</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="MenuApprovalListItemDto" SortLabel="menuuniqueparent">@L["ParentColumn"]</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="MenuApprovalListItemDto" SortLabel="approvaltype">@L["TypeColumn"]</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="MenuApprovalListItemDto" SortLabel="requesterfullname">@L["Requester"]</MudTableSortLabel></MudTh>
             <PermissionGate AnyOf="PermissionSets.ApproveReject">
-                <MudTh Style="text-align:center;">Action</MudTh>
+                <MudTh Style="text-align:center;">@L["Action"]</MudTh>
             </PermissionGate>
         </HeaderContent>
         <RowTemplate>
-            <MudTd DataLabel="Unique">@context.MenuUnique</MudTd>
-            <MudTd DataLabel="Name">@context.MenuName</MudTd>
-            <MudTd DataLabel="URL">@context.MenuUrl</MudTd>
-            <MudTd DataLabel="Parent">@context.MenuUniqueParent</MudTd>
-            <MudTd DataLabel="Type">@context.ApprovalType</MudTd>
-            <MudTd DataLabel="Requester">@context.RequesterFullName</MudTd>
+            <MudTd DataLabel="@L["UniqueColumn"]">@context.MenuUnique</MudTd>
+            <MudTd DataLabel="@L["NameColumn"]">@context.MenuName</MudTd>
+            <MudTd DataLabel="@L["UrlColumn"]">@context.MenuUrl</MudTd>
+            <MudTd DataLabel="@L["ParentColumn"]">@context.MenuUniqueParent</MudTd>
+            <MudTd DataLabel="@L["TypeColumn"]">@context.ApprovalType</MudTd>
+            <MudTd DataLabel="@L["Requester"]">@context.RequesterFullName</MudTd>
             <PermissionGate AnyOf="PermissionSets.ApproveReject">
-                <MudTd DataLabel="Action" Style="text-align:center;">
+                <MudTd DataLabel="@L["Action"]" Style="text-align:center;">
                     <MudRadioGroup @bind-Value="context.SelectedAction" Class="approval-radios">
-                        <MudRadio T="int" Value="1" Color="Color.Primary">Approve</MudRadio>
-                        <MudRadio T="int" Value="2" Color="Color.Default">Pending</MudRadio>
-                        <MudRadio T="int" Value="0" Color="Color.Error">Reject</MudRadio>
+                        <MudRadio T="int" Value="1" Color="Color.Primary">@L["Approve"]</MudRadio>
+                        <MudRadio T="int" Value="2" Color="Color.Default">@L["Pending"]</MudRadio>
+                        <MudRadio T="int" Value="0" Color="Color.Error">@L["Reject"]</MudRadio>
                     </MudRadioGroup>
                 </MudTd>
             </PermissionGate>
         </RowTemplate>
         <NoRecordsContent>
-            <MudText>No pending menu requests.</MudText>
+            <MudText>@L["NoPendingMenuRequests"]</MudText>
         </NoRecordsContent>
         <LoadingContent>
             <MudProgressLinear Indeterminate="true" />
         </LoadingContent>
         <PagerContent>
-            <MudTablePager PageSizeOptions="new[] { 10, 25, 50, 100 }" />
+            <MudTablePager PageSizeOptions="new[] { 10, 25, 50, 100 }" RowsPerPageString="@L["RowsPerPage"]" InfoFormat="@L["PagerInfoFormat"]" AllItemsText="@L["AllItems"]" />
         </PagerContent>
     </MudTable>
 
     <PermissionGate Action="PermissionAction.Approve">
         <div class="d-flex justify-center mt-4">
             <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Gavel" Class="@("ryz-busy-button" + (_submitting ? " is-busy" : string.Empty))" Disabled="@_submitting" OnClick="SubmitApprovalsAsync">
-                @(_submitting ? "Submitting..." : "Submit")
+                @(_submitting ? L["Submitting"] : L["SubmitAction"])
             </MudButton>
         </div>
     </PermissionGate>
 </MudPaper>
 
 @code {
-    private readonly List<BreadcrumbItem> _breadcrumbs =
-    [
-        new("Dashboard", href: "/dashboard"),
-        new("Maintenance", href: null),
-        new("Menu Approval", href: null, disabled: true),
-    ];
+    private List<BreadcrumbItem> _breadcrumbs => new()
+    {
+        new(L["Dashboard"], href: "/dashboard"),
+        new(L["Maintenance"], href: null),
+        new(L["MenuApprovalTitle"], href: null, disabled: true),
+    };
+
+    protected override void OnInitialized() => L.OnChange += HandleLanguageChanged;
 
     private MudTable<MenuApprovalListItemDto>? _table;
     private List<MenuApprovalListItemDto> _currentItems = new();
@@ -166,18 +170,18 @@
 
         if (approveIds.Count == 0 && rejectIds.Count == 0)
         {
-            Snackbar.Add("No approvals or rejections selected.", Severity.Warning);
+            Snackbar.Add(L["NoApprovalsSelected"], Severity.Warning);
             return;
         }
 
         var parameters = new DialogParameters
         {
-            ["Title"] = "Confirm Submission",
-            ["Message"] = $"Approve {approveIds.Count} item(s) and reject {rejectIds.Count} item(s)?",
+            ["Title"] = L["ConfirmSubmission"],
+            ["Message"] = L.Format("ConfirmSubmissionMessage", approveIds.Count, rejectIds.Count),
             ["ConfirmText"] = "Submit",
         };
 
-        var dialog = await DialogService.ShowAsync<ConfirmDialog>("Confirm Submission", parameters);
+        var dialog = await DialogService.ShowAsync<ConfirmDialog>(L["ConfirmSubmission"], parameters);
         var result = await dialog.Result;
         if (result is not { Canceled: false })
         {
@@ -207,7 +211,7 @@
             }
 
             Snackbar.Add(
-                failed == 0 ? "Approval processed successfully." : $"{failed} request(s) failed.",
+                failed == 0 ? L["ApprovalProcessedSuccess"] : L.Format("ApprovalPartialFailed", failed),
                 failed == 0 ? Severity.Success : Severity.Error);
             await _table!.ReloadServerData();
         }
@@ -216,4 +220,8 @@
             _submitting = false;
         }
     }
+
+    private void HandleLanguageChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose() => L.OnChange -= HandleLanguageChanged;
 }

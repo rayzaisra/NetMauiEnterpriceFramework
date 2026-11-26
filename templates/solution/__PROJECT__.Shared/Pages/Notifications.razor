@@ -1,23 +1,25 @@
 @page "/notifications"
 @layout AuthenticatedLayout
 @attribute [Authorize]
+@implements IDisposable
 @inject NotificationApiService NotificationApi
 @inject MotionService Motion
 @inject ISnackbar Snackbar
+@inject LanguageService L
 
 <MudBreadcrumbs Items="_breadcrumbs" Separator=">" Class="mb-4" />
 
 <div class="page-heading">
     <div>
-        <h1>Notifications</h1>
-        <p>All notifications for your account.</p>
+        <h1>@L["Notifications"]</h1>
+        <p>@L["NotificationsWillAppearHere"]</p>
     </div>
     <div class="d-flex align-items-center gap-2">
         <MudButton Variant="Variant.Filled"
                    Color="Color.Primary"
                    StartIcon="@Icons.Material.Filled.DoneAll"
                    OnClick="MarkAllReadAsync">
-            Mark All Read
+            @L["MarkAllRead"]
         </MudButton>
     </div>
 </div>
@@ -26,8 +28,8 @@
     <div class="notification-toolbar">
         <MudTextField @bind-Value="_search"
                       @bind-Value:after="ApplyFilter"
-                      Label="Search"
-                      Placeholder="Search notifications..."
+                      Label="@L["Search"]"
+                      Placeholder="@L["SearchNotifications"]"
                       Variant="Variant.Outlined"
                       Adornment="Adornment.End"
                       AdornmentIcon="@Icons.Material.Filled.Search"
@@ -42,25 +44,25 @@
               Bordered="true"
               Class="mt-4">
         <HeaderContent>
-            <MudTh>Action</MudTh>
-            <MudTh><MudTableSortLabel T="NotificationDto" SortLabel="shorttext" SortBy="new Func<NotificationDto, object>(x => x.ShortText ?? string.Empty)">Notification</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel T="NotificationDto" SortLabel="createddate" SortBy="new Func<NotificationDto, object>(x => x.CreatedDate ?? DateTime.MinValue)">Date</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel T="NotificationDto" SortLabel="isseen" SortBy="new Func<NotificationDto, object>(x => x.IsSeen)">Status</MudTableSortLabel></MudTh>
+            <MudTh>@L["Action"]</MudTh>
+            <MudTh><MudTableSortLabel T="NotificationDto" SortLabel="shorttext" SortBy="new Func<NotificationDto, object>(x => x.ShortText ?? string.Empty)">@L["Notification"]</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="NotificationDto" SortLabel="createddate" SortBy="new Func<NotificationDto, object>(x => x.CreatedDate ?? DateTime.MinValue)">@L["Date"]</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="NotificationDto" SortLabel="isseen" SortBy="new Func<NotificationDto, object>(x => x.IsSeen)">@L["Status"]</MudTableSortLabel></MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Action">
                 @if (!context.IsSeen)
                 {
-                    <MudTooltip Text="Mark as read">
+                    <MudTooltip Text="@L["MarkAsRead"]">
                         <MudIconButton Icon="@Icons.Material.Filled.MarkEmailRead"
                                        Color="Color.Primary"
                                        Size="Size.Small"
-                                       aria-label="Mark as read"
+                                       aria-label="@L["MarkAsRead"]"
                                        OnClick="@(() => MarkReadAsync(context))" />
                     </MudTooltip>
                 }
             </MudTd>
-            <MudTd DataLabel="Notification">
+            <MudTd DataLabel="@L["Notification"]">
                 <div class="d-flex align-start gap-2">
                     @if (!context.IsSeen)
                     {
@@ -68,42 +70,43 @@
                     }
                     <div>
                         <MudText Typo="Typo.body2" Style="@(context.IsSeen ? "font-weight:400;" : "font-weight:700;")">
-                            @(context.ShortText ?? context.Type ?? "Notification")
+                            @(context.ShortText ?? context.Type ?? L["Notification"])
                         </MudText>
                         <MudText Typo="Typo.caption" Color="Color.Secondary">@context.LongText</MudText>
                     </div>
                 </div>
             </MudTd>
-            <MudTd DataLabel="Date">@context.CreatedDate?.ToString("dd MMM yyyy HH:mm")</MudTd>
-            <MudTd DataLabel="Status">
+            <MudTd DataLabel="@L["Date"]">@context.CreatedDate?.ToString("dd MMM yyyy HH:mm")</MudTd>
+            <MudTd DataLabel="@L["Status"]">
                 <MudChip T="string" Size="Size.Small" Color="@(context.IsSeen ? Color.Default : Color.Primary)" Variant="Variant.Outlined">
-                    @(context.IsSeen ? "Read" : "Unread")
+                    @(context.IsSeen ? L["MarkAllRead"] : L["Unread"])
                 </MudChip>
             </MudTd>
         </RowTemplate>
         <NoRecordsContent>
             <div class="notification-empty">
                 <MudIcon Icon="@Icons.Material.Filled.NotificationsOff" Color="Color.Error" Size="Size.Large" />
-                <MudText Color="Color.Error">No notifications</MudText>
+                <MudText Color="Color.Error">@L["NoNotifications"]</MudText>
             </div>
         </NoRecordsContent>
     </MudTable>
 </MudPaper>
 
 @code {
-    private readonly List<BreadcrumbItem> _breadcrumbs =
-    [
-        new("Dashboard", href: "/dashboard"),
-        new("Notifications", href: null, disabled: true),
-    ];
+    private List<BreadcrumbItem> _breadcrumbs => new()
+    {
+        new(L["Dashboard"], href: "/dashboard"),
+        new(L["Notifications"], href: null, disabled: true),
+    };
 
     private List<NotificationDto> _notifications = new();
     private List<NotificationDto> _filtered = new();
     private string _search = string.Empty;
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        await LoadAsync();
+        L.OnChange += HandleLanguageChanged;
+        _ = LoadAsync();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -125,7 +128,7 @@
         }
         catch
         {
-            Snackbar.Add("Unable to load notifications.", Severity.Error);
+            Snackbar.Add(L["UnableToLoadNotifications"], Severity.Error);
         }
     }
 
@@ -145,7 +148,7 @@
         await NotificationApi.MarkSeenAsync(notification.Id);
         notification.IsSeen = true;
         ApplyFilter();
-        Snackbar.Add("Notification marked as read.", Severity.Success);
+        Snackbar.Add(L["NotificationMarkedRead"], Severity.Success);
     }
 
     private async Task MarkAllReadAsync()
@@ -157,6 +160,10 @@
         }
 
         ApplyFilter();
-        Snackbar.Add("All notifications marked as read.", Severity.Success);
+        Snackbar.Add(L["AllNotificationsMarkedRead"], Severity.Success);
     }
+
+    private void HandleLanguageChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose() => L.OnChange -= HandleLanguageChanged;
 }

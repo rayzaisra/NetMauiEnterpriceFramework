@@ -1,5 +1,6 @@
 @using __PROJECT__.Application.DTOs.Menu
 @using __PROJECT__.Shared.Utils
+@inject LanguageService L
 
 <div class="menu-map-tree-node">
     <MudCheckBox T="bool"
@@ -8,7 +9,7 @@
                  Color="Color.Primary">
         <div class="d-flex align-items-center gap-2">
             <MudIcon Icon="@MenuIconResolver.GetIcon(Node.MenuIcon)" Size="Size.Small" Color="Color.Primary" />
-            <span>@Node.MenuName</span>
+            <span>@L.Menu(Node.MenuUnique, Node.MenuName)</span>
         </div>
     </MudCheckBox>
 

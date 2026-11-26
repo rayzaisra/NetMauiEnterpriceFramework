@@ -1,4 +1,6 @@
 @using MudBlazor
+@inject LanguageService L
+@implements IDisposable
 
 <MudDialog>
     <TitleContent>
@@ -8,8 +10,8 @@
         <MudText>@Message</MudText>
     </DialogContent>
     <DialogActions>
-        <MudButton Variant="Variant.Text" OnClick="@(_ => MudDialog.Cancel())">@CancelText</MudButton>
-        <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="@(_ => MudDialog.Close(DialogResult.Ok(true)))">@ConfirmText</MudButton>
+        <MudButton Variant="Variant.Text" OnClick="@(_ => MudDialog.Cancel())">@(CancelText ?? L["Cancel"])</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="@(_ => MudDialog.Close(DialogResult.Ok(true)))">@(ConfirmText ?? L["Confirm"])</MudButton>
     </DialogActions>
 </MudDialog>
 
@@ -19,6 +21,10 @@
 
     [Parameter] public string Title { get; set; } = "Confirm";
     [Parameter] public string Message { get; set; } = "Are you sure?";
-    [Parameter] public string ConfirmText { get; set; } = "Confirm";
-    [Parameter] public string CancelText { get; set; } = "Cancel";
+    [Parameter] public string? ConfirmText { get; set; }
+    [Parameter] public string? CancelText { get; set; }
+
+    protected override void OnInitialized() => L.OnChange += HandleLanguageChanged;
+    private void HandleLanguageChanged() => InvokeAsync(StateHasChanged);
+    public void Dispose() => L.OnChange -= HandleLanguageChanged;
 }

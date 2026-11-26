@@ -1,23 +1,25 @@
 @inject AuthService AuthService
 @inject ISnackbar Snackbar
+@inject LanguageService L
+@implements IDisposable
 
 <MudDialog>
     <TitleContent>
-        <MudText Typo="Typo.h6">Edit Profile</MudText>
+        <MudText Typo="Typo.h6">@L["EditProfile"]</MudText>
     </TitleContent>
     <DialogContent>
-        <MudTextField @bind-Value="_fullName" Label="Full Name" Variant="Variant.Outlined" Required="true" />
-        <MudTextField @bind-Value="_email" Label="Email" Variant="Variant.Outlined" InputType="InputType.Email" />
-        <MudTextField @bind-Value="_phoneNumber" Label="Phone Number" Variant="Variant.Outlined" />
-        <MudSelect T="string" @bind-Value="_genderId" Label="Gender" Variant="Variant.Outlined" Class="mt-4" Clearable="true">
-            <MudSelectItem Value="@("L")">Laki-Laki</MudSelectItem>
-            <MudSelectItem Value="@("P")">Perempuan</MudSelectItem>
+        <MudTextField @bind-Value="_fullName" Label="@L["FullName"]" Variant="Variant.Outlined" Required="true" />
+        <MudTextField @bind-Value="_email" Label="@L["Email"]" Variant="Variant.Outlined" InputType="InputType.Email" />
+        <MudTextField @bind-Value="_phoneNumber" Label="@L["PhoneNumberColumn"]" Variant="Variant.Outlined" />
+        <MudSelect T="string" @bind-Value="_genderId" Label="@L["GenderColumn"]" Variant="Variant.Outlined" Class="mt-4" Clearable="true">
+            <MudSelectItem Value="@("L")">@L["Male"]</MudSelectItem>
+            <MudSelectItem Value="@("P")">@L["Female"]</MudSelectItem>
         </MudSelect>
     </DialogContent>
     <DialogActions>
-        <MudButton Variant="Variant.Outlined" Color="Color.Default" OnClick="@(_ => MudDialog.Cancel())">Cancel</MudButton>
+        <MudButton Variant="Variant.Outlined" Color="Color.Default" OnClick="@(_ => MudDialog.Cancel())">@L["Cancel"]</MudButton>
         <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="@("ryz-busy-button" + (_saving ? " is-busy" : string.Empty))" Disabled="@_saving" OnClick="SaveAsync">
-            @(_saving ? "Saving..." : "Save Changes")
+            @(_saving ? L["Saving"] : L["SaveChanges"])
         </MudButton>
     </DialogActions>
 </MudDialog>
@@ -37,6 +39,7 @@
 
     protected override void OnInitialized()
     {
+        L.OnChange += HandleLanguageChanged;
         _fullName = User.FullName;
         _email = User.Email;
         _phoneNumber = User.PhoneNumber;
@@ -52,7 +55,7 @@
 
         if (string.IsNullOrWhiteSpace(_fullName))
         {
-            Snackbar.Add("Full name is required.", Severity.Warning);
+            Snackbar.Add(L["FullNameRequired"], Severity.Warning);
             return;
         }
 
@@ -69,12 +72,12 @@
 
             if (result != null)
             {
-                Snackbar.Add("Profile updated successfully.", Severity.Success);
+                Snackbar.Add(L["ProfileUpdatedSuccess"], Severity.Success);
                 MudDialog.Close(DialogResult.Ok(result));
             }
             else
             {
-                Snackbar.Add("Profile update failed.", Severity.Error);
+                Snackbar.Add(L["ProfileUpdateFailed"], Severity.Error);
             }
         }
         catch (Exception ex)
@@ -86,4 +89,8 @@
             _saving = false;
         }
     }
+
+    private void HandleLanguageChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose() => L.OnChange -= HandleLanguageChanged;
 }

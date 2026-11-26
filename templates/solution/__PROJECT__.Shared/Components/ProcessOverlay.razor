@@ -1,3 +1,6 @@
+@inject LanguageService L
+@implements IDisposable
+
 @* Global process overlay. Visibility and animation are driven by ryzcore-motion.js. *@
 <div class="ryz-process-overlay" aria-hidden="true">
     <div class="ryz-process-card" role="status" aria-live="polite">
@@ -10,8 +13,8 @@
             <span class="ryz-process-dot dot-3"></span>
         </div>
         <div class="ryz-process-body">
-            <div class="ryz-process-title">Processing</div>
-            <div class="ryz-process-stage">Please wait...</div>
+            <div class="ryz-process-title">@L["Processing"]</div>
+            <div class="ryz-process-stage">@L["PleaseWait"]</div>
             <div class="ryz-process-track">
                 <div class="ryz-process-bar"></div>
             </div>
@@ -19,3 +22,11 @@
         </div>
     </div>
 </div>
+
+@code {
+    protected override void OnInitialized() => L.OnChange += HandleLanguageChanged;
+
+    private void HandleLanguageChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose() => L.OnChange -= HandleLanguageChanged;
+}

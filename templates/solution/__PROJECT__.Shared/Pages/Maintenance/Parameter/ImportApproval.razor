@@ -1,28 +1,30 @@
 @page "/dashboard/maintenance/import-approval"
 @layout AuthenticatedLayout
 @attribute [Authorize]
+@implements IDisposable
 @inject ParameterApiService ParameterApi
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
+@inject LanguageService L
 
 <MudPaper Elevation="0" Class="dashboard-card">
     <div class="page-heading">
         <div>
-            <div class="dashboard-kicker">Maintenance</div>
-            <h1>Import Approval</h1>
-            <p>Review staged Excel import batches before they are applied.</p>
+            <div class="dashboard-kicker">@L["Maintenance"]</div>
+            <h1>@L["ImportApprovalTitle"]</h1>
+            <p>@L["ReviewStagedImports"]</p>
         </div>
     </div>
 
     <div class="table-toolbar">
         <MudTextField @bind-Value="_search"
-                      Placeholder="Search import..."
+                      Placeholder="@L["SearchImport"]"
                       Variant="Variant.Outlined"
                       Margin="Margin.Dense"
                       Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Search"
                       Immediate="true" />
-        <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="@(_ => ReloadAsync())">Search</MudButton>
+        <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="@(_ => ReloadAsync())">@L["Search"]</MudButton>
     </div>
 
     <MudTable T="ParameterPendingListItemDto"
@@ -33,36 +35,36 @@
               Breakpoint="Breakpoint.Sm"
               Elevation="0">
         <HeaderContent>
-            <MudTh><MudTableSortLabel T="ParameterPendingListItemDto" SortLabel="keyvalue">File</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel T="ParameterPendingListItemDto" SortLabel="tablename">Target</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel T="ParameterPendingListItemDto" SortLabel="summary">Summary</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel T="ParameterPendingListItemDto" SortLabel="requesterfullname">Requester</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel T="ParameterPendingListItemDto" SortLabel="createddate">Date</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="ParameterPendingListItemDto" SortLabel="keyvalue">@L["FileColumn"]</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="ParameterPendingListItemDto" SortLabel="tablename">@L["TargetColumn"]</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="ParameterPendingListItemDto" SortLabel="summary">@L["SummaryColumn"]</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="ParameterPendingListItemDto" SortLabel="requesterfullname">@L["Requester"]</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="ParameterPendingListItemDto" SortLabel="createddate">@L["DateColumn"]</MudTableSortLabel></MudTh>
             <PermissionGate AnyOf="PermissionSets.ApproveReject">
-                <MudTh>Actions</MudTh>
+                <MudTh>@L["Action"]</MudTh>
             </PermissionGate>
         </HeaderContent>
         <RowTemplate>
-            <MudTd DataLabel="File">@context.KeyValue</MudTd>
-            <MudTd DataLabel="Target"><code>@context.TableName</code></MudTd>
-            <MudTd DataLabel="Summary">@context.Summary</MudTd>
-            <MudTd DataLabel="Requester">@context.RequesterFullName</MudTd>
-            <MudTd DataLabel="Date">@context.CreatedDate?.ToString("dd MMM yyyy HH:mm")</MudTd>
+            <MudTd DataLabel="@L["FileColumn"]">@context.KeyValue</MudTd>
+            <MudTd DataLabel="@L["TargetColumn"]"><code>@context.TableName</code></MudTd>
+            <MudTd DataLabel="@L["SummaryColumn"]">@context.Summary</MudTd>
+            <MudTd DataLabel="@L["Requester"]">@context.RequesterFullName</MudTd>
+            <MudTd DataLabel="@L["DateColumn"]">@context.CreatedDate?.ToString("dd MMM yyyy HH:mm")</MudTd>
             <PermissionGate AnyOf="PermissionSets.ApproveReject">
-                <MudTd DataLabel="Actions">
-                    <MudButton Variant="Variant.Filled" Color="Color.Success" Size="Size.Small" OnClick="@(_ => ProcessAsync(context.Id, true))">Approve</MudButton>
-                    <MudButton Variant="Variant.Outlined" Color="Color.Error" Size="Size.Small" OnClick="@(_ => ProcessAsync(context.Id, false))">Reject</MudButton>
+                <MudTd DataLabel="@L["Action"]">
+                    <MudButton Variant="Variant.Filled" Color="Color.Success" Size="Size.Small" OnClick="@(_ => ProcessAsync(context.Id, true))">@L["Approve"]</MudButton>
+                    <MudButton Variant="Variant.Outlined" Color="Color.Error" Size="Size.Small" OnClick="@(_ => ProcessAsync(context.Id, false))">@L["Reject"]</MudButton>
                 </MudTd>
             </PermissionGate>
         </RowTemplate>
         <NoRecordsContent>
-            <MudText>No pending import batches.</MudText>
+            <MudText>@L["NoPendingImportBatches"]</MudText>
         </NoRecordsContent>
         <LoadingContent>
             <MudProgressLinear Indeterminate="true" />
         </LoadingContent>
         <PagerContent>
-            <MudTablePager PageSizeOptions="new[] { 10, 25, 50 }" />
+            <MudTablePager PageSizeOptions="new[] { 10, 25, 50 }" RowsPerPageString="@L["RowsPerPage"]" InfoFormat="@L["PagerInfoFormat"]" AllItemsText="@L["AllItems"]" />
         </PagerContent>
     </MudTable>
 </MudPaper>
@@ -70,6 +72,8 @@
 @code {
     private MudTable<ParameterPendingListItemDto>? _table;
     private string? _search;
+
+    protected override void OnInitialized() => L.OnChange += HandleLanguageChanged;
 
     private async Task<TableData<ParameterPendingListItemDto>> LoadServerData(TableState state, CancellationToken cancellationToken)
     {
@@ -98,12 +102,12 @@
     {
         var parameters = new DialogParameters
         {
-            ["Title"] = approve ? "Approve Import" : "Reject Import",
-            ["Message"] = approve ? "Apply all staged rows?" : "Discard this import batch?",
-            ["ConfirmText"] = approve ? "Approve" : "Reject",
+            ["Title"] = approve ? L["ApproveImport"] : L["RejectImport"],
+            ["Message"] = approve ? L["ApplyAllStagedRows"] : L["DiscardImportBatch"],
+            ["ConfirmText"] = approve ? L["Approve"] : L["Reject"],
         };
 
-        var dialog = await DialogService.ShowAsync<ConfirmDialog>(approve ? "Approve Import" : "Reject Import", parameters);
+        var dialog = await DialogService.ShowAsync<ConfirmDialog>(approve ? L["ApproveImport"] : L["RejectImport"], parameters);
         var result = await dialog.Result;
         if (result is not { Canceled: false })
         {
@@ -114,7 +118,11 @@
             ? await ParameterApi.ApproveAsync(id)
             : await ParameterApi.RejectAsync(id);
 
-        Snackbar.Add(response.Message ?? "Processed.", response.Success ? Severity.Success : Severity.Error);
+        Snackbar.Add(response.Message ?? L["Processed"], response.Success ? Severity.Success : Severity.Error);
         await ReloadAsync();
     }
+
+    private void HandleLanguageChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose() => L.OnChange -= HandleLanguageChanged;
 }

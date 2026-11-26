@@ -513,6 +513,12 @@ html, body {
     object-fit: contain;
 }
 
+.maui-auth-lang {
+    display: flex;
+    justify-content: center;
+    margin: -4px 0 18px;
+}
+
 .maui-auth-heading {
     margin-bottom: 24px;
     text-align: center;
@@ -1531,6 +1537,25 @@ html, body {
 
 .app-docs-button:hover {
     background: color-mix(in srgb, var(--mud-palette-primary) 20%, transparent) !important;
+}
+
+.app-language-toggle {
+    min-width: 44px;
+    min-height: 36px;
+    padding: 0 12px;
+    border-radius: 10px !important;
+    font-size: .78rem;
+    font-weight: 800;
+    letter-spacing: .04em;
+}
+
+.app-language-toggle .mud-button-label {
+    line-height: 1;
+}
+
+.maui-language-toggle {
+    min-height: 34px;
+    padding: 0 10px;
 }
 
 .enterprise-tabs {
@@ -3012,6 +3037,17 @@ body:has(.neo-brutalism) .mud-dialog .mud-switch-thumb {
 .login-shell .login-form-header {
     animation-duration: 280ms;
     animation-delay: 220ms;
+}
+
+.login-form-header-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.login-form-header-top > div:first-child {
+    min-width: 0;
 }
 
 .login-shell .login-form-fields > *:not(.mud-button-root) {

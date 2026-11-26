@@ -1,4 +1,5 @@
 @using __PROJECT__.Application.DTOs.Menu
+@inject LanguageService L
 
 <button type="button"
         class="maui-menu-tile"
@@ -6,7 +7,7 @@
     <span class="maui-menu-icon" style="background-color:@(BackgroundColor ?? "#76d7cf")">
         <MudIcon Icon="@MenuIconResolver.GetIcon(Item.MenuIcon)" Size="Size.Medium" />
     </span>
-    <span class="maui-menu-label">@Item.MenuName</span>
+    <span class="maui-menu-label">@L.Menu(Item.MenuUnique, Item.MenuName)</span>
 </button>
 
 @code {

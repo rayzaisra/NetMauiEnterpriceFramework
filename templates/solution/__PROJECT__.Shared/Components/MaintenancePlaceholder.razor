@@ -1,9 +1,11 @@
 @using MudBlazor
+@inject LanguageService L
+@implements IDisposable
 
 <MudPaper Elevation="0" Class="dashboard-card">
     <div class="page-heading">
         <div>
-            <div class="dashboard-kicker">Maintenance</div>
+            <div class="dashboard-kicker">@L["Maintenance"]</div>
             <h1>@Title</h1>
             <p>@Subtitle</p>
         </div>
@@ -11,11 +13,28 @@
     </div>
 
     <MudAlert Severity="Severity.Info">
-        This module is under development. The shell, menu, auth, and tab behavior are already wired.
+        @L["ModuleUnderDevelopment"]
     </MudAlert>
 </MudPaper>
 
 @code {
-    [Parameter] public string Title { get; set; } = "Maintenance";
-    [Parameter] public string Subtitle { get; set; } = "Module placeholder";
+    [Parameter] public string Title { get; set; } = "";
+    [Parameter] public string Subtitle { get; set; } = "";
+
+    protected override void OnInitialized()
+    {
+        L.OnChange += HandleLanguageChanged;
+        if (string.IsNullOrWhiteSpace(Title)) Title = L["Maintenance"];
+        if (string.IsNullOrWhiteSpace(Subtitle)) Subtitle = L["ModulePlaceholder"];
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (string.IsNullOrWhiteSpace(Title)) Title = L["Maintenance"];
+        if (string.IsNullOrWhiteSpace(Subtitle)) Subtitle = L["ModulePlaceholder"];
+    }
+
+    private void HandleLanguageChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose() => L.OnChange -= HandleLanguageChanged;
 }

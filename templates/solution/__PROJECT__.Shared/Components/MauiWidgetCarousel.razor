@@ -1,10 +1,12 @@
 @using __PROJECT__.Application.DTOs.Dashboard
+@inject LanguageService L
+@implements IDisposable
 
 @if (Widgets.Count == 0)
 {
     <div class="maui-widget-empty">
         <MudIcon Icon="@Icons.Material.Outlined.Dashboard" Size="Size.Small" />
-        <span>Belum ada widget.</span>
+        <span>@L["NoData"]</span>
     </div>
 }
 else
@@ -40,6 +42,12 @@ else
     [Parameter]
     public EventCallback<DashboardWidgetDto> OnSelected { get; set; }
 
+    protected override void OnInitialized() => L.OnChange += HandleLanguageChanged;
+
     private Task OpenWidgetAsync(DashboardWidgetDto widget)
         => OnSelected.InvokeAsync(widget);
+
+    private void HandleLanguageChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose() => L.OnChange -= HandleLanguageChanged;
 }

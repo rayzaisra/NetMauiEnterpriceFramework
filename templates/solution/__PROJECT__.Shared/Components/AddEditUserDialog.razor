@@ -2,6 +2,8 @@
 @using __PROJECT__.Application.DTOs.User
 @inject SettingApiService SettingApi
 @inject ISnackbar Snackbar
+@inject LanguageService L
+@implements IDisposable
 
 <MudDialog>
     <TitleContent>
@@ -12,21 +14,21 @@
             <MudGrid Spacing="2">
                 <MudItem xs="12" sm="6">
                     <MudTextField @bind-Value="_model.UserId"
-                                  Label="User Id"
+                                  Label="@L["UserId"]"
                                   Variant="Variant.Text"
                                   Required="true"
                                   Disabled="@IsEdit" />
                 </MudItem>
                 <MudItem xs="12" sm="6">
                     <MudTextField @bind-Value="_model.FullName"
-                                  Label="Full Name"
+                                  Label="@L["FullName"]"
                                   Variant="Variant.Text"
                                   Required="true" />
                 </MudItem>
                 <MudItem xs="12" sm="6">
                     <MudSelect T="string"
                                @bind-Value="_model.GenderId"
-                               Label="Gender"
+                               Label="@L["GenderColumn"]"
                                Variant="Variant.Text"
                                Required="true" Clearable="true">
                         @foreach (var gender in _genders)
@@ -37,36 +39,36 @@
                 </MudItem>
                 <MudItem xs="12" sm="6">
                     <MudTextField @bind-Value="_model.Email"
-                                  Label="Email"
+                                  Label="@L["Email"]"
                                   Variant="Variant.Text"
                                   InputType="InputType.Email"
                                   Required="true" />
                 </MudItem>
                 <MudItem xs="12" sm="6">
                     <MudTextField @bind-Value="_model.PhoneNumber"
-                                  Label="Phone Number"
+                                  Label="@L["PhoneNumberColumn"]"
                                   Variant="Variant.Text" />
                 </MudItem>
                 @if (!IsEdit)
                 {
                     <MudItem xs="12" sm="6">
                         <MudTextField @bind-Value="_model.Password"
-                                      Label="Password"
+                                      Label="@L["Password"]"
                                       Variant="Variant.Text"
                                       InputType="InputType.Password"
                                       Required="true" />
                     </MudItem>
                 }
                 <MudItem xs="12" Class="user-active-row">
-                    <MudSwitch T="bool" @bind-Value="_model.IsActive" Label="Is Active?" Color="Color.Primary" />
+                    <MudSwitch T="bool" @bind-Value="_model.IsActive" Label="@L["IsActiveQuestion"]" Color="Color.Primary" />
                 </MudItem>
             </MudGrid>
         </MudForm>
     </DialogContent>
     <DialogActions>
-        <MudButton Variant="Variant.Outlined" Color="Color.Default" OnClick="@(_ => MudDialog.Cancel())">Close</MudButton>
+        <MudButton Variant="Variant.Outlined" Color="Color.Default" OnClick="@(_ => MudDialog.Cancel())">@L["Close"]</MudButton>
         <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="@("ryz-busy-button" + (_saving ? " is-busy" : string.Empty))" Disabled="@_saving" OnClick="@(_ => SubmitAsync())">
-            @(_saving ? "Saving..." : "Save Changes")
+            @(_saving ? L["Saving"] : L["SaveChanges"])
         </MudButton>
     </DialogActions>
 </MudDialog>
@@ -84,10 +86,11 @@
     private bool _saving;
 
     private bool IsEdit => !string.IsNullOrWhiteSpace(User?.UserId);
-    private string Title => IsEdit ? "Edit User" : "Add User";
+    private string Title => IsEdit ? L["EditUser"] : L["AddUser"];
 
     protected override async Task OnInitializedAsync()
     {
+        L.OnChange += HandleLanguageChanged;
         _genders = await SettingApi.GetGendersAsync();
 
         if (User != null)
@@ -113,13 +116,13 @@
 
         if (string.IsNullOrWhiteSpace(_model.UserId))
         {
-            Snackbar.Add("User ID is required.", Severity.Warning);
+            Snackbar.Add(L["UserIdRequired"], Severity.Warning);
             return;
         }
 
         if (!IsEdit && string.IsNullOrWhiteSpace(_model.Password))
         {
-            Snackbar.Add("Password is required for a new user.", Severity.Warning);
+            Snackbar.Add(L["PasswordRequiredForNewUser"], Severity.Warning);
             return;
         }
 
@@ -132,12 +135,12 @@
 
             if (result.Success)
             {
-                Snackbar.Add(result.Message ?? "Saved.", Severity.Success);
+                Snackbar.Add(result.Message ?? L["Saved"], Severity.Success);
                 MudDialog.Close(DialogResult.Ok(true));
             }
             else
             {
-                Snackbar.Add(result.Message ?? "Save failed.", Severity.Error);
+                Snackbar.Add(result.Message ?? L["SaveFailed"], Severity.Error);
             }
         }
         finally
@@ -145,4 +148,8 @@
             _saving = false;
         }
     }
+
+    private void HandleLanguageChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose() => L.OnChange -= HandleLanguageChanged;
 }

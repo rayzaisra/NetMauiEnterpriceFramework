@@ -3,12 +3,14 @@
 @page "/dashboard/maintenance/parameter-system/{Mode}/{TableName}"
 @layout AuthenticatedLayout
 @attribute [Authorize]
+@implements IDisposable
 @inject ParameterApiService ParameterApi
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
 @inject NavigationManager Navigation
 @inject TabStateService TabService
 @inject ExportApiService ExportApi
+@inject LanguageService L
 
 @if (!IsCardsView)
 {
@@ -18,7 +20,7 @@
 <MudPaper Elevation="0" Class="dashboard-card">
     <div class="page-heading">
         <div>
-            <div class="dashboard-kicker">Parameter</div>
+            <div class="dashboard-kicker">@L["Parameter"]</div>
             <h1>@Heading</h1>
             <p>@Subtitle</p>
         </div>
@@ -27,9 +29,9 @@
             <PermissionGate Action="PermissionAction.AddEdit">
                 <div class="d-flex gap-2">
                     <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.FileDownload" Class="@("ryz-busy-button" + (_exporting ? " is-busy" : string.Empty))" Disabled="@_exporting" OnClick="ExportMakerAsync">
-                        @(_exporting ? "Exporting..." : "Export Excel")
+                        @(_exporting ? L["Exporting"] : L["ExportExcel"])
                     </MudButton>
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="@(_ => OpenAddAsync())">Add</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="@(_ => OpenAddAsync())">@L["Add"]</MudButton>
                 </div>
             </PermissionGate>
         }
@@ -37,8 +39,8 @@
         {
             <PermissionGate Action="PermissionAction.Approve">
                 <div class="d-flex gap-2">
-                    <MudButton Variant="Variant.Outlined" Color="Color.Success" StartIcon="@Icons.Material.Filled.DoneAll" OnClick="ApproveAll">Approve All</MudButton>
-                    <MudButton Variant="Variant.Outlined" Color="Color.Error" StartIcon="@Icons.Material.Filled.DoNotDisturb" OnClick="RejectAll">Reject All</MudButton>
+                    <MudButton Variant="Variant.Outlined" Color="Color.Success" StartIcon="@Icons.Material.Filled.DoneAll" OnClick="ApproveAll">@L["ApproveAllAction"]</MudButton>
+                    <MudButton Variant="Variant.Outlined" Color="Color.Error" StartIcon="@Icons.Material.Filled.DoNotDisturb" OnClick="RejectAll">@L["RejectAllAction"]</MudButton>
                 </div>
             </PermissionGate>
         }
@@ -69,16 +71,16 @@
                             <div class="d-flex gap-2">
                                 @if (IsMakerCards && card.IsMaker)
                                 {
-                                    <MudButton Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" Class="parameter-card-action" OnClick="@(_ => OpenMaker(card))">Maker</MudButton>
+                                    <MudButton Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" Class="parameter-card-action" OnClick="@(_ => OpenMaker(card))">@L["Maker"]</MudButton>
                                 }
                                 @if (IsApprovalCards && card.IsApproval)
                                 {
-                                    <MudButton Variant="Variant.Outlined" Color="Color.Warning" Size="Size.Small" Class="parameter-card-action" OnClick="@(_ => OpenApproval(card))">Approval</MudButton>
+                                    <MudButton Variant="Variant.Outlined" Color="Color.Warning" Size="Size.Small" Class="parameter-card-action" OnClick="@(_ => OpenApproval(card))">@L["Approval"]</MudButton>
                                 }
                                 @if (IsGenericCards)
                                 {
-                                    <MudButton Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" Class="parameter-card-action" OnClick="@(_ => OpenMaker(card))">Maker</MudButton>
-                                    <MudButton Variant="Variant.Outlined" Color="Color.Warning" Size="Size.Small" Class="parameter-card-action" OnClick="@(_ => OpenApproval(card))">Approval</MudButton>
+                                    <MudButton Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" Class="parameter-card-action" OnClick="@(_ => OpenMaker(card))">@L["Maker"]</MudButton>
+                                    <MudButton Variant="Variant.Outlined" Color="Color.Warning" Size="Size.Small" Class="parameter-card-action" OnClick="@(_ => OpenApproval(card))">@L["Approval"]</MudButton>
                                 }
                             </div>
                         </div>
@@ -101,8 +103,8 @@
                 <MudSpacer />
                 <MudTextField @bind-Value="_search"
                               @bind-Value:after="ReloadMakerAsync"
-                              Label="Search"
-                              Placeholder="Search parameter..."
+                              Label="@L["Search"]"
+                              Placeholder="@L["SearchParameter"]"
                               Variant="Variant.Outlined"
                               Margin="Margin.Dense"
                               Adornment="Adornment.End"
@@ -112,7 +114,7 @@
             </ToolBarContent>
             <HeaderContent>
                 <PermissionGate AnyOf="PermissionSets.EditDelete">
-                    <MudTh Style="text-align:center;">Actions</MudTh>
+                    <MudTh Style="text-align:center;">@L["Action"]</MudTh>
                 </PermissionGate>
                 @foreach (var field in _makerFields)
                 {
@@ -121,7 +123,7 @@
             </HeaderContent>
             <RowTemplate>
                 <PermissionGate AnyOf="PermissionSets.EditDelete">
-                    <MudTd DataLabel="Actions" Style="text-align:center; white-space:nowrap;">
+                    <MudTd DataLabel="@L["Action"]" Style="text-align:center; white-space:nowrap;">
                         <PermissionGate Action="PermissionAction.Edit">
                             <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Color="Color.Primary" OnClick="@(_ => OpenEditAsync(context))" />
                         </PermissionGate>
@@ -136,10 +138,10 @@
                 }
             </RowTemplate>
             <NoRecordsContent>
-                <MudText>No parameter rows.</MudText>
+                <MudText>@L["NoParameterRows"]</MudText>
             </NoRecordsContent>
             <PagerContent>
-                <MudTablePager PageSizeOptions="new[] { 10, 25, 50, 100 }" />
+                <MudTablePager PageSizeOptions="new[] { 10, 25, 50, 100 }" RowsPerPageString="@L["RowsPerPage"]" InfoFormat="@L["PagerInfoFormat"]" AllItemsText="@L["AllItems"]" />
             </PagerContent>
         </MudTable>
     }
@@ -157,8 +159,8 @@
                 <MudSpacer />
                 <MudTextField @bind-Value="_search"
                               @bind-Value:after="ReloadApprovalAsync"
-                              Label="Search"
-                              Placeholder="Search..."
+                              Label="@L["Search"]"
+                              Placeholder="@L["Search"]"
                               Variant="Variant.Outlined"
                               Margin="Margin.Dense"
                               Adornment="Adornment.End"
@@ -167,21 +169,21 @@
                               Class="approval-search" />
             </ToolBarContent>
             <HeaderContent>
-                <MudTh><MudTableSortLabel T="ParameterApprovalRowDto" SortLabel="idpending">ID Pending</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel T="ParameterApprovalRowDto" SortLabel="typeparameter">TypeParameter</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel T="ParameterApprovalRowDto" SortLabel="idpending">@L["IdPending"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel T="ParameterApprovalRowDto" SortLabel="typeparameter">@L["TypeParameter"]</MudTableSortLabel></MudTh>
                 @foreach (var field in _approvalFields)
                 {
                     <MudTh><MudTableSortLabel T="ParameterApprovalRowDto" SortLabel="@field.FieldName">@(field.FieldDesc?.Replace("_", " ") ?? field.FieldName)</MudTableSortLabel></MudTh>
                 }
                 <PermissionGate AnyOf="PermissionSets.ApproveReject">
-                    <MudTh Style="text-align:center;">Action</MudTh>
+                    <MudTh Style="text-align:center;">@L["Action"]</MudTh>
                 </PermissionGate>
             </HeaderContent>
             <RowTemplate>
-                <MudTd DataLabel="ID Pending" Style="max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                <MudTd DataLabel="@L["IdPending"]" Style="max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
                     @context.IdPending
                 </MudTd>
-                <MudTd DataLabel="TypeParameter">@context.TypeParameter</MudTd>
+                <MudTd DataLabel="@L["TypeParameter"]">@context.TypeParameter</MudTd>
                 @foreach (var field in _approvalFields)
                 {
                     <MudTd DataLabel="@(field.FieldDesc ?? field.FieldName)">@GetApprovalDisplay(field, context.Fields.GetValueOrDefault(field.FieldName))</MudTd>
@@ -189,25 +191,25 @@
                 <PermissionGate AnyOf="PermissionSets.ApproveReject">
                     <MudTd DataLabel="Action" Style="text-align:center;">
                         <MudRadioGroup @bind-Value="context.Action" Class="approval-radios">
-                            <MudRadio T="int" Value="1" Color="Color.Primary">Approve</MudRadio>
-                            <MudRadio T="int" Value="2" Color="Color.Default">Pending</MudRadio>
-                            <MudRadio T="int" Value="0" Color="Color.Error">Reject</MudRadio>
+                            <MudRadio T="int" Value="1" Color="Color.Primary">@L["Approve"]</MudRadio>
+                            <MudRadio T="int" Value="2" Color="Color.Default">@L["Pending"]</MudRadio>
+                            <MudRadio T="int" Value="0" Color="Color.Error">@L["Reject"]</MudRadio>
                         </MudRadioGroup>
                     </MudTd>
                 </PermissionGate>
             </RowTemplate>
             <NoRecordsContent>
-                <MudText>No pending parameter requests.</MudText>
+                <MudText>@L["NoPendingParameterRequests"]</MudText>
             </NoRecordsContent>
             <PagerContent>
-                <MudTablePager PageSizeOptions="new[] { 10, 25, 50, 100 }" />
+                <MudTablePager PageSizeOptions="new[] { 10, 25, 50, 100 }" RowsPerPageString="@L["RowsPerPage"]" InfoFormat="@L["PagerInfoFormat"]" AllItemsText="@L["AllItems"]" />
             </PagerContent>
         </MudTable>
 
         <PermissionGate Action="PermissionAction.Approve">
             <div class="d-flex justify-center mt-4">
                 <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Gavel" Class="@("ryz-busy-button" + (_submittingApproval ? " is-busy" : string.Empty))" Disabled="@_submittingApproval" OnClick="SubmitApprovalsAsync">
-                    @(_submittingApproval ? "Submitting..." : "Submit")
+                    @(_submittingApproval ? L["Submitting"] : L["SubmitAction"])
                 </MudButton>
             </div>
         </PermissionGate>
@@ -247,27 +249,29 @@
 
     private List<BreadcrumbItem> BreadcrumbItems =>
     [
-        new("Dashboard", href: "/dashboard"),
-        new("Maintenance", href: null),
-        new(IsMakerView ? "Parameter Maintenance Maker" : "Parameter Maintenance Approval", href: null),
+        new(L["Dashboard"], href: "/dashboard"),
+        new(L["Maintenance"], href: null),
+        new(IsMakerView ? L["ParameterMaintenanceMaker"] : L["ParameterMaintenanceApproval"], href: null),
         new(_cardDescription ?? TableName ?? string.Empty, href: null, disabled: true),
     ];
 
     private string Heading => IsMakerCards
-        ? "Parameter Maintenance Maker"
+        ? L["ParameterMaintenanceMaker"]
         : IsApprovalCards
-            ? "Parameter Maintenance Approval"
+            ? L["ParameterMaintenanceApproval"]
             : IsCardsView
-                ? "Parameter System"
+                ? L["ParameterSystemTitle"]
                 : IsMakerView
-                    ? _cardDescription ?? "Parameter Maker"
-                    : _cardDescription ?? "Parameter Approval";
+                    ? _cardDescription ?? L["ParameterMaker"]
+                    : _cardDescription ?? L["ParameterApproval"];
 
     private string Subtitle => IsCardsView
-        ? "Choose a parameter table to maintain."
+        ? L["ChooseParameterTable"]
         : IsMakerView
-            ? "Create or update parameter requests. Changes require approval."
-            : "Review pending parameter requests.";
+            ? L["ParameterMakerSubtitle"]
+            : L["ParameterApprovalSubtitle"];
+
+    protected override void OnInitialized() => L.OnChange += HandleLanguageChanged;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -385,7 +389,7 @@
 
         if (string.IsNullOrWhiteSpace(TableName))
         {
-            Snackbar.Add("Table is not available.", Severity.Error);
+            Snackbar.Add(L["TableNotAvailable"], Severity.Error);
             return;
         }
 
@@ -395,7 +399,7 @@
             var url = await ExportApi.ExportManagementAsync("api/export/parameters", _search, TableName);
             if (string.IsNullOrWhiteSpace(url))
             {
-                Snackbar.Add("Export failed. Please try again.", Severity.Error);
+                Snackbar.Add(L["ExportFailed"], Severity.Error);
                 return;
             }
 
@@ -449,7 +453,7 @@
     {
         if (_makerFields.Count == 0)
         {
-            Snackbar.Add("Parameter metadata is empty.", Severity.Warning);
+            Snackbar.Add(L["ParameterMetadataEmpty"], Severity.Warning);
             return;
         }
 
@@ -459,7 +463,7 @@
             ["Fields"] = _makerFields,
         };
 
-        var dialog = await DialogService.ShowAsync<ParameterEditDialog>("Add Parameter", parameters);
+        var dialog = await DialogService.ShowAsync<ParameterEditDialog>(L["AddParameter"], parameters);
         var result = await dialog.Result;
         if (result is { Canceled: false })
         {
@@ -476,7 +480,7 @@
             ["Row"] = row,
         };
 
-        var dialog = await DialogService.ShowAsync<ParameterEditDialog>("Edit Parameter", parameters);
+        var dialog = await DialogService.ShowAsync<ParameterEditDialog>(L["EditParameter"], parameters);
         var result = await dialog.Result;
         if (result is { Canceled: false })
         {
@@ -489,12 +493,12 @@
         var key = row.GetValueOrDefault("__key");
         var parameters = new DialogParameters
         {
-            ["Title"] = "Delete Parameter",
-            ["Message"] = $"Delete parameter {TableName}?",
-            ["ConfirmText"] = "Delete",
+            ["Title"] = L["DeleteParameter"],
+            ["Message"] = L.Format("DeleteParameterConfirm", TableName ?? string.Empty),
+            ["ConfirmText"] = L["Delete"],
         };
 
-        var dialog = await DialogService.ShowAsync<ConfirmDialog>("Delete Parameter", parameters);
+        var dialog = await DialogService.ShowAsync<ConfirmDialog>(L["DeleteParameter"], parameters);
         var result = await dialog.Result;
         if (result is not { Canceled: false })
         {
@@ -502,7 +506,7 @@
         }
 
         var response = await ParameterApi.DeleteAsync(TableName!, key);
-        Snackbar.Add(response.Message ?? "Delete failed.", response.Success ? Severity.Success : Severity.Error);
+        Snackbar.Add(response.Message ?? L["DeleteFailed"], response.Success ? Severity.Success : Severity.Error);
         await ReloadMakerAsync();
     }
 
@@ -539,18 +543,18 @@
 
         if (approveIds.Count == 0 && rejectIds.Count == 0)
         {
-            Snackbar.Add("No approvals or rejections selected.", Severity.Warning);
+            Snackbar.Add(L["NoApprovalsSelected"], Severity.Warning);
             return;
         }
 
         var parameters = new DialogParameters
         {
-            ["Title"] = "Confirm Submission",
-            ["Message"] = $"Approve {approveIds.Count} item(s) and reject {rejectIds.Count} item(s)?",
-            ["ConfirmText"] = "Submit",
+            ["Title"] = L["ConfirmSubmission"],
+            ["Message"] = L.Format("ConfirmSubmissionMessage", approveIds.Count, rejectIds.Count),
+            ["ConfirmText"] = L["SubmitAction"],
         };
 
-        var dialog = await DialogService.ShowAsync<ConfirmDialog>("Confirm Submission", parameters);
+        var dialog = await DialogService.ShowAsync<ConfirmDialog>(L["ConfirmSubmission"], parameters);
         var result = await dialog.Result;
         if (result is not { Canceled: false })
         {
@@ -580,7 +584,7 @@
             }
 
             Snackbar.Add(
-                failed == 0 ? "Approval processed successfully." : $"{failed} request(s) failed.",
+                failed == 0 ? L["ApprovalProcessedSuccess"] : L.Format("ApprovalPartialFailed", failed),
                 failed == 0 ? Severity.Success : Severity.Error);
             await ReloadApprovalAsync();
         }
@@ -589,4 +593,8 @@
             _submittingApproval = false;
         }
     }
+
+    private void HandleLanguageChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose() => L.OnChange -= HandleLanguageChanged;
 }

@@ -1,10 +1,12 @@
 @using System.Text.Json
 @inject DynamicApiService DynamicApi
 @inject ISnackbar Snackbar
+@inject LanguageService L
+@implements IDisposable
 
 <MudDialog>
     <TitleContent>
-        <MudText Typo="Typo.h6">@(IsEdit ? "Edit Record" : "Add Record")</MudText>
+        <MudText Typo="Typo.h6">@(IsEdit ? L["EditRecord"] : L["AddRecord"])</MudText>
     </TitleContent>
     <DialogContent>
         <MudGrid Spacing="3">
@@ -35,10 +37,10 @@
         </MudGrid>
     </DialogContent>
     <DialogActions>
-        <MudButton Variant="Variant.Text" OnClick="@(_ => MudDialog.Cancel())">Cancel</MudButton>
+        <MudButton Variant="Variant.Text" OnClick="@(_ => MudDialog.Cancel())">@L["Cancel"]</MudButton>
         <PermissionGate Action="PermissionAction.AddEdit">
             <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="@("ryz-busy-button" + (_saving ? " is-busy" : string.Empty))" Disabled="@_saving" OnClick="@(_ => SaveAsync())">
-                @(_saving ? "Saving..." : "Save")
+                @(_saving ? L["Saving"] : L["Save"])
             </MudButton>
         </PermissionGate>
     </DialogActions>
@@ -64,6 +66,7 @@
 
     protected override void OnInitialized()
     {
+        L.OnChange += HandleLanguageChanged;
         if (Row == null)
         {
             return;
@@ -94,12 +97,12 @@
 
             if (result.Success)
             {
-                Snackbar.Add(result.Message ?? "Saved.", Severity.Success);
+                Snackbar.Add(result.Message ?? L["Saved"], Severity.Success);
                 MudDialog.Close(DialogResult.Ok(true));
             }
             else
             {
-                Snackbar.Add(result.Message ?? "Save failed.", Severity.Error);
+                Snackbar.Add(result.Message ?? L["SaveFailed"], Severity.Error);
             }
         }
         finally
@@ -122,4 +125,8 @@
 
     private static bool IsTrue(string? value)
         => value == "1" || string.Equals(value, "true", StringComparison.OrdinalIgnoreCase);
+
+    private void HandleLanguageChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose() => L.OnChange -= HandleLanguageChanged;
 }

@@ -1,25 +1,27 @@
 @page "/dashboard/maintenance/user-list"
 @layout AuthenticatedLayout
 @attribute [Authorize]
+@implements IDisposable
 @inject SettingApiService SettingApi
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
 @inject ExportApiService ExportApi
 @inject NavigationManager Navigation
+@inject LanguageService L
 
 <MudBreadcrumbs Items="_breadcrumbs" Separator=">" Class="mb-3" />
 
 <div class="page-heading">
     <div>
-        <div class="dashboard-kicker">Maintenance</div>
-        <h1>User Management</h1>
-        <p>Manage application users and their roles.</p>
+        <div class="dashboard-kicker">@L["Maintenance"]</div>
+        <h1>@L["UserManagement"]</h1>
+        <p>@L["ManageUsersAndRoles"]</p>
     </div>
     <PermissionGate Action="PermissionAction.AddEdit">
         <div class="d-flex gap-2">
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="@(_ => OpenAddAsync())">Add User</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="@(_ => OpenAddAsync())">@L["AddUser"]</MudButton>
             <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.FileDownload" Class="@("ryz-busy-button" + (_isExporting ? " is-busy" : string.Empty))" Disabled="@_isExporting" OnClick="@(_ => ExportExcelAsync())">
-                @(_isExporting ? "Exporting..." : "Export Excel")
+                @(_isExporting ? L["Exporting"] : L["ExportExcel"])
             </MudButton>
         </div>
     </PermissionGate>
@@ -37,8 +39,8 @@
             <MudSpacer />
             <MudTextField @bind-Value="_search"
                           @bind-Value:after="OnSearchChanged"
-                          Label="Search"
-                          Placeholder="Search by ID, name, email..."
+                          Label="@L["Search"]"
+                          Placeholder="@L["SearchByIdNameEmail"]"
                           Variant="Variant.Outlined"
                           Margin="Margin.Dense"
                           Adornment="Adornment.End"
@@ -48,19 +50,19 @@
         </ToolBarContent>
         <HeaderContent>
             <PermissionGate AnyOf="PermissionSets.EditDelete">
-                <MudTh Style="text-align:center;">Actions</MudTh>
+                <MudTh Style="text-align:center;">@L["Action"]</MudTh>
             </PermissionGate>
-            <MudTh><MudTableSortLabel T="UserListItemDto" SortLabel="userid">User Id</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel T="UserListItemDto" SortLabel="fullname">Full Name</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel T="UserListItemDto" SortLabel="gendername">Gender</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel T="UserListItemDto" SortLabel="email">Email</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel T="UserListItemDto" SortLabel="phonenumber">Phone Number</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel T="UserListItemDto" SortLabel="groupname">Role</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel T="UserListItemDto" SortLabel="isactive">Status</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="UserListItemDto" SortLabel="userid">@L["UserIdColumn"]</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="UserListItemDto" SortLabel="fullname">@L["FullName"]</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="UserListItemDto" SortLabel="gendername">@L["GenderColumn"]</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="UserListItemDto" SortLabel="email">@L["Email"]</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="UserListItemDto" SortLabel="phonenumber">@L["PhoneNumberColumn"]</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="UserListItemDto" SortLabel="groupname">@L["Role"]</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="UserListItemDto" SortLabel="isactive">@L["Status"]</MudTableSortLabel></MudTh>
         </HeaderContent>
         <RowTemplate>
             <PermissionGate AnyOf="PermissionSets.EditDelete">
-                <MudTd DataLabel="Actions" Style="text-align:center; white-space:nowrap;">
+                <MudTd DataLabel="@L["Action"]" Style="text-align:center; white-space:nowrap;">
                     <PermissionGate Action="PermissionAction.Edit">
                         <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Color="Color.Primary" OnClick="@(_ => OpenEditAsync(context))" />
                     </PermissionGate>
@@ -69,50 +71,52 @@
                     </PermissionGate>
                 </MudTd>
             </PermissionGate>
-            <MudTd DataLabel="User Id">@context.UserId</MudTd>
-            <MudTd DataLabel="Full Name">@context.FullName</MudTd>
-            <MudTd DataLabel="Gender">@context.GenderName</MudTd>
-            <MudTd DataLabel="Email">@context.Email</MudTd>
-            <MudTd DataLabel="Phone Number">@context.PhoneNumber</MudTd>
-            <MudTd DataLabel="Role">@context.GroupName</MudTd>
-            <MudTd DataLabel="Status">
+            <MudTd DataLabel="@L["UserIdColumn"]">@context.UserId</MudTd>
+            <MudTd DataLabel="@L["FullName"]">@context.FullName</MudTd>
+            <MudTd DataLabel="@L["GenderColumn"]">@context.GenderName</MudTd>
+            <MudTd DataLabel="@L["Email"]">@context.Email</MudTd>
+            <MudTd DataLabel="@L["PhoneNumberColumn"]">@context.PhoneNumber</MudTd>
+            <MudTd DataLabel="@L["Role"]">@context.GroupName</MudTd>
+            <MudTd DataLabel="@L["Status"]">
                 @if (context.IsLocked)
                 {
-                    <MudChip T="string" Size="Size.Small" Color="Color.Error">Locked</MudChip>
+                    <MudChip T="string" Size="Size.Small" Color="Color.Error">@L["Locked"]</MudChip>
                 }
                 else if (context.IsActive)
                 {
-                    <MudChip T="string" Size="Size.Small" Color="Color.Success">Active</MudChip>
+                    <MudChip T="string" Size="Size.Small" Color="Color.Success">@L["Active"]</MudChip>
                 }
                 else
                 {
-                    <MudChip T="string" Size="Size.Small" Color="Color.Default">Inactive</MudChip>
+                    <MudChip T="string" Size="Size.Small" Color="Color.Default">@L["Inactive"]</MudChip>
                 }
             </MudTd>
         </RowTemplate>
         <NoRecordsContent>
-            <MudText>No users found.</MudText>
+            <MudText>@L["NoUsersFound"]</MudText>
         </NoRecordsContent>
         <LoadingContent>
             <MudProgressLinear Indeterminate="true" />
         </LoadingContent>
         <PagerContent>
-            <MudTablePager PageSizeOptions="new[] { 10, 25, 50, 100 }" />
+            <MudTablePager PageSizeOptions="new[] { 10, 25, 50, 100 }" RowsPerPageString="@L["RowsPerPage"]" InfoFormat="@L["PagerInfoFormat"]" AllItemsText="@L["AllItems"]" />
         </PagerContent>
     </MudTable>
 </MudPaper>
 
 @code {
-    private readonly List<BreadcrumbItem> _breadcrumbs =
-    [
-        new("Dashboard", href: "/dashboard"),
-        new("Maintenance", href: null),
-        new("User Management", href: null, disabled: true),
-    ];
+    private List<BreadcrumbItem> _breadcrumbs => new()
+    {
+        new(L["Dashboard"], href: "/dashboard"),
+        new(L["Maintenance"], href: null),
+        new(L["UserManagement"], href: null, disabled: true),
+    };
 
     private MudTable<UserListItemDto>? _table;
     private string? _search;
     private bool _isExporting;
+
+    protected override void OnInitialized() => L.OnChange += HandleLanguageChanged;
 
     private async Task<TableData<UserListItemDto>> LoadServerData(TableState state, CancellationToken cancellationToken)
     {
@@ -151,7 +155,7 @@
 
     private async Task OpenAddAsync()
     {
-        var dialog = await DialogService.ShowAsync<AddEditUserDialog>("Add User");
+        var dialog = await DialogService.ShowAsync<AddEditUserDialog>(L["AddUser"]);
         var result = await dialog.Result;
         if (result is { Canceled: false })
         {
@@ -162,7 +166,7 @@
     private async Task OpenEditAsync(UserListItemDto user)
     {
         var parameters = new DialogParameters { ["User"] = user };
-        var dialog = await DialogService.ShowAsync<AddEditUserDialog>("Edit User", parameters);
+        var dialog = await DialogService.ShowAsync<AddEditUserDialog>(L["EditUser"], parameters);
         var result = await dialog.Result;
         if (result is { Canceled: false })
         {
@@ -174,12 +178,12 @@
     {
         var parameters = new DialogParameters
         {
-            ["Title"] = "Delete User",
-            ["Message"] = $"Delete user {user.UserId}?",
-            ["ConfirmText"] = "Delete",
+            ["Title"] = L["DeleteUser"],
+            ["Message"] = L.Format("DeleteUserConfirm", user.UserId),
+            ["ConfirmText"] = L["Delete"],
         };
 
-        var dialog = await DialogService.ShowAsync<ConfirmDialog>("Delete User", parameters);
+        var dialog = await DialogService.ShowAsync<ConfirmDialog>(L["DeleteUser"], parameters);
         var result = await dialog.Result;
         if (result is not { Canceled: false })
         {
@@ -187,7 +191,7 @@
         }
 
         var response = await SettingApi.DeleteUserAsync(user.UserId);
-        Snackbar.Add(response.Message ?? "Delete failed.", response.Success ? Severity.Success : Severity.Error);
+        Snackbar.Add(response.Message ?? L["DeleteFailed"], response.Success ? Severity.Success : Severity.Error);
         await ReloadAsync();
     }
 
@@ -204,7 +208,7 @@
             var url = await ExportApi.ExportManagementAsync("api/export/users", _search);
             if (string.IsNullOrWhiteSpace(url))
             {
-                Snackbar.Add("Export failed. Please try again.", Severity.Error);
+                Snackbar.Add(L["ExportFailed"], Severity.Error);
                 return;
             }
 
@@ -219,4 +223,8 @@
             _isExporting = false;
         }
     }
+
+    private void HandleLanguageChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose() => L.OnChange -= HandleLanguageChanged;
 }

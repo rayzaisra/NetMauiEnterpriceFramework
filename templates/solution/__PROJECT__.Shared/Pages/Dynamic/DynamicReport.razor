@@ -1,24 +1,26 @@
 @page "/dynamic/report/{ReportId}"
 @layout AuthenticatedLayout
 @attribute [Authorize]
+@implements IDisposable
 @using System.Text.Json
 @inject DynamicApiService DynamicApi
 @inject ExportApiService ExportApi
 @inject ISnackbar Snackbar
+@inject LanguageService L
 
 <MudPaper Elevation="0" Class="dashboard-card">
     <div class="page-heading">
         <div>
-            <div class="dashboard-kicker">Dynamic Report</div>
+            <div class="dashboard-kicker">@L["DynamicReport"]</div>
             <h1>@(_report?.Name ?? ReportId)</h1>
-            <p>Metadata-driven report from <code>tb_report_set</code>.</p>
+            <p>@L["DynamicReportSubtitle"]</p>
         </div>
         <div class="d-flex gap-2">
             <PermissionGate Action="PermissionAction.Export">
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Download" OnClick="@(_ => QueueExportAsync())">Export Excel</MudButton>
-                <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.PictureAsPdf" OnClick="@(_ => QueuePdfExportAsync())">Export PDF</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Download" OnClick="@(_ => QueueExportAsync())">@L["ExportExcel"]</MudButton>
+                <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.PictureAsPdf" OnClick="@(_ => QueuePdfExportAsync())">@L["ExportPdf"]</MudButton>
             </PermissionGate>
-            <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Refresh" OnClick="@(_ => ReloadAsync())">Refresh</MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Refresh" OnClick="@(_ => ReloadAsync())">@L["Refresh"]</MudButton>
         </div>
     </div>
 
@@ -32,7 +34,7 @@
         <MudGrid Spacing="2" Class="mb-4">
             <MudItem xs="12" md="4">
                 <MudTextField @bind-Value="_search"
-                              Label="Search"
+                              Label="@L["Search"]"
                               Variant="Variant.Outlined"
                               Margin="Margin.Dense"
                               Adornment="Adornment.Start"
@@ -79,7 +81,7 @@
             }
 
             <MudItem xs="12" md="4">
-                <MudSelect T="string" @bind-Value="_sortColumn" Label="Sort by" Variant="Variant.Outlined" Margin="Margin.Dense" Clearable="true">
+                <MudSelect T="string" @bind-Value="_sortColumn" Label="@L["SortBy"]" Variant="Variant.Outlined" Margin="Margin.Dense" Clearable="true">
                     @foreach (var column in Columns)
                     {
                         <MudSelectItem Value="@column">@column</MudSelectItem>
@@ -87,14 +89,14 @@
                 </MudSelect>
             </MudItem>
             <MudItem xs="12" md="4">
-                <MudSelect T="string" @bind-Value="_sortDirection" Label="Direction" Variant="Variant.Outlined" Margin="Margin.Dense" Clearable="true">
-                    <MudSelectItem Value="@("asc")">Ascending</MudSelectItem>
-                    <MudSelectItem Value="@("desc")">Descending</MudSelectItem>
+                <MudSelect T="string" @bind-Value="_sortDirection" Label="@L["Direction"]" Variant="Variant.Outlined" Margin="Margin.Dense" Clearable="true">
+                    <MudSelectItem Value="@("asc")">@L["Ascending"]</MudSelectItem>
+                    <MudSelectItem Value="@("desc")">@L["Descending"]</MudSelectItem>
                 </MudSelect>
             </MudItem>
             <MudItem xs="12" md="4" Class="d-flex align-items-center gap-2">
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(_ => ReloadAsync())">Load</MudButton>
-                <MudButton Variant="Variant.Text" OnClick="@(_ => ResetAsync())">Reset</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(_ => ReloadAsync())">@L["Load"]</MudButton>
+                <MudButton Variant="Variant.Text" OnClick="@(_ => ResetAsync())">@L["Reset"]</MudButton>
             </MudItem>
         </MudGrid>
     }
@@ -121,13 +123,13 @@
                 }
             </RowTemplate>
             <NoRecordsContent>
-                <MudText>No data.</MudText>
+                <MudText>@L["NoData"]</MudText>
             </NoRecordsContent>
             <LoadingContent>
                 <MudProgressLinear Indeterminate="true" />
             </LoadingContent>
             <PagerContent>
-                <MudTablePager PageSizeOptions="new[] { 10, 25, 50, 100 }" />
+                <MudTablePager PageSizeOptions="new[] { 10, 25, 50, 100 }" RowsPerPageString="@L["RowsPerPage"]" InfoFormat="@L["PagerInfoFormat"]" AllItemsText="@L["AllItems"]" />
             </PagerContent>
         </MudTable>
     }
@@ -149,6 +151,8 @@
 
     private IEnumerable<string> Columns => _result?.Columns ?? Enumerable.Empty<string>();
 
+    protected override void OnInitialized() => L.OnChange += HandleLanguageChanged;
+
     protected override async Task OnParametersSetAsync()
     {
         _report = null;
@@ -159,14 +163,14 @@
 
         if (string.IsNullOrWhiteSpace(ReportId))
         {
-            _error = "Report id is missing.";
+            _error = L["ReportIdMissing"];
             return;
         }
 
         _report = await DynamicApi.GetReportAsync(ReportId);
         if (_report == null)
         {
-            _error = "Report not found, not approved, or access denied.";
+            _error = L["ReportNotFoundDenied"];
             return;
         }
 
@@ -221,7 +225,7 @@
 
         if (response == null)
         {
-            _error = "Failed to load report data.";
+            _error = L["FailedLoadReportData"];
             return new TableData<Dictionary<string, object>>();
         }
 
@@ -267,7 +271,7 @@
         });
 
         Snackbar.Add(
-            result == null ? "Unable to queue export." : $"Export queued: {result.FileName}",
+            result == null ? L["UnableQueueExport"] : L.Format("ExportQueued", result.FileName),
             result == null ? Severity.Error : Severity.Success);
     }
 
@@ -284,7 +288,7 @@
         });
 
         Snackbar.Add(
-            result == null ? "Unable to queue PDF export." : $"PDF export queued: {result.FileName}",
+            result == null ? L["UnableQueuePdfExport"] : L.Format("PdfExportQueued", result.FileName),
             result == null ? Severity.Error : Severity.Success);
     }
 
@@ -311,10 +315,10 @@
         _ => null,
     };
 
-    private static string Format(object? value) => value switch
+    private string Format(object? value) => value switch
     {
         null => string.Empty,
-        bool boolean => boolean ? "Yes" : "No",
+        bool boolean => boolean ? L["Yes"] : L["No"],
         JsonElement element => element.ValueKind switch
         {
             JsonValueKind.String => element.GetString() ?? string.Empty,
@@ -323,4 +327,8 @@
         },
         _ => Convert.ToString(value) ?? string.Empty,
     };
+
+    private void HandleLanguageChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose() => L.OnChange -= HandleLanguageChanged;
 }

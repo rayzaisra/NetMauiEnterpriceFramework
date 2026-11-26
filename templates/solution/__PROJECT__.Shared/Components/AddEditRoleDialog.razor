@@ -1,5 +1,7 @@
 @inject SettingApiService SettingApi
 @inject ISnackbar Snackbar
+@inject LanguageService L
+@implements IDisposable
 
 <MudDialog>
     <TitleContent>
@@ -8,7 +10,7 @@
     <DialogContent>
         <MudGrid Spacing="3">
             <MudItem xs="12" md="6">
-                <MudSelect T="string" @bind-Value="_model.UserId" Label="User" Variant="Variant.Outlined" Required="true" Disabled="@IsEdit" Clearable="true">
+                <MudSelect T="string" @bind-Value="_model.UserId" Label="@L["User"]" Variant="Variant.Outlined" Required="true" Disabled="@IsEdit" Clearable="true">
                     @foreach (var user in _users)
                     {
                         <MudSelectItem Value="@user.Value">@user.Text</MudSelectItem>
@@ -16,7 +18,7 @@
                 </MudSelect>
             </MudItem>
             <MudItem xs="12" md="6">
-                <MudSelect T="string" @bind-Value="_model.GroupId" Label="Group" Variant="Variant.Outlined" Required="true" Clearable="true">
+                <MudSelect T="string" @bind-Value="_model.GroupId" Label="@L["Group"]" Variant="Variant.Outlined" Required="true" Clearable="true">
                     @foreach (var group in _groups)
                     {
                         <MudSelectItem Value="@group.Value">@group.Text</MudSelectItem>
@@ -24,23 +26,23 @@
                 </MudSelect>
             </MudItem>
             <MudItem xs="12" Class="d-flex align-items-center">
-                <MudSwitch T="bool" @bind-Value="_model.CanAddEdit" Color="Color.Primary" Label="Can Add / Edit" />
+                <MudSwitch T="bool" @bind-Value="_model.CanAddEdit" Color="Color.Primary" Label="@L["AddEditColumn"]" />
             </MudItem>
             <MudItem xs="12" Class="d-flex align-items-center">
-                <MudSwitch T="bool" @bind-Value="_model.CanDelete" Color="Color.Primary" Label="Can Delete" />
+                <MudSwitch T="bool" @bind-Value="_model.CanDelete" Color="Color.Primary" Label="@L["DeleteColumn"]" />
             </MudItem>
             <MudItem xs="12" Class="d-flex align-items-center">
-                <MudSwitch T="bool" @bind-Value="_model.CanReadOnly" Color="Color.Primary" Label="Read Only" />
+                <MudSwitch T="bool" @bind-Value="_model.CanReadOnly" Color="Color.Primary" Label="@L["ReadOnlyColumn"]" />
             </MudItem>
             <MudItem xs="12" Class="d-flex align-items-center">
-                <MudSwitch T="bool" @bind-Value="_model.IsActive" Color="Color.Primary" Label="Active" />
+                <MudSwitch T="bool" @bind-Value="_model.IsActive" Color="Color.Primary" Label="@L["Active"]" />
             </MudItem>
         </MudGrid>
     </DialogContent>
     <DialogActions>
-        <MudButton Variant="Variant.Text" OnClick="@(_ => MudDialog.Cancel())">Cancel</MudButton>
+        <MudButton Variant="Variant.Text" OnClick="@(_ => MudDialog.Cancel())">@L["Cancel"]</MudButton>
         <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="@("ryz-busy-button" + (_saving ? " is-busy" : string.Empty))" Disabled="@_saving" OnClick="@(_ => SubmitAsync())">
-            @(_saving ? "Saving..." : "Save")
+            @(_saving ? L["Saving"] : L["Save"])
         </MudButton>
     </DialogActions>
 </MudDialog>
@@ -58,10 +60,11 @@
     private bool _saving;
 
     private bool IsEdit => Role != null;
-    private string Title => IsEdit ? "Edit Role" : "Add Role";
+    private string Title => IsEdit ? L["EditRole"] : L["AddRole"];
 
     protected override async Task OnInitializedAsync()
     {
+        L.OnChange += HandleLanguageChanged;
         _groups = await SettingApi.GetGroupsAsync();
         _users = await SettingApi.GetUsersAsync();
 
@@ -88,7 +91,7 @@
 
         if (string.IsNullOrWhiteSpace(_model.UserId) || string.IsNullOrWhiteSpace(_model.GroupId))
         {
-            Snackbar.Add("User and group are required.", Severity.Warning);
+            Snackbar.Add(L["UserAndGroupRequired"], Severity.Warning);
             return;
         }
 
@@ -101,12 +104,12 @@
 
             if (result.Success)
             {
-                Snackbar.Add(result.Message ?? "Saved.", Severity.Success);
+                Snackbar.Add(result.Message ?? L["Saved"], Severity.Success);
                 MudDialog.Close(DialogResult.Ok(true));
             }
             else
             {
-                Snackbar.Add(result.Message ?? "Save failed.", Severity.Error);
+                Snackbar.Add(result.Message ?? L["SaveFailed"], Severity.Error);
             }
         }
         finally
@@ -114,4 +117,8 @@
             _saving = false;
         }
     }
+
+    private void HandleLanguageChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose() => L.OnChange -= HandleLanguageChanged;
 }

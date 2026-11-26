@@ -13,6 +13,7 @@
 @inject ISnackbar Snackbar
 @inject NotificationApiService NotificationApi
 @inject ThemePreferenceService ThemeService
+@inject LanguageService L
 @inject MotionService Motion
 @inject ApiService ApiService
 @inject IHttpMessageHandlerFactory HttpMessageHandlerFactory
@@ -33,7 +34,7 @@
         <MudIconButton Icon="@(DrawerToggleState ? Icons.Material.Filled.MenuOpen : Icons.Material.Filled.Menu)"
                        Color="Color.Inherit"
                        Class="app-drawer-toggle ml-2"
-                       aria-label="@(DrawerToggleState ? "Collapse navigation" : "Expand navigation")"
+                       aria-label="@(DrawerToggleState ? L["CollapseNavigation"] : L["ExpandNavigation"])"
                        OnClick="@(_ => ToggleDrawer())" />
         @if (_docsMenu is { Children.Count: > 0 })
         {
@@ -42,12 +43,12 @@
                     <MudButton Variant="Variant.Text"
                                Color="Color.Primary"
                                Class="app-docs-button"
-                               OnClick="@(_ => docsMenu.ToggleAsync())">Docs</MudButton>
+                               OnClick="@(_ => docsMenu.ToggleAsync())">@MenuLabel(_docsMenu)</MudButton>
                 </ActivatorContent>
                 <ChildContent>
                     @foreach (var docsPage in _docsMenu.Children.OrderBy(item => item.OrderSeq))
                     {
-                        <MudMenuItem OnClick="@(() => OpenMenu(docsPage))">@docsPage.MenuName</MudMenuItem>
+                        <MudMenuItem OnClick="@(() => OpenMenu(docsPage))">@MenuLabel(docsPage)</MudMenuItem>
                     }
                 </ChildContent>
             </MudMenu>
@@ -59,7 +60,7 @@
                 <MudTextField T="string"
                               @bind-Value="_searchTerm"
                               @bind-Value:after="OnSearchChanged"
-                              Placeholder="Search data..."
+                              Placeholder="@L["SearchData"]"
                               Variant="Variant.Outlined"
                               Margin="Margin.Dense"
                               Immediate="true"
@@ -79,14 +80,14 @@
                         @foreach (var result in _filteredResults)
                         {
                             <button type="button" class="search-result" @onclick="() => OpenSearchResult(result)">
-                                <div class="search-result-title">@result.Item.MenuName</div>
+                                <div class="search-result-title">@MenuLabel(result.Item)</div>
                                 <div class="search-result-subtitle">@result.Path</div>
                             </button>
                         }
                     }
                     else
                     {
-                        <div class="search-empty">No results found.</div>
+                        <div class="search-empty">@L["NoResultsFound"]</div>
                     }
                 </MudPaper>
             </MudPopover>
@@ -108,7 +109,7 @@
                 <MudPaper Elevation="4" Class="notification-panel">
                     <div class="notification-panel-head">
                         <div class="d-flex align-items-center gap-2">
-                            <MudText Typo="Typo.h6">Notifications</MudText>
+                            <MudText Typo="Typo.h6">@L["Notifications"]</MudText>
                             @if (_unreadCount > 0)
                             {
                                 <MudChip T="string" Size="Size.Small" Color="Color.Error">@_unreadCount</MudChip>
@@ -117,9 +118,9 @@
                         <div class="d-flex align-items-center gap-1">
                             @if (_unreadCount > 0)
                             {
-                                <MudButton Variant="Variant.Text" Size="Size.Small" Color="Color.Primary" OnClick="@(_ => MarkAllSeenAsync())">Mark all read</MudButton>
+                                <MudButton Variant="Variant.Text" Size="Size.Small" Color="Color.Primary" OnClick="@(_ => MarkAllSeenAsync())">@L["MarkAllRead"]</MudButton>
                             }
-                            <MudButton Variant="Variant.Text" Size="Size.Small" Color="Color.Primary" OnClick="@(_ => OpenNotificationList())">View All</MudButton>
+                            <MudButton Variant="Variant.Text" Size="Size.Small" Color="Color.Primary" OnClick="@(_ => OpenNotificationList())">@L["ViewAll"]</MudButton>
                         </div>
                     </div>
 
@@ -128,7 +129,7 @@
                         {
                             <div class="notification-empty">
                                 <MudIcon Icon="@Icons.Material.Filled.NotificationsOff" Color="Color.Error" Size="Size.Large" />
-                                <MudText Color="Color.Error">No notifications</MudText>
+                                <MudText Color="Color.Error">@L["NoNotifications"]</MudText>
                             </div>
                         }
                         else
@@ -138,7 +139,7 @@
                                 <div class="notification-item" @onclick="@(() => OpenNotificationAsync(notification))">
                                     <MudIcon Icon="@Icons.Material.Outlined.Info" Color="Color.Primary" Size="Size.Small" Class="mt-1" />
                                     <div class="notification-item-copy">
-                                        <div class="notification-title">@(notification.ShortText ?? notification.Type ?? "Notification")</div>
+                                        <div class="notification-title">@(notification.ShortText ?? notification.Type ?? L["Notification"])</div>
                                         <div class="notification-body">@notification.LongText</div>
                                         <div class="notification-time">@notification.CreatedDate?.ToString("dd MMM yyyy HH:mm")</div>
                                     </div>
@@ -159,14 +160,14 @@
         </div>
         <MudIconButton Icon="@(_isDarkMode ? Icons.Material.Filled.LightMode : Icons.Material.Filled.DarkMode)"
                        Color="Color.Inherit"
-                       aria-label="@(_isDarkMode ? "Switch to light mode" : "Switch to dark mode")"
+                       aria-label="@(_isDarkMode ? L["LightMode"] : L["DarkMode"])"
                        OnClick="@(_ => ToggleDarkMode())" />
         <MudMenu>
             <ActivatorContent Context="paletteMenu">
                 <MudIconButton Icon="@Icons.Material.Filled.Palette"
                                Color="Color.Inherit"
-                               aria-label="Color palette"
-                               title="Color palette"
+                               aria-label="@L["ColorPalette"]"
+                               title="@L["ColorPalette"]"
                                OnClick="@(_ => paletteMenu.ToggleAsync())" />
             </ActivatorContent>
             <ChildContent>
@@ -181,25 +182,31 @@
                 }
             </ChildContent>
         </MudMenu>
+        <MudButton Variant="Variant.Outlined"
+                   Color="Color.Inherit"
+                   Class="app-language-toggle"
+                   aria-label="@L.ToggleAriaLabel"
+                   title="@L.ToggleTitle"
+                   OnClick="@(_ => ToggleLanguageAsync())">@L.ToggleLabel</MudButton>
         <MudIconButton Icon="@Icons.Material.Filled.Brush"
                        Color="Color.Inherit"
-                       aria-label="@(ThemeService.IsNeoBrutalism ? "Use default style" : "Use neo brutalism")"
-                       title="@(ThemeService.IsNeoBrutalism ? "Default style" : "Neo brutalism")"
+                       aria-label="@(ThemeService.IsNeoBrutalism ? L["UseDefaultStyle"] : L["UseNeoBrutalism"])"
+                       title="@(ThemeService.IsNeoBrutalism ? L["DefaultStyle"] : L["NeoBrutalism"])"
                        OnClick="@(_ => ToggleNeoBrutalismAsync())" />
         <MudMenu>
             <ActivatorContent Context="accountMenu">
                 <button type="button"
                         class="app-user-avatar"
-                        aria-label="Account menu"
+                        aria-label="@L["AccountMenu"]"
                         @onclick:stopPropagation="true"
                         @onclick="@(_ => accountMenu.ToggleAsync())">
                     <img src="/images/branding/user-avatar.png" alt="" />
                 </button>
             </ActivatorContent>
             <ChildContent>
-                <MudMenuItem OnClick="@(_ => OpenProfile())">Profile</MudMenuItem>
+                <MudMenuItem OnClick="@(_ => OpenProfile())">@L["Profile"]</MudMenuItem>
                 <MudDivider />
-                <MudMenuItem OnClick="@(_ => LogoutAsync())">Logout</MudMenuItem>
+                <MudMenuItem OnClick="@(_ => LogoutAsync())">@L["Logout"]</MudMenuItem>
             </ChildContent>
         </MudMenu>
     </MudAppBar>
@@ -221,7 +228,7 @@
                     </div>
                     <div class="sidebar-brand-copy">
                         <div class="sidebar-brand-title">@BrandName</div>
-                        <div class="sidebar-brand-subtitle">Enterprise Portal</div>
+                        <div class="sidebar-brand-subtitle">@L["EnterprisePortal"]</div>
                     </div>
                 </div>
 
@@ -271,8 +278,8 @@
                             <button type="button"
                                     class="sidebar-rail-item"
                                     style="animation-delay:@(index * 25)ms"
-                                    title="@item.MenuName"
-                                    aria-label="@item.MenuName"
+                                    title="@MenuLabel(item)"
+                                    aria-label="@MenuLabel(item)"
                                     @onclick="@(() => ExpandFromRail(item))">
                                 <MudIcon Icon="@MenuIconResolver.GetIcon(item.MenuIcon)" />
                             </button>
@@ -284,7 +291,7 @@
     </MudDrawer>
 
     <MudMainContent>
-        <a href="#ryz-main-content" class="ryz-skip-link">Skip to main content</a>
+        <a href="#ryz-main-content" class="ryz-skip-link">@L["SkipToMainContent"]</a>
         <MudContainer MaxWidth="MaxWidth.False" Class="app-main-container">
             <main id="ryz-main-content" class="ryz-main-content" tabindex="-1">
             @if (TabService.Tabs.Count > 0)
@@ -301,15 +308,15 @@
                             <TabContent>
                                 <div class="tab-header">
                                     <MudIcon Icon="@MenuIconResolver.GetIcon(tab.Icon)" Color="Color.Primary" Size="Size.Small" />
-                                    <MudText Typo="Typo.body2">@tab.Title</MudText>
+                                    <MudText Typo="Typo.body2">@TabTitle(tab)</MudText>
                                     <span class="tab-header-actions" @onclick:stopPropagation="true">
                                         <MudIconButton Icon="@Icons.Material.Filled.Refresh"
                                                        Size="Size.Small"
-                                                       aria-label="@($"Refresh {tab.Title}")"
+                                                       aria-label="@L.Format("RefreshTab", TabTitle(tab))"
                                                        OnClick="@(_ => RefreshTab(tab))" />
                                         <MudIconButton Icon="@Icons.Material.Filled.Close"
                                                        Size="Size.Small"
-                                                       aria-label="@($"Close {tab.Title}")"
+                                                       aria-label="@L.Format("CloseTab", TabTitle(tab))"
                                                        OnClick="@(_ => CloseTab(tab))" />
                                     </span>
                                 </div>
@@ -326,7 +333,7 @@
                                     }
                                     else
                                     {
-                                        <MudAlert Severity="Severity.Info" Class="mt-4">This module is not implemented yet.</MudAlert>
+                                        <MudAlert Severity="Severity.Info" Class="mt-4">@L["ModuleNotImplemented"]</MudAlert>
                                     }
                                 </div>
                             </ChildContent>
@@ -336,7 +343,7 @@
             }
             else
             {
-                <MudAlert Severity="Severity.Info">Select a menu to start.</MudAlert>
+                <MudAlert Severity="Severity.Info">@L["SelectMenuToStart"]</MudAlert>
             }
             </main>
         </MudContainer>
@@ -381,14 +388,16 @@
 
     protected override async Task OnInitializedAsync()
     {
+        L.OnChange += HandleLanguageChanged;
         TabService.OnTabsChanged += OnTabsChanged;
 
         await ThemeService.InitializeAsync();
+        await L.InitializeAsync();
         _isDarkMode = ThemeService.IsDarkMode;
 
         if (TabService.Tabs.Count == 0)
         {
-            TabService.OpenTab("Dashboard", DashboardComponent, "/dashboard", icon: "Home");
+            TabService.OpenTab(L["Dashboard"], DashboardComponent, "/dashboard", icon: "Home", titleKey: "Dashboard");
         }
 
         SyncSelectedTab();
@@ -497,10 +506,14 @@
 
     private void CloseNotificationPopover() => _notificationPopoverOpen = false;
 
+    private void HandleLanguageChanged() => InvokeAsync(StateHasChanged);
+
+    private async Task ToggleLanguageAsync() => await L.ToggleAsync();
+
     private void OpenNotificationList()
     {
         _notificationPopoverOpen = false;
-        TabService.OpenTab("Notifications", NotificationsComponent, "/notifications", icon: "Notifications");
+        TabService.OpenTab(L["Notifications"], NotificationsComponent, "/notifications", icon: "Notifications", titleKey: "Notifications");
     }
 
     private async Task OpenNotificationAsync(NotificationDto notification)
@@ -653,6 +666,7 @@
         if (firstRender)
         {
             await ThemeService.InitializeAsync();
+            await L.InitializeAsync();
             _isDarkMode = ThemeService.IsDarkMode;
             await Motion.InitBusyIndicatorsAsync();
             await Motion.EndRouteTransitionAsync();
@@ -702,7 +716,7 @@
     {
         if (string.IsNullOrWhiteSpace(item.ComponentType))
         {
-            Snackbar.Add("This menu is not implemented yet.", Severity.Info);
+            Snackbar.Add(L["ThisMenuNotImplemented"], Severity.Info);
             return;
         }
 
@@ -734,11 +748,12 @@
         }
 
         TabService.OpenTab(
-            item.MenuName,
+            MenuLabel(item),
             item.ComponentType,
             item.MenuUrl,
             parameters.Count > 0 ? parameters : null,
-            item.MenuIcon);
+            item.MenuIcon,
+            string.IsNullOrWhiteSpace(item.MenuUnique) ? null : $"Menu.{item.MenuUnique}");
 
         if (_isMobile)
         {
@@ -753,7 +768,7 @@
     }
 
     private void OpenProfile()
-        => TabService.OpenTab("Profile", ProfileComponent, "/profile", icon: "Person");
+        => TabService.OpenTab(L["Profile"], ProfileComponent, "/profile", icon: "Person", titleKey: "Profile");
 
     private void RefreshTab(AppTabDto tab) => TabService.RefreshTab(tab);
 
@@ -764,7 +779,7 @@
 
         if (TempDataNeedsDashboard(active, tab))
         {
-            TabService.OpenTab("Dashboard", DashboardComponent, "/dashboard", icon: "Home");
+            TabService.OpenTab(L["Dashboard"], DashboardComponent, "/dashboard", icon: "Home", titleKey: "Dashboard");
         }
     }
 
@@ -809,13 +824,14 @@
         _searchOpen = false;
     }
 
-    private static IEnumerable<MenuSearchResult> FlattenWithPath(IEnumerable<MenuItemDto> items, string parentPath = "")
+    private IEnumerable<MenuSearchResult> FlattenWithPath(IEnumerable<MenuItemDto> items, string parentPath = "")
     {
         foreach (var item in items)
         {
+            var label = MenuLabel(item);
             var path = string.IsNullOrWhiteSpace(parentPath)
-                ? item.MenuName
-                : $"{parentPath} -> {item.MenuName}";
+                ? label
+                : $"{parentPath} -> {label}";
 
             yield return new MenuSearchResult(item, path);
 
@@ -826,11 +842,30 @@
         }
     }
 
+    private string MenuLabel(MenuItemDto item) => L.Menu(item.MenuUnique, item.MenuName);
+
+    private string TabTitle(AppTabDto tab)
+    {
+        if (string.IsNullOrWhiteSpace(tab.TitleKey))
+        {
+            return tab.Title;
+        }
+
+        if (tab.TitleKey.StartsWith("Menu.", StringComparison.Ordinal))
+        {
+            return L.Menu(tab.TitleKey["Menu.".Length..], tab.Title);
+        }
+
+        var localized = L[tab.TitleKey];
+        return string.Equals(localized, tab.TitleKey, StringComparison.Ordinal) ? tab.Title : localized;
+    }
+
     private sealed record MenuSearchResult(MenuItemDto Item, string Path);
 
     public void Dispose()
     {
         _ = ViewportService.UnsubscribeAsync(_viewportObserverId);
+        L.OnChange -= HandleLanguageChanged;
         TabService.OnTabsChanged -= OnTabsChanged;
         if (_hub != null)
         {

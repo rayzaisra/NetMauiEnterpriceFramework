@@ -1,21 +1,23 @@
 @page "/maui/notifications"
 @layout MauiAuthenticatedLayout
 @attribute [Authorize]
+@implements IDisposable
 @inject NotificationApiService NotificationApi
 @inject MotionService Motion
 @inject NavigationManager Navigation
 @inject ISnackbar Snackbar
+@inject LanguageService L
 
 <div class="maui-notifications-page">
     <div class="maui-menu-header maui-notifications-header">
         <MudIconButton Icon="@Icons.Material.Filled.ArrowBack"
                        Color="Color.Default"
-                       aria-label="Kembali"
+                       aria-label="@L["Back"]"
                        OnClick="BackToDashboard" />
-        <h1>Notifikasi</h1>
+        <h1>@L["Notifications"]</h1>
         @if (_unreadCount > 0)
         {
-            <button type="button" class="maui-text-link" @onclick="MarkAllReadAsync">Tandai Semua</button>
+            <button type="button" class="maui-text-link" @onclick="MarkAllReadAsync">@L["MarkAllRead"]</button>
         }
     </div>
 
@@ -27,8 +29,8 @@
     {
         <div class="maui-notification-empty">
             <MudIcon Icon="@Icons.Material.Outlined.NotificationsOff" Size="Size.Large" />
-            <strong>Belum ada notifikasi</strong>
-            <span>Notifikasi akun Anda akan muncul di sini.</span>
+            <strong>@L["NoNotifications"]</strong>
+            <span>@L["NotificationsWillAppearHere"]</span>
         </div>
     }
     else
@@ -44,7 +46,7 @@
                     </span>
                     <span class="maui-notification-copy">
                         <span class="maui-notification-title">
-                            @(notification.ShortText ?? notification.Type ?? "Notification")
+                            @(notification.ShortText ?? notification.Type ?? L["Notification"])
                         </span>
                         @if (!string.IsNullOrWhiteSpace(notification.LongText))
                         {
@@ -54,7 +56,7 @@
                     </span>
                     @if (!notification.IsSeen)
                     {
-                        <span class="maui-notification-dot" aria-label="Belum dibaca"></span>
+                        <span class="maui-notification-dot" aria-label="@L["Unread"]"></span>
                     }
                 </button>
             }
@@ -68,7 +70,11 @@
     private int _unreadCount;
     private bool _motionPlayed;
 
-    protected override async Task OnInitializedAsync() => await LoadAsync();
+    protected override void OnInitialized()
+    {
+        L.OnChange += HandleLanguageChanged;
+        _ = LoadAsync();
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -91,7 +97,7 @@
         }
         catch
         {
-            Snackbar.Add("Gagal memuat notifikasi.", Severity.Error);
+            Snackbar.Add(L["FailedLoadNotifications"], Severity.Error);
         }
         finally
         {
@@ -123,8 +129,12 @@
         }
 
         _unreadCount = 0;
-        Snackbar.Add("Semua notifikasi ditandai sudah dibaca.", Severity.Success);
+        Snackbar.Add(L["AllNotificationsMarkedRead"], Severity.Success);
     }
 
     private void BackToDashboard() => Navigation.NavigateTo("/maui/dashboard");
+
+    private void HandleLanguageChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose() => L.OnChange -= HandleLanguageChanged;
 }

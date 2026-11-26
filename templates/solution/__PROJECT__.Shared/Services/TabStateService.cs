@@ -13,11 +13,17 @@ public class TabStateService
         string? componentType,
         string? url,
         Dictionary<string, object>? parameters = null,
-        string? icon = null)
+        string? icon = null,
+        string? titleKey = null)
     {
         var existing = Tabs.FirstOrDefault(t => t.ComponentType == componentType && t.Url == url);
         if (existing != null)
         {
+            if (!string.IsNullOrWhiteSpace(titleKey))
+            {
+                existing.TitleKey = titleKey;
+            }
+            existing.Title = title;
             ActiveTab = existing;
             NotifyChanged();
             return;
@@ -26,6 +32,7 @@ public class TabStateService
         var tab = new AppTabDto
         {
             Title = title,
+            TitleKey = titleKey,
             ComponentType = componentType,
             Url = url,
             Icon = icon,

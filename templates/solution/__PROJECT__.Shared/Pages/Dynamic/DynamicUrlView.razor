@@ -1,29 +1,33 @@
 @using Microsoft.AspNetCore.Authorization
 @attribute [Authorize]
+@inject LanguageService L
+@implements IDisposable
 
 <MudPaper Elevation="0" Class="dashboard-card">
     <div class="page-heading">
         <div>
-            <div class="dashboard-kicker">Dynamic Link</div>
-            <h1>Linked page</h1>
+            <div class="dashboard-kicker">@L["DynamicLink"]</div>
+            <h1>@L["LinkedPage"]</h1>
             <p>@Url</p>
         </div>
-        <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.OpenInNew" OnClick="@(_ => OpenExternal())">Open in new browser tab</MudButton>
+        <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.OpenInNew" OnClick="@(_ => OpenExternal())">@L["OpenInNewBrowserTab"]</MudButton>
     </div>
 
     @if (string.IsNullOrWhiteSpace(Url))
     {
-        <MudAlert Severity="Severity.Warning">No URL was provided.</MudAlert>
+        <MudAlert Severity="Severity.Warning">@L["NoUrlProvided"]</MudAlert>
     }
     else
     {
-        <iframe src="@Url" title="Linked page" style="width:100%;height:72vh;border:1px solid #e2e8f0;border-radius:12px;" />
+        <iframe src="@Url" title="@L["LinkedPage"]" style="width:100%;height:72vh;border:1px solid #e2e8f0;border-radius:12px;" />
     }
 </MudPaper>
 
 @code {
     [Parameter]
     public string? Url { get; set; }
+
+    protected override void OnInitialized() => L.OnChange += HandleLanguageChanged;
 
     private void OpenExternal()
     {
@@ -35,4 +39,8 @@
 
     [Inject]
     private NavigationManager Navigation { get; set; } = default!;
+
+    private void HandleLanguageChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose() => L.OnChange -= HandleLanguageChanged;
 }

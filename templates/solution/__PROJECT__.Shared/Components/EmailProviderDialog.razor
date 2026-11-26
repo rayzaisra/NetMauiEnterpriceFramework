@@ -1,90 +1,92 @@
 @using __PROJECT__.Application.DTOs.Email
 @inject EmailProviderApiService EmailProviderApi
 @inject ISnackbar Snackbar
+@inject LanguageService L
+@implements IDisposable
 
 <MudDialog>
     <TitleContent>
-        <MudText Typo="Typo.h6">@(IsEdit ? "Edit Email Provider" : "Add Email Provider")</MudText>
+        <MudText Typo="Typo.h6">@(IsEdit ? L["EditEmailProvider"] : L["AddEmailProvider"])</MudText>
     </TitleContent>
     <DialogContent>
         <MudGrid Spacing="3">
             <MudItem xs="12" md="6">
-                <MudSelect T="string" @bind-Value="_model.ProviderType" Label="Provider Type" Variant="Variant.Outlined" Required="true" Clearable="true">
+                <MudSelect T="string" @bind-Value="_model.ProviderType" Label="@L["ProviderType"]" Variant="Variant.Outlined" Required="true" Clearable="true">
                     <MudSelectItem Value="@("SMTP")">SMTP</MudSelectItem>
                     <MudSelectItem Value="@("GMAIL")">Gmail API (OAuth)</MudSelectItem>
                 </MudSelect>
             </MudItem>
             <MudItem xs="12" md="6">
-                <MudTextField @bind-Value="_model.ProviderName" Label="Provider Name" Variant="Variant.Outlined" />
+                <MudTextField @bind-Value="_model.ProviderName" Label="@L["ProviderName"]" Variant="Variant.Outlined" />
             </MudItem>
             <MudItem xs="12" md="6">
-                <MudTextField @bind-Value="_model.FromEmail" Label="From Email" Variant="Variant.Outlined" Required="true" />
+                <MudTextField @bind-Value="_model.FromEmail" Label="@L["FromEmail"]" Variant="Variant.Outlined" Required="true" />
             </MudItem>
             <MudItem xs="12" md="6">
-                <MudTextField @bind-Value="_model.FromName" Label="From Name" Variant="Variant.Outlined" />
+                <MudTextField @bind-Value="_model.FromName" Label="@L["FromName"]" Variant="Variant.Outlined" />
             </MudItem>
             <MudItem xs="12" md="6">
-                <MudNumericField T="int" @bind-Value="_model.Priority" Label="Priority" Variant="Variant.Outlined" Min="1" />
+                <MudNumericField T="int" @bind-Value="_model.Priority" Label="@L["Priority"]" Variant="Variant.Outlined" Min="1" />
             </MudItem>
             <MudItem xs="12" md="6"></MudItem>
 
             @if (IsSmtp)
             {
                 <MudItem xs="12" md="6">
-                    <MudTextField @bind-Value="_model.Host" Label="SMTP Host" Variant="Variant.Outlined" Required="true" />
+                    <MudTextField @bind-Value="_model.Host" Label="@L["SmtpHost"]" Variant="Variant.Outlined" Required="true" />
                 </MudItem>
                 <MudItem xs="12" md="6">
-                    <MudNumericField T="int" @bind-Value="_model.Port" Label="Port" Variant="Variant.Outlined" Min="1" Max="65535" />
+                    <MudNumericField T="int" @bind-Value="_model.Port" Label="@L["Port"]" Variant="Variant.Outlined" Min="1" Max="65535" />
                 </MudItem>
                 <MudItem xs="12" md="6">
-                    <MudTextField @bind-Value="_model.Username" Label="SMTP Username" Variant="Variant.Outlined" />
+                    <MudTextField @bind-Value="_model.Username" Label="@L["SmtpUsername"]" Variant="Variant.Outlined" />
                 </MudItem>
                 <MudItem xs="12" md="6">
                     <MudTextField @bind-Value="_model.Password"
-                                  Label="SMTP Password"
+                                  Label="@L["SmtpPassword"]"
                                   Variant="Variant.Outlined"
                                   InputType="InputType.Password"
-                                  HelperText="@(_model.HasPassword ? "Leave blank to keep the existing password." : null)" />
+                                  HelperText="@(_model.HasPassword ? L["LeaveBlankKeepPassword"] : null)" />
                 </MudItem>
                 <MudItem xs="12" Class="d-flex align-items-center">
-                    <MudSwitch T="bool" @bind-Value="_model.EnableSsl" Color="Color.Primary" Label="Use SSL / TLS" />
+                    <MudSwitch T="bool" @bind-Value="_model.EnableSsl" Color="Color.Primary" Label="@L["UseSslTls"]" />
                 </MudItem>
             }
             else if (IsGmail)
             {
                 <MudItem xs="12" md="6">
-                    <MudTextField @bind-Value="_model.ClientId" Label="OAuth Client ID" Variant="Variant.Outlined" Required="true" />
+                    <MudTextField @bind-Value="_model.ClientId" Label="@L["OAuthClientId"]" Variant="Variant.Outlined" Required="true" />
                 </MudItem>
                 <MudItem xs="12" md="6">
                     <MudTextField @bind-Value="_model.ClientSecret"
-                                  Label="OAuth Client Secret"
+                                  Label="@L["OAuthClientSecret"]"
                                   Variant="Variant.Outlined"
                                   InputType="InputType.Password"
-                                  HelperText="@(_model.HasClientSecret ? "Leave blank to keep the existing secret." : null)" />
+                                  HelperText="@(_model.HasClientSecret ? L["LeaveBlankKeepSecret"] : null)" />
                 </MudItem>
                 <MudItem xs="12" md="6">
                     <MudTextField @bind-Value="_model.RefreshToken"
-                                  Label="OAuth Refresh Token"
+                                  Label="@L["OAuthRefreshToken"]"
                                   Variant="Variant.Outlined"
                                   InputType="InputType.Password"
-                                  HelperText="@(_model.HasRefreshToken ? "Leave blank to keep the existing token." : null)" />
+                                  HelperText="@(_model.HasRefreshToken ? L["LeaveBlankKeepToken"] : null)" />
                 </MudItem>
                 <MudItem xs="12">
                     <MudAlert Severity="Severity.Info">
-                        Refresh token must be generated with the Gmail send scope: https://www.googleapis.com/auth/gmail.send
+                        @L["GmailRefreshTokenScope"]
                     </MudAlert>
                 </MudItem>
             }
 
             <MudItem xs="12" Class="d-flex align-items-center">
-                <MudSwitch T="bool" @bind-Value="_model.IsActive" Color="Color.Primary" Label="Active" />
+                <MudSwitch T="bool" @bind-Value="_model.IsActive" Color="Color.Primary" Label="@L["Active"]" />
             </MudItem>
         </MudGrid>
     </DialogContent>
     <DialogActions>
-        <MudButton Variant="Variant.Text" OnClick="@(_ => MudDialog.Cancel())">Cancel</MudButton>
+        <MudButton Variant="Variant.Text" OnClick="@(_ => MudDialog.Cancel())">@L["Cancel"]</MudButton>
         <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="@("ryz-busy-button" + (_saving ? " is-busy" : string.Empty))" Disabled="@_saving" OnClick="SubmitAsync">
-            @(_saving ? "Saving..." : "Save")
+            @(_saving ? L["Saving"] : L["Save"])
         </MudButton>
     </DialogActions>
 </MudDialog>
@@ -105,6 +107,7 @@
 
     protected override void OnInitialized()
     {
+        L.OnChange += HandleLanguageChanged;
         if (Provider != null)
         {
             _model = Provider;
@@ -120,19 +123,19 @@
 
         if (!IsSmtp && !IsGmail)
         {
-            Snackbar.Add("Select SMTP or Gmail as provider type.", Severity.Warning);
+            Snackbar.Add(L["SelectSmtpOrGmail"], Severity.Warning);
             return;
         }
 
         if (string.IsNullOrWhiteSpace(_model.FromEmail))
         {
-            Snackbar.Add("From email is required.", Severity.Warning);
+            Snackbar.Add(L["FromEmailRequired"], Severity.Warning);
             return;
         }
 
         if (IsSmtp && (string.IsNullOrWhiteSpace(_model.Host) || (!_model.HasPassword && string.IsNullOrWhiteSpace(_model.Password))))
         {
-            Snackbar.Add("SMTP host and password are required.", Severity.Warning);
+            Snackbar.Add(L["SmtpHostPasswordRequired"], Severity.Warning);
             return;
         }
 
@@ -141,7 +144,7 @@
                 || (!_model.HasClientSecret && string.IsNullOrWhiteSpace(_model.ClientSecret))
                 || (!_model.HasRefreshToken && string.IsNullOrWhiteSpace(_model.RefreshToken))))
         {
-            Snackbar.Add("Gmail Client ID, Client Secret, and Refresh Token are required.", Severity.Warning);
+            Snackbar.Add(L["GmailOauthRequired"], Severity.Warning);
             return;
         }
 
@@ -151,11 +154,11 @@
             var result = await EmailProviderApi.SaveAsync(_model);
             if (!result.Success)
             {
-                Snackbar.Add(result.Message ?? "Save failed.", Severity.Error);
+                Snackbar.Add(result.Message ?? L["SaveFailed"], Severity.Error);
                 return;
             }
 
-            Snackbar.Add(result.Message ?? "Email provider saved.", Severity.Success);
+            Snackbar.Add(result.Message ?? L["EmailProviderSaved"], Severity.Success);
             MudDialog.Close(DialogResult.Ok(true));
         }
         catch (Exception ex)
@@ -167,4 +170,8 @@
             _saving = false;
         }
     }
+
+    private void HandleLanguageChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose() => L.OnChange -= HandleLanguageChanged;
 }

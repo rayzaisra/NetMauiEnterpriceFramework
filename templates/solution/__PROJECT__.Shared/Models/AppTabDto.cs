@@ -8,5 +8,6 @@ public class AppTabDto
     public string? Url { get; set; }
     public string? Icon { get; set; }
     public Dictionary<string, object>? Parameters { get; set; }
+    public string? TitleKey { get; set; }
     public Guid RefreshKey { get; set; } = Guid.NewGuid();
 }

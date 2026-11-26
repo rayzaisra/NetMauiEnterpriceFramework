@@ -1,30 +1,32 @@
 @page "/dashboard"
 @layout AuthenticatedLayout
 @attribute [Authorize]
+@implements IDisposable
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject LanguageService L
 
 <MudContainer MaxWidth="MaxWidth.False" Class="pa-0 dashboard-page">
     <MudPaper Elevation="0" Class="dashboard-hero">
         <div class="dashboard-hero-copy">
-            <div class="dashboard-kicker">RyzCore / Enterprise Coding Framework</div>
-            <h1>Hello, @_displayName</h1>
+            <div class="dashboard-kicker">RyzCore / @L["EnterpriseCodingFramework"]</div>
+            <h1>@L.Format("HelloName", _displayName)</h1>
             <p class="dashboard-manifesto">@Manifesto</p>
-            <p class="dashboard-support">Open a module from the sidebar. Core enterprise plumbing is already in place, so your next tab can move straight to business work.</p>
+            <p class="dashboard-support">@L["SelectMenuToStart"]</p>
             <div class="dashboard-hero-actions">
-                <span class="dashboard-proof-chip">Proven core patterns</span>
-                <span class="dashboard-proof-chip">Tab workspace</span>
-                <span class="dashboard-proof-chip">Business-ready foundation</span>
+                <span class="dashboard-proof-chip">@L["ProvenCorePatterns"]</span>
+                <span class="dashboard-proof-chip">@L["TabWorkspace"]</span>
+                <span class="dashboard-proof-chip">@L["BusinessReadyFoundation"]</span>
             </div>
         </div>
 
         <div class="dashboard-hero-signal" aria-hidden="true">
-            <div class="dashboard-signal-label">Business Tab Snap</div>
+            <div class="dashboard-signal-label">@L["BusinessTabSnap"]</div>
             <div class="dashboard-signal-track">
                 <span class="dashboard-signal-node">Pattern</span>
                 <span class="dashboard-signal-arrow"></span>
-                <span class="dashboard-signal-node is-active">Business</span>
+                <span class="dashboard-signal-node is-active">@L["Business"]</span>
             </div>
-            <div class="dashboard-signal-caption">From proven pattern to business tab in one focused move.</div>
+            <div class="dashboard-signal-caption">@L["BusinessReadyFoundation"]</div>
         </div>
     </MudPaper>
 
@@ -47,14 +49,9 @@
     private const string Manifesto =
         "RyzCore merupakan framework coding yang dikembangkan berdasarkan pengalaman panjang dalam pengembangan aplikasi perusahaan. Dengan menyediakan pola-pola inti yang telah terbukti melalui penggunaan berulang, RyzCore dirancang untuk memangkas waktu development dan mempercepat tim dalam memenuhi kebutuhan bisnis.";
 
-    private static readonly ProofCard[] ProofCards =
-    [
-        new("Auth & access", "Login, roles, and permissions are ready", "Authentication, authorization, and access control are already wired so teams do not rebuild the gate before business work.", Icons.Material.Filled.VerifiedUser),
-        new("Operational patterns", "Menu mapping and parameter master", "Reusable enterprise patterns keep common setup consistent across projects, from navigation structure to configurable parameters.", Icons.Material.Filled.AccountTree),
-        new("Tab workspace", "Stay in flow, switch by context", "The workspace keeps work in main-content tabs, so teams can move between modules without losing operational momentum.", Icons.Material.Filled.Tab),
-    ];
-
     private string _displayName = "Administrator";
+
+    protected override void OnInitialized() => L.OnChange += HandleLanguageChanged;
 
     protected override async Task OnInitializedAsync()
     {
@@ -65,6 +62,17 @@
             _displayName = name;
         }
     }
+
+    private IEnumerable<ProofCard> ProofCards =>
+    [
+        new(L["Authentication"], L["ProvenCorePatterns"], L["BusinessReadyFoundation"], Icons.Material.Filled.VerifiedUser),
+        new(L["ParameterMaster"], L["MenuMapping"], L["EnterprisePortal"], Icons.Material.Filled.AccountTree),
+        new(L["TabWorkspace"], L["BusinessTabSnap"], L["SelectMenuToStart"], Icons.Material.Filled.Tab),
+    ];
+
+    private void HandleLanguageChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose() => L.OnChange -= HandleLanguageChanged;
 
     private sealed record ProofCard(string Kicker, string Title, string Description, string Icon);
 }

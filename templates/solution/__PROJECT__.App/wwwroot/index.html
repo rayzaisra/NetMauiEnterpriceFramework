@@ -9,12 +9,27 @@
         (function () {
             var allowed = ["default", "fintech", "monochrome", "creative", "wellness"];
             var palette = "__THEME_PALETTE__";
+            var style = "__THEME_STYLE__";
+            var mode = "light";
+            var language = "en";
             try {
                 var saved = localStorage.getItem("enterprise-ui-palette");
                 if (saved) palette = saved;
+                var savedStyle = localStorage.getItem("enterprise-ui-style");
+                if (savedStyle) style = savedStyle;
+                var savedMode = localStorage.getItem("enterprise-ui-theme-mode");
+                if (savedMode) mode = savedMode;
+                var savedLanguage = localStorage.getItem("enterprise-ui-language");
+                if (savedLanguage) language = savedLanguage;
             } catch (e) { }
             if (allowed.indexOf(palette) < 0) palette = "default";
+            if (style !== "default" && style !== "neo") style = "default";
+            if (language !== "id" && language !== "en") language = "en";
             document.documentElement.setAttribute("data-palette", palette);
+            document.documentElement.setAttribute("data-style", style);
+            document.documentElement.setAttribute("data-theme-mode", mode);
+            document.documentElement.setAttribute("data-language", language);
+            document.documentElement.setAttribute("lang", language);
         })();
     </script>
     <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css" />

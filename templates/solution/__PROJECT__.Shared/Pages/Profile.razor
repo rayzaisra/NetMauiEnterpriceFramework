@@ -1,15 +1,17 @@
 @page "/profile"
 @layout AuthenticatedLayout
 @attribute [Authorize]
+@implements IDisposable
 @inject AuthService AuthService
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
+@inject LanguageService L
 
 <MudBreadcrumbs Items="_breadcrumbs" Separator=">" Class="mb-3" />
 
 @if (_user == null)
 {
-    <MudAlert Severity="Severity.Info">Profile is not available.</MudAlert>
+    <MudAlert Severity="Severity.Info">@L["ProfileNotAvailable"]</MudAlert>
 }
 else
 {
@@ -20,12 +22,12 @@ else
                 <h1>@_user.FullName</h1>
                 <div class="profile-role">@RoleName</div>
                 <div class="d-flex align-items-center flex-wrap gap-2 mt-2">
-                    <MudChip T="string" Size="Size.Small" Color="Color.Success">Verified Account</MudChip>
+                    <MudChip T="string" Size="Size.Small" Color="Color.Success">@L["VerifiedAccount"]</MudChip>
                     <MudChip T="string" Size="Size.Small" Color="Color.Default" Variant="Variant.Outlined">ID: @_user.UserId</MudChip>
                 </div>
             </div>
         </div>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Edit" OnClick="EditProfileAsync">Edit Profile</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Edit" OnClick="EditProfileAsync">@L["EditProfile"]</MudButton>
     </MudPaper>
 
     <MudGrid Spacing="3" Class="mt-1">
@@ -33,35 +35,35 @@ else
             <MudPaper Elevation="0" Class="profile-panel">
                 <div class="profile-panel-title">
                     <MudIcon Icon="@Icons.Material.Filled.Person" Color="Color.Primary" />
-                    <MudText Typo="Typo.h6">Personal Details</MudText>
+                    <MudText Typo="Typo.h6">@L["PersonalDetails"]</MudText>
                 </div>
 
                 <MudGrid Spacing="3" Class="mt-1">
                     <MudItem xs="12" sm="6">
-                        <div class="profile-label">Email Address</div>
+                        <div class="profile-label">@L["EmailAddress"]</div>
                         <div class="profile-value">@_user.Email</div>
                     </MudItem>
                     <MudItem xs="12" sm="6">
-                        <div class="profile-label">Phone Number</div>
+                        <div class="profile-label">@L["PhoneNumber"]</div>
                         <div class="profile-value">@(_user.PhoneNumber ?? "-")</div>
                     </MudItem>
                     <MudItem xs="12" sm="6">
-                        <div class="profile-label">Gender</div>
+                        <div class="profile-label">@L["Gender"]</div>
                         <div class="profile-value">@GenderName</div>
                     </MudItem>
                     <MudItem xs="12" sm="6">
-                        <div class="profile-label">Role</div>
+                        <div class="profile-label">@L["Role"]</div>
                         <div class="profile-value">@RoleName</div>
                     </MudItem>
                     <MudItem xs="12" sm="6">
-                        <div class="profile-label">User ID</div>
+                        <div class="profile-label">@L["UserId"]</div>
                         <div class="profile-value">@_user.UserId</div>
                     </MudItem>
                     <MudItem xs="12" sm="6">
-                        <div class="profile-label">Status</div>
+                        <div class="profile-label">@L["Status"]</div>
                         <div class="profile-value">
                             <MudChip T="string" Size="Size.Small" Color="@(_user.IsActive ? Color.Success : Color.Default)">
-                                @(_user.IsActive ? "Active" : "Inactive")
+                                @(_user.IsActive ? L["Active"] : L["Inactive"])
                             </MudChip>
                         </div>
                     </MudItem>
@@ -73,9 +75,9 @@ else
             <MudPaper Elevation="0" Class="profile-panel">
                 <div class="profile-panel-title">
                     <MudIcon Icon="@Icons.Material.Filled.Security" Color="Color.Primary" />
-                    <MudText Typo="Typo.h6">Account Security</MudText>
+                    <MudText Typo="Typo.h6">@L["AccountSecurity"]</MudText>
                     <MudSpacer />
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" StartIcon="@Icons.Material.Filled.Lock" OnClick="TogglePasswordUpdate">Change Password</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" StartIcon="@Icons.Material.Filled.Lock" OnClick="TogglePasswordUpdate">@L["ChangePassword"]</MudButton>
                 </div>
 
                 @if (_showPasswordUpdate)
@@ -87,7 +89,7 @@ else
                         }
 
                         <MudTextField T="string"
-                                      Label="Current Password*"
+                                      Label="@L["CurrentPasswordRequired"]"
                                       @bind-Value="_changePasswordModel.CurrentPassword"
                                       InputType="@(_showCurrentPassword ? InputType.Text : InputType.Password)"
                                       Variant="Variant.Outlined"
@@ -97,7 +99,7 @@ else
                                       AdornmentIcon="@(_showCurrentPassword ? Icons.Material.Filled.VisibilityOff : Icons.Material.Filled.Visibility)"
                                       OnAdornmentClick="@(() => _showCurrentPassword = !_showCurrentPassword)" />
                         <MudTextField T="string"
-                                      Label="New Password*"
+                                      Label="@L["NewPasswordRequired"]"
                                       @bind-Value="_changePasswordModel.NewPassword"
                                       InputType="@(_showNewPassword ? InputType.Text : InputType.Password)"
                                       Variant="Variant.Outlined"
@@ -107,7 +109,7 @@ else
                                       AdornmentIcon="@(_showNewPassword ? Icons.Material.Filled.VisibilityOff : Icons.Material.Filled.Visibility)"
                                       OnAdornmentClick="@(() => _showNewPassword = !_showNewPassword)" />
                         <MudTextField T="string"
-                                      Label="New Password Confirm*"
+                                      Label="@L["NewPasswordConfirmRequired"]"
                                       @bind-Value="_changePasswordModel.ConfirmNewPassword"
                                       InputType="@(_showConfirmPassword ? InputType.Text : InputType.Password)"
                                       Variant="Variant.Outlined"
@@ -122,7 +124,7 @@ else
                                    Class="@("ryz-busy-button" + (_passwordSaving ? " is-busy" : string.Empty))"
                                    Disabled="@_passwordSaving"
                                    OnClick="UpdatePasswordAsync">
-                            @(_passwordSaving ? "Updating..." : "Update Password")
+                            @(_passwordSaving ? L["Processing"] : L["ChangePassword"])
                         </MudButton>
                     </div>
                 }
@@ -133,8 +135,8 @@ else
                             <MudIcon Icon="@Icons.Material.Filled.Password" Color="Color.Primary" />
                         </div>
                         <div>
-                            <div class="profile-label">Password Status</div>
-                            <div class="profile-value">Last updated: @(_user.LastPasswordChangeDate?.ToString("dd MMM yyyy HH:mm") ?? "-")</div>
+                            <div class="profile-label">@L["LastPasswordChangeDate"]</div>
+                            <div class="profile-value">@(_user.LastPasswordChangeDate?.ToString("dd MMM yyyy HH:mm") ?? "-")</div>
                         </div>
                     </div>
                 </div>
@@ -145,11 +147,11 @@ else
                             <MudIcon Icon="@Icons.Material.Filled.VerifiedUser" Color="Color.Primary" />
                         </div>
                         <div class="profile-access-content">
-                            <div class="profile-label mb-2">Access Rights</div>
+                            <div class="profile-label mb-2">@L["Manage"]</div>
                             <div class="d-flex flex-column gap-2">
-                                <MudSwitch T="bool" Value="_user.CanAddEdit" Disabled="true" Color="Color.Primary" Size="Size.Medium" Label="Add/Edit" />
-                                <MudSwitch T="bool" Value="_user.CanDelete" Disabled="true" Color="Color.Primary" Size="Size.Medium" Label="Delete" />
-                                <MudSwitch T="bool" Value="_user.CanReadOnly" Disabled="true" Color="Color.Primary" Size="Size.Medium" Label="ReadOnly" />
+                                <MudSwitch T="bool" Value="_user.CanAddEdit" Disabled="true" Color="Color.Primary" Size="Size.Medium" Label="@L["AddEdit"]" />
+                                <MudSwitch T="bool" Value="_user.CanDelete" Disabled="true" Color="Color.Primary" Size="Size.Medium" Label="@L["Delete"]" />
+                                <MudSwitch T="bool" Value="_user.CanReadOnly" Disabled="true" Color="Color.Primary" Size="Size.Medium" Label="@L["ReadOnly"]" />
                             </div>
                         </div>
                     </div>
@@ -161,7 +163,7 @@ else
                             <MudIcon Icon="@Icons.Material.Filled.Devices" Color="Color.Primary" />
                         </div>
                         <div>
-                            <div class="profile-label">Last Login</div>
+                            <div class="profile-label">@L["LastLogin"]</div>
                             <div class="profile-value">@_user.LastLoginDate.ToString("dd MMM yyyy HH:mm")</div>
                         </div>
                     </div>
@@ -173,7 +175,7 @@ else
                             <MudIcon Icon="@Icons.Material.Filled.Router" Color="Color.Primary" />
                         </div>
                         <div>
-                            <div class="profile-label">Last IP Access</div>
+                            <div class="profile-label">@L["LastIpAddress"]</div>
                             <div class="profile-value">@(_user.LastIpAddress ?? "-")</div>
                         </div>
                     </div>
@@ -184,12 +186,12 @@ else
 }
 
 @code {
-    private readonly List<BreadcrumbItem> _breadcrumbs =
-    [
-        new("Dashboard", href: "/dashboard"),
-        new("Account", href: null),
-        new("Profile", href: null, disabled: true),
-    ];
+    private List<BreadcrumbItem> _breadcrumbs => new()
+    {
+        new(L["Dashboard"], href: "/dashboard"),
+        new(L["Account"], href: null),
+        new(L["Profile"], href: null, disabled: true),
+    };
 
     private UserResponseDto? _user;
     private readonly ChangePasswordDto _changePasswordModel = new();
@@ -221,10 +223,12 @@ else
 
     private string GenderName => _user?.GenderId?.ToUpperInvariant() switch
     {
-        "L" => "Laki-Laki",
-        "P" => "Perempuan",
+        "L" => L.IsIndonesian ? "Laki-laki" : "Male",
+        "P" => L.IsIndonesian ? "Perempuan" : "Female",
         _ => _user?.GenderId ?? "-",
     };
+
+    protected override void OnInitialized() => L.OnChange += HandleLanguageChanged;
 
     protected override async Task OnInitializedAsync()
     {
@@ -239,7 +243,7 @@ else
         }
 
         var parameters = new DialogParameters { ["User"] = _user };
-        var dialog = await DialogService.ShowAsync<ProfileEditDialog>("Edit Profile", parameters);
+        var dialog = await DialogService.ShowAsync<ProfileEditDialog>(L["EditProfile"], parameters);
         var result = await dialog.Result;
         if (result is { Canceled: false, Data: UserResponseDto updated })
         {
@@ -272,13 +276,13 @@ else
             || string.IsNullOrWhiteSpace(_changePasswordModel.NewPassword)
             || string.IsNullOrWhiteSpace(_changePasswordModel.ConfirmNewPassword))
         {
-            _passwordError = "All password fields are required.";
+            _passwordError = L["PasswordRequiredForNewUser"];
             return;
         }
 
         if (_changePasswordModel.NewPassword != _changePasswordModel.ConfirmNewPassword)
         {
-            _passwordError = "New password and confirmation do not match.";
+            _passwordError = L["NewPasswordAndConfirmationDoNotMatch"];
             return;
         }
 
@@ -286,7 +290,7 @@ else
         try
         {
             await AuthService.ChangePasswordAsync(_changePasswordModel);
-            Snackbar.Add("Password changed successfully.", Severity.Success);
+            Snackbar.Add(L["PasswordChangedSuccessfully"], Severity.Success);
             _showPasswordUpdate = false;
             ResetPasswordFields();
             _user = await AuthService.GetCurrentUserAsync();
@@ -300,6 +304,10 @@ else
             _passwordSaving = false;
         }
     }
+
+    private void HandleLanguageChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose() => L.OnChange -= HandleLanguageChanged;
 
     private void ResetPasswordFields()
     {

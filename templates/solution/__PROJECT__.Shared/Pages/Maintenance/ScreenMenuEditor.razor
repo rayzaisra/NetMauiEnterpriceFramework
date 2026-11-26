@@ -1,31 +1,33 @@
 @page "/dashboard/maintenance/screen-menu-editor"
 @layout AuthenticatedLayout
 @attribute [Authorize]
+@implements IDisposable
 @inject ScreenMenuApiService ScreenMenuApi
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
+@inject LanguageService L
 
 <MudPaper Elevation="0" Class="dashboard-card">
     <div class="page-heading">
         <div>
-            <div class="dashboard-kicker">Maintenance</div>
-            <h1>Screen Menu</h1>
-            <p>Manage screens with child modal/URL and import process metadata.</p>
+            <div class="dashboard-kicker">@L["Maintenance"]</div>
+            <h1>@L["ScreenMenu"]</h1>
+            <p>@L["ManageScreens"]</p>
         </div>
         <PermissionGate Action="PermissionAction.AddEdit">
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="@(_ => OpenAddAsync())">Add Screen</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="@(_ => OpenAddAsync())">@L["AddScreen"]</MudButton>
         </PermissionGate>
     </div>
 
     <div class="table-toolbar">
         <MudTextField @bind-Value="_search"
-                      Placeholder="Search screen..."
+                      Placeholder="@L["SearchScreen"]"
                       Variant="Variant.Outlined"
                       Margin="Margin.Dense"
                       Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Search"
                       Immediate="true" />
-        <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="@(_ => ReloadAsync())">Search</MudButton>
+        <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="@(_ => ReloadAsync())">@L["Search"]</MudButton>
     </div>
 
     <MudTable T="ScreenMenuListItemDto"
@@ -36,44 +38,44 @@
               Breakpoint="Breakpoint.Sm"
               Elevation="0">
         <HeaderContent>
-            <MudTh><MudTableSortLabel T="ScreenMenuListItemDto" SortLabel="id">Screen ID</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel T="ScreenMenuListItemDto" SortLabel="description">Description</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel T="ScreenMenuListItemDto" SortLabel="screenmenuchildid">Child</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel T="ScreenMenuListItemDto" SortLabel="screenmenuimportexcelprocessid">Import</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel T="ScreenMenuListItemDto" SortLabel="isactive">Status</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="ScreenMenuListItemDto" SortLabel="id">@L["ScreenId"]</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="ScreenMenuListItemDto" SortLabel="description">@L["Description"]</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="ScreenMenuListItemDto" SortLabel="screenmenuchildid">@L["Child"]</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="ScreenMenuListItemDto" SortLabel="screenmenuimportexcelprocessid">@L["Import"]</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="ScreenMenuListItemDto" SortLabel="isactive">@L["Status"]</MudTableSortLabel></MudTh>
             <PermissionGate Action="PermissionAction.Edit">
-                <MudTh>Actions</MudTh>
+                <MudTh>@L["Action"]</MudTh>
             </PermissionGate>
         </HeaderContent>
         <RowTemplate>
-            <MudTd DataLabel="Screen ID">@context.Id</MudTd>
-            <MudTd DataLabel="Description">@context.Description</MudTd>
-            <MudTd DataLabel="Child">@context.ScreenMenuChildId</MudTd>
-            <MudTd DataLabel="Import">@context.ScreenMenuImportExcelProcessId</MudTd>
-            <MudTd DataLabel="Status">
+            <MudTd DataLabel="@L["ScreenId"]">@context.Id</MudTd>
+            <MudTd DataLabel="@L["Description"]">@context.Description</MudTd>
+            <MudTd DataLabel="@L["Child"]">@context.ScreenMenuChildId</MudTd>
+            <MudTd DataLabel="@L["Import"]">@context.ScreenMenuImportExcelProcessId</MudTd>
+            <MudTd DataLabel="@L["Status"]">
                 @if (context.IsActive)
                 {
-                    <MudChip T="string" Size="Size.Small" Color="Color.Success">Active</MudChip>
+                    <MudChip T="string" Size="Size.Small" Color="Color.Success">@L["Active"]</MudChip>
                 }
                 else
                 {
-                    <MudChip T="string" Size="Size.Small" Color="Color.Default">Inactive</MudChip>
+                    <MudChip T="string" Size="Size.Small" Color="Color.Default">@L["Inactive"]</MudChip>
                 }
             </MudTd>
             <PermissionGate Action="PermissionAction.Edit">
-                <MudTd DataLabel="Actions">
+                <MudTd DataLabel="@L["Action"]">
                     <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="@(_ => OpenEditAsync(context))" />
                 </MudTd>
             </PermissionGate>
         </RowTemplate>
         <NoRecordsContent>
-            <MudText>No screen menus.</MudText>
+            <MudText>@L["NoScreenMenus"]</MudText>
         </NoRecordsContent>
         <LoadingContent>
             <MudProgressLinear Indeterminate="true" />
         </LoadingContent>
         <PagerContent>
-            <MudTablePager PageSizeOptions="new[] { 10, 25, 50, 100 }" />
+            <MudTablePager PageSizeOptions="new[] { 10, 25, 50, 100 }" RowsPerPageString="@L["RowsPerPage"]" InfoFormat="@L["PagerInfoFormat"]" AllItemsText="@L["AllItems"]" />
         </PagerContent>
     </MudTable>
 </MudPaper>
@@ -81,6 +83,8 @@
 @code {
     private MudTable<ScreenMenuListItemDto>? _table;
     private string? _search;
+
+    protected override void OnInitialized() => L.OnChange += HandleLanguageChanged;
 
     private async Task<TableData<ScreenMenuListItemDto>> LoadServerData(TableState state, CancellationToken cancellationToken)
     {
@@ -106,7 +110,7 @@
 
     private async Task OpenAddAsync()
     {
-        var dialog = await DialogService.ShowAsync<ScreenMenuEditorDialog>("Add Screen Menu");
+        var dialog = await DialogService.ShowAsync<ScreenMenuEditorDialog>(L["AddScreenMenu"]);
         var result = await dialog.Result;
         if (result is { Canceled: false })
         {
@@ -119,16 +123,20 @@
         var model = await ScreenMenuApi.GetAsync(item.Id);
         if (model == null)
         {
-            Snackbar.Add("Screen menu not found.", Severity.Warning);
+            Snackbar.Add(L["ScreenMenuNotFound"], Severity.Warning);
             return;
         }
 
         var parameters = new DialogParameters { ["Screen"] = model };
-        var dialog = await DialogService.ShowAsync<ScreenMenuEditorDialog>("Edit Screen Menu", parameters);
+        var dialog = await DialogService.ShowAsync<ScreenMenuEditorDialog>(L["EditScreenMenu"], parameters);
         var result = await dialog.Result;
         if (result is { Canceled: false })
         {
             await ReloadAsync();
         }
     }
+
+    private void HandleLanguageChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose() => L.OnChange -= HandleLanguageChanged;
 }

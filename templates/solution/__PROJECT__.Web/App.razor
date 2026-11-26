@@ -2,6 +2,8 @@
 @using __PROJECT__.Shared.Layouts
 @using __PROJECT__.Shared.Pages
 @inject IJSRuntime JS
+@inject LanguageService L
+@implements IDisposable
 
 <MudPopoverProvider />
 <MudDialogProvider />
@@ -10,7 +12,7 @@
 <div class="ryz-route-overlay" aria-hidden="true">
     <div class="ryz-route-overlay-card" role="status" aria-live="polite">
         <img src="images/branding/app-logo.png" alt="" />
-        <div class="ryz-route-overlay-title">Preparing workspace</div>
+        <div class="ryz-route-overlay-title">@L["PreparingWorkspace"]</div>
         <div class="ryz-route-overlay-track">
             <div class="ryz-route-overlay-bar"></div>
         </div>
@@ -31,6 +33,8 @@
 </CascadingAuthenticationState>
 
 @code {
+    protected override void OnInitialized() => L.OnChange += HandleLanguageChanged;
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (!firstRender)
@@ -40,4 +44,8 @@
 
         await JS.InvokeVoidAsync("ryzBootReady");
     }
+
+    private void HandleLanguageChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose() => L.OnChange -= HandleLanguageChanged;
 }

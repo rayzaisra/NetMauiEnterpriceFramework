@@ -10,6 +10,69 @@ const finish = cleanInlineStyles;
 const scopes = new Map();
 let lastTabPanel = null;
 
+const i18n = {
+    en: {
+        ImportingExcel: "Importing Excel",
+        UploadingFile: "Uploading file...",
+        ValidatingRows: "Validating rows...",
+        SavingData: "Saving data...",
+        SavingTasks: "Saving tasks...",
+        ExportingExcel: "Exporting Excel",
+        PreparingData: "Preparing data...",
+        GeneratingWorkbook: "Generating workbook...",
+        FinalizingFile: "Finalizing file...",
+        SavingChanges: "Saving changes",
+        WritingToDatabase: "Writing to database...",
+        RefreshingData: "Refreshing data...",
+        Submitting: "Submitting",
+        ProcessingRequest: "Processing request...",
+        ApplyingChanges: "Applying changes...",
+        Updating: "Updating",
+        FinishingUp: "Finishing up...",
+        Processing: "Processing",
+        PleaseWait: "Please wait..."
+    },
+    id: {
+        ImportingExcel: "Mengimpor Excel",
+        UploadingFile: "Mengunggah berkas...",
+        ValidatingRows: "Memvalidasi baris...",
+        SavingData: "Menyimpan data...",
+        SavingTasks: "Menyimpan tugas...",
+        ExportingExcel: "Mengekspor Excel",
+        PreparingData: "Menyiapkan data...",
+        GeneratingWorkbook: "Membuat buku kerja...",
+        FinalizingFile: "Menyelesaikan berkas...",
+        SavingChanges: "Menyimpan perubahan",
+        WritingToDatabase: "Menulis ke basis data...",
+        RefreshingData: "Menyegarkan data...",
+        Submitting: "Mengirim",
+        ProcessingRequest: "Memproses permintaan...",
+        ApplyingChanges: "Menerapkan perubahan...",
+        Updating: "Memperbarui",
+        FinishingUp: "Menyelesaikan...",
+        Processing: "Memproses",
+        PleaseWait: "Mohon tunggu..."
+    }
+};
+
+function currentLang() {
+    const lang = document.documentElement.getAttribute("data-language")
+        || document.documentElement.getAttribute("lang")
+        || "en";
+    return lang.toLowerCase().startsWith("id") ? "id" : "en";
+}
+
+function t(key) {
+    const lang = currentLang();
+    return i18n[lang]?.[key] ?? i18n.en[key] ?? key;
+}
+
+export function setLanguage(lang) {
+    const normalized = (lang || "en").toLowerCase().startsWith("id") ? "id" : "en";
+    document.documentElement.setAttribute("data-language", normalized);
+    document.documentElement.setAttribute("lang", normalized);
+}
+
 function hasTargets(selector) {
     return document.querySelector(selector) !== null;
 }
@@ -484,61 +547,61 @@ function stopProcess(mode) {
 function describeBusyAction(label) {
     if (label.includes("import")) {
         return {
-            title: "Importing Excel",
-            stage: "Uploading file...",
-            duration: 22000,
+            title: t("ImportingExcel"),
+            stage: t("UploadingFile"),
+            duration: 12000,
             steps: [
-                { at: 0, text: "Uploading file..." },
-                { at: 40, text: "Validating rows..." },
-                { at: 78, text: "Saving data..." }
+                { at: 0, text: t("UploadingFile") },
+                { at: 40, text: t("ValidatingRows") },
+                { at: 78, text: t("SavingData") }
             ]
         };
     }
 
     if (label.includes("export")) {
         return {
-            title: "Exporting Excel",
-            stage: "Preparing data...",
+            title: t("ExportingExcel"),
+            stage: t("PreparingData"),
             duration: 16000,
             steps: [
-                { at: 0, text: "Preparing data..." },
-                { at: 60, text: "Generating workbook..." },
-                { at: 88, text: "Finalizing file..." }
+                { at: 0, text: t("PreparingData") },
+                { at: 60, text: t("GeneratingWorkbook") },
+                { at: 88, text: t("FinalizingFile") }
             ]
         };
     }
 
     if (label.includes("save") || label.includes("menyimpan") || label.includes("update")) {
         return {
-            title: "Saving changes",
-            stage: "Writing to database...",
+            title: t("SavingChanges"),
+            stage: t("WritingToDatabase"),
             duration: 7000,
             steps: [
-                { at: 0, text: "Writing to database..." },
-                { at: 70, text: "Refreshing data..." }
+                { at: 0, text: t("WritingToDatabase") },
+                { at: 70, text: t("RefreshingData") }
             ]
         };
     }
 
     if (label.includes("submit") || label.includes("approve") || label.includes("reject")) {
         return {
-            title: "Submitting",
-            stage: "Processing request...",
+            title: t("Submitting"),
+            stage: t("ProcessingRequest"),
             duration: 9000,
             steps: [
-                { at: 0, text: "Processing request..." },
-                { at: 70, text: "Applying changes..." }
+                { at: 0, text: t("ProcessingRequest") },
+                { at: 70, text: t("ApplyingChanges") }
             ]
         };
     }
 
     return {
-        title: "Updating",
-        stage: "Applying changes...",
+        title: t("Updating"),
+        stage: t("ApplyingChanges"),
         duration: 6000,
         steps: [
-            { at: 0, text: "Applying changes..." },
-            { at: 70, text: "Finishing up..." }
+            { at: 0, text: t("ApplyingChanges") },
+            { at: 70, text: t("FinishingUp") }
         ]
     };
 }
@@ -622,13 +685,13 @@ export function initBusyIndicators() {
 export function startUploadIndicator() {
     showProcess(
         "upload",
-        "Importing Excel",
-        "Uploading file...",
+        t("ImportingExcel"),
+        t("UploadingFile"),
         22000,
         [
-            { at: 0, text: "Uploading file..." },
-            { at: 40, text: "Validating rows..." },
-            { at: 78, text: "Saving tasks..." }
+            { at: 0, text: t("UploadingFile") },
+            { at: 40, text: t("ValidatingRows") },
+            { at: 78, text: t("SavingTasks") }
         ]);
 }
 

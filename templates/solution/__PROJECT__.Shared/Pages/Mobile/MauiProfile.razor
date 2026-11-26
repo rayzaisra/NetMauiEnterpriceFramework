@@ -1,6 +1,7 @@
 @page "/maui/profile"
 @layout MauiAuthenticatedLayout
 @attribute [Authorize]
+@implements IDisposable
 @inject AuthService AuthService
 @inject MotionService Motion
 @inject ITokenStorage TokenStorage
@@ -8,14 +9,15 @@
 @inject IDialogService DialogService
 @inject NavigationManager Navigation
 @inject ISnackbar Snackbar
+@inject LanguageService L
 
 <div class="maui-profile-page">
     <div class="maui-menu-header maui-profile-topbar">
         <MudIconButton Icon="@Icons.Material.Filled.ArrowBack"
                        Color="Color.Default"
-                       aria-label="Kembali"
+                       aria-label="@L["Back"]"
                        OnClick="BackToDashboard" />
-        <h1>Profil</h1>
+        <h1>@L["Profile"]</h1>
     </div>
 
     @if (_loading)
@@ -25,7 +27,7 @@
     else if (_error != null)
     {
         <MudAlert Severity="Severity.Error" Class="mb-4">@_error</MudAlert>
-        <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="LoadAsync">Coba Lagi</MudButton>
+        <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="LoadAsync">@L["Refresh"]</MudButton>
     }
     else if (_user != null)
     {
@@ -36,46 +38,46 @@
                 <div class="maui-profile-role">@RoleName</div>
                 <div class="maui-profile-chips">
                     <MudChip T="string" Size="Size.Small" Color="@(_user.IsActive ? Color.Success : Color.Default)">
-                        @(_user.IsActive ? "Active" : "Inactive")
+                        @(_user.IsActive ? L["Active"] : L["Inactive"])
                     </MudChip>
                     <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined">ID: @_user.UserId</MudChip>
                 </div>
             </div>
             <MudIconButton Icon="@Icons.Material.Filled.Edit"
                            Color="Color.Primary"
-                           aria-label="Edit Profil"
+                           aria-label="@L["EditProfile"]"
                            OnClick="EditProfileAsync" />
         </section>
 
         <section class="maui-profile-card">
             <div class="maui-profile-section-title">
                 <MudIcon Icon="@Icons.Material.Filled.Person" Size="Size.Small" />
-                <h2>Informasi Pribadi</h2>
+                <h2>@L["PersonalDetails"]</h2>
             </div>
             <div class="maui-profile-fields">
                 <div class="maui-profile-field">
-                    <span class="maui-profile-label">Email</span>
+                    <span class="maui-profile-label">@L["Email"]</span>
                     <span class="maui-profile-value">@(_user.Email ?? "-")</span>
                 </div>
                 <div class="maui-profile-field">
-                    <span class="maui-profile-label">Nomor HP</span>
+                    <span class="maui-profile-label">@L["PhoneNumber"]</span>
                     <span class="maui-profile-value">@(_user.PhoneNumber ?? "-")</span>
                 </div>
                 <div class="maui-profile-field">
-                    <span class="maui-profile-label">Gender</span>
+                    <span class="maui-profile-label">@L["Gender"]</span>
                     <span class="maui-profile-value">@GenderName</span>
                 </div>
                 <div class="maui-profile-field">
-                    <span class="maui-profile-label">Role</span>
+                    <span class="maui-profile-label">@L["Role"]</span>
                     <span class="maui-profile-value">@RoleName</span>
                 </div>
                 <div class="maui-profile-field">
-                    <span class="maui-profile-label">User ID</span>
+                    <span class="maui-profile-label">@L["UserId"]</span>
                     <span class="maui-profile-value">@_user.UserId</span>
                 </div>
                 <div class="maui-profile-field">
-                    <span class="maui-profile-label">Status</span>
-                    <span class="maui-profile-value">@(_user.IsActive ? "Active" : "Inactive")</span>
+                    <span class="maui-profile-label">@L["Status"]</span>
+                    <span class="maui-profile-value">@(_user.IsActive ? L["Active"] : L["Inactive"])</span>
                 </div>
             </div>
         </section>
@@ -83,7 +85,7 @@
         <section class="maui-profile-card">
             <div class="maui-profile-section-title">
                 <MudIcon Icon="@Icons.Material.Filled.Security" Size="Size.Small" />
-                <h2>Keamanan Akun</h2>
+                <h2>@L["AccountSecurity"]</h2>
             </div>
 
             <button type="button" class="maui-profile-action-row" @onclick="ChangePasswordAsync">
@@ -91,8 +93,8 @@
                     <MudIcon Icon="@Icons.Material.Filled.Lock" Size="Size.Small" />
                 </span>
                 <span class="maui-profile-action-copy">
-                    <span class="maui-profile-label">Ubah Password</span>
-                    <span class="maui-profile-action-subtitle">Perbarui password akun Anda</span>
+                    <span class="maui-profile-label">@L["ChangePassword"]</span>
+                    <span class="maui-profile-action-subtitle">@L["UpdateYourAccountPassword"]</span>
                 </span>
                 <MudIcon Icon="@Icons.Material.Filled.ChevronRight" Size="Size.Small" />
             </button>
@@ -100,21 +102,21 @@
             <div class="maui-profile-info-row">
                 <MudIcon Icon="@Icons.Material.Filled.Password" Size="Size.Small" />
                 <div>
-                    <span class="maui-profile-label">Password terakhir diperbarui</span>
+                    <span class="maui-profile-label">@L["LastPasswordChangeDate"]</span>
                     <span class="maui-profile-value">@(_user.LastPasswordChangeDate?.ToString("dd MMM yyyy HH:mm") ?? "-")</span>
                 </div>
             </div>
             <div class="maui-profile-info-row">
                 <MudIcon Icon="@Icons.Material.Filled.Devices" Size="Size.Small" />
                 <div>
-                    <span class="maui-profile-label">Login terakhir</span>
+                    <span class="maui-profile-label">@L["LastLogin"]</span>
                     <span class="maui-profile-value">@_user.LastLoginDate.ToString("dd MMM yyyy HH:mm")</span>
                 </div>
             </div>
             <div class="maui-profile-info-row">
                 <MudIcon Icon="@Icons.Material.Filled.Router" Size="Size.Small" />
                 <div>
-                    <span class="maui-profile-label">IP terakhir</span>
+                    <span class="maui-profile-label">@L["LastIpAddress"]</span>
                     <span class="maui-profile-value">@(_user.LastIpAddress ?? "-")</span>
                 </div>
             </div>
@@ -123,27 +125,27 @@
         <section class="maui-profile-card">
             <div class="maui-profile-section-title">
                 <MudIcon Icon="@Icons.Material.Filled.VerifiedUser" Size="Size.Small" />
-                <h2>Hak Akses</h2>
+                <h2>@L["Manage"]</h2>
             </div>
             <div class="maui-profile-access-list">
                 <span class="maui-profile-access @(_user.CanAddEdit ? "is-enabled" : "")">
                     <MudIcon Icon="@(_user.CanAddEdit ? Icons.Material.Filled.CheckCircle : Icons.Material.Filled.RemoveCircleOutline)" Size="Size.Small" />
-                    Add/Edit
+                    @L["AddEdit"]
                 </span>
                 <span class="maui-profile-access @(_user.CanDelete ? "is-enabled" : "")">
                     <MudIcon Icon="@(_user.CanDelete ? Icons.Material.Filled.CheckCircle : Icons.Material.Filled.RemoveCircleOutline)" Size="Size.Small" />
-                    Delete
+                    @L["Delete"]
                 </span>
                 <span class="maui-profile-access @(_user.CanReadOnly ? "is-enabled" : "")">
                     <MudIcon Icon="@(_user.CanReadOnly ? Icons.Material.Filled.CheckCircle : Icons.Material.Filled.RemoveCircleOutline)" Size="Size.Small" />
-                    Read-only
+                    @L["ReadOnly"]
                 </span>
             </div>
         </section>
 
         <button type="button" class="maui-profile-logout" @onclick="LogoutAsync">
             <MudIcon Icon="@Icons.Material.Outlined.Logout" Size="Size.Small" />
-            Logout
+            @L["Logout"]
         </button>
     }
 </div>
@@ -175,10 +177,12 @@
 
     private string GenderName => _user?.GenderId?.ToUpperInvariant() switch
     {
-        "L" => "Laki-Laki",
-        "P" => "Perempuan",
+        "L" => L.IsIndonesian ? "Laki-laki" : "Male",
+        "P" => L.IsIndonesian ? "Perempuan" : "Female",
         _ => "-",
     };
+
+    protected override void OnInitialized() => L.OnChange += HandleLanguageChanged;
 
     protected override async Task OnInitializedAsync() => await LoadAsync();
 
@@ -202,7 +206,7 @@
             _user = await AuthService.GetCurrentUserAsync();
             if (_user == null)
             {
-                _error = "Profil tidak tersedia.";
+                _error = L["ProfileNotAvailable"];
             }
         }
         catch (Exception ex)
@@ -223,7 +227,7 @@
         }
 
         var parameters = new DialogParameters { ["User"] = _user };
-        var dialog = await DialogService.ShowAsync<ProfileEditDialog>("Edit Profil", parameters);
+        var dialog = await DialogService.ShowAsync<ProfileEditDialog>(L["EditProfile"], parameters);
         var result = await dialog.Result;
         if (result is { Canceled: false, Data: UserResponseDto updated })
         {
@@ -233,7 +237,7 @@
 
     private async Task ChangePasswordAsync()
     {
-        var dialog = await DialogService.ShowAsync<MauiChangePasswordDialog>("Ubah Password");
+        var dialog = await DialogService.ShowAsync<MauiChangePasswordDialog>(L["ChangePassword"]);
         var result = await dialog.Result;
         if (result is { Canceled: false })
         {
@@ -242,6 +246,10 @@
     }
 
     private void BackToDashboard() => Navigation.NavigateTo("/maui/dashboard");
+
+    private void HandleLanguageChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose() => L.OnChange -= HandleLanguageChanged;
 
     private async Task LogoutAsync()
     {

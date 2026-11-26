@@ -2,15 +2,25 @@
 @page "/not-found"
 @layout MainLayout
 @attribute [AllowAnonymous]
+@inject LanguageService L
+@implements IDisposable
 
 <MudContainer MaxWidth="MaxWidth.Medium" Class="pa-6 ryz-error-page">
     <MudPaper Elevation="0" Class="ryz-error-card">
         <div class="ryz-error-kicker">RyzCore Workspace</div>
-        <h1>Page not found</h1>
-        <p class="ryz-error-copy">The page you requested is not available in this workspace. Return to the dashboard to continue your work in the main content tabs.</p>
+        <h1>@L["PageNotFound"]</h1>
+        <p class="ryz-error-copy">@L["PageNotFoundDescription"]</p>
         <div class="ryz-error-actions">
-            <MudButton Href="/dashboard" Variant="Variant.Filled" Color="Color.Primary">Go to Dashboard</MudButton>
-            <MudButton Href="/" Variant="Variant.Outlined" Color="Color.Primary">Go to Sign In</MudButton>
+            <MudButton Href="/dashboard" Variant="Variant.Filled" Color="Color.Primary">@L["GoToDashboard"]</MudButton>
+            <MudButton Href="/" Variant="Variant.Outlined" Color="Color.Primary">@L["GoToSignIn"]</MudButton>
         </div>
     </MudPaper>
 </MudContainer>
+
+@code {
+    protected override void OnInitialized() => L.OnChange += HandleLanguageChanged;
+
+    private void HandleLanguageChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose() => L.OnChange -= HandleLanguageChanged;
+}

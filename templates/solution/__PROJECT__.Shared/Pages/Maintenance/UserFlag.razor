@@ -1,17 +1,19 @@
 @page "/dashboard/maintenance/user-flag"
 @layout AuthenticatedLayout
 @attribute [Authorize]
+@implements IDisposable
 @inject SettingApiService SettingApi
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
+@inject LanguageService L
 
 <MudBreadcrumbs Items="_breadcrumbs" Separator=">" Class="mb-3" />
 
 <div class="page-heading">
     <div>
-        <div class="dashboard-kicker">Maintenance</div>
-        <h1>User Flag Management</h1>
-        <p>Lockout and login flags.</p>
+        <div class="dashboard-kicker">@L["Maintenance"]</div>
+        <h1>@L["UserFlagManagement"]</h1>
+        <p>@L["LockoutAndLoginFlags"]</p>
     </div>
 </div>
 
@@ -28,8 +30,8 @@
             <MudSpacer />
             <MudTextField @bind-Value="_search"
                           @bind-Value:after="OnSearchChanged"
-                          Label="Search"
-                          Placeholder="Search by ID, name, IP..."
+                          Label="@L["Search"]"
+                          Placeholder="@L["SearchByIdNameIp"]"
                           Variant="Variant.Outlined"
                           Margin="Margin.Dense"
                           Adornment="Adornment.End"
@@ -39,21 +41,21 @@
         </ToolBarContent>
         <HeaderContent>
             <PermissionGate AnyOf="PermissionSets.AddEdit">
-                <MudTh Style="text-align:center;">Actions</MudTh>
+                <MudTh Style="text-align:center;">@L["Action"]</MudTh>
             </PermissionGate>
-            <MudTh><MudTableSortLabel T="UserFlagDto" SortLabel="userid">User Id</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel T="UserFlagDto" SortLabel="fullname">Full Name</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel T="UserFlagDto" SortLabel="islogin">Is Login</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel T="UserFlagDto" SortLabel="isfirstlogin">Is First Login</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel T="UserFlagDto" SortLabel="islocked">Is Locked</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel T="UserFlagDto" SortLabel="failedpasswordattempt">Failed Password Attempt</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel T="UserFlagDto" SortLabel="ipaddress">Last IP Address</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel T="UserFlagDto" SortLabel="lastlogindate">Last Login Date</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel T="UserFlagDto" SortLabel="comment">Comment</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="UserFlagDto" SortLabel="userid">@L["UserIdColumn"]</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="UserFlagDto" SortLabel="fullname">@L["FullName"]</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="UserFlagDto" SortLabel="islogin">@L["IsLogin"]</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="UserFlagDto" SortLabel="isfirstlogin">@L["IsFirstLogin"]</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="UserFlagDto" SortLabel="islocked">@L["IsLocked"]</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="UserFlagDto" SortLabel="failedpasswordattempt">@L["FailedPasswordAttempt"]</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="UserFlagDto" SortLabel="ipaddress">@L["LastIpAddress"]</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="UserFlagDto" SortLabel="lastlogindate">@L["LastLoginDate"]</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="UserFlagDto" SortLabel="comment">@L["Comment"]</MudTableSortLabel></MudTh>
         </HeaderContent>
         <RowTemplate>
             <PermissionGate AnyOf="PermissionSets.AddEdit">
-                <MudTd DataLabel="Actions" Style="text-align:center; white-space:nowrap;">
+                <MudTd DataLabel="@L["Action"]" Style="text-align:center; white-space:nowrap;">
                     <MudIconButton Icon="@Icons.Material.Filled.LockOpen"
                                    Size="Size.Small"
                                    Color="Color.Primary"
@@ -64,38 +66,40 @@
                                    OnClick="@(_ => ResetPasswordAsync(context))" />
                 </MudTd>
             </PermissionGate>
-            <MudTd DataLabel="User Id">@context.UserId</MudTd>
-            <MudTd DataLabel="Full Name">@context.FullName</MudTd>
-            <MudTd DataLabel="Is Login">@ToYesNo(context.IsLogin)</MudTd>
-            <MudTd DataLabel="Is First Login">@ToYesNo(context.IsFirstLogin)</MudTd>
-            <MudTd DataLabel="Is Locked">@ToYesNo(context.IsLocked)</MudTd>
-            <MudTd DataLabel="Failed Password Attempt">@context.FailedPasswordAttempt</MudTd>
-            <MudTd DataLabel="Last IP Address">@context.IpAddress</MudTd>
-            <MudTd DataLabel="Last Login Date">@context.LastLoginDate?.ToString("yyyy-MM-dd HH:mm:ss")</MudTd>
-            <MudTd DataLabel="Comment">@context.Comment</MudTd>
+            <MudTd DataLabel="@L["UserIdColumn"]">@context.UserId</MudTd>
+            <MudTd DataLabel="@L["FullName"]">@context.FullName</MudTd>
+            <MudTd DataLabel="@L["IsLogin"]">@ToYesNo(context.IsLogin)</MudTd>
+            <MudTd DataLabel="@L["IsFirstLogin"]">@ToYesNo(context.IsFirstLogin)</MudTd>
+            <MudTd DataLabel="@L["IsLocked"]">@ToYesNo(context.IsLocked)</MudTd>
+            <MudTd DataLabel="@L["FailedPasswordAttempt"]">@context.FailedPasswordAttempt</MudTd>
+            <MudTd DataLabel="@L["LastIpAddress"]">@context.IpAddress</MudTd>
+            <MudTd DataLabel="@L["LastLoginDate"]">@context.LastLoginDate?.ToString("yyyy-MM-dd HH:mm:ss")</MudTd>
+            <MudTd DataLabel="@L["Comment"]">@context.Comment</MudTd>
         </RowTemplate>
         <NoRecordsContent>
-            <MudText>No user flags found.</MudText>
+            <MudText>@L["NoUserFlagsFound"]</MudText>
         </NoRecordsContent>
         <LoadingContent>
             <MudProgressLinear Indeterminate="true" />
         </LoadingContent>
         <PagerContent>
-            <MudTablePager PageSizeOptions="new[] { 10, 25, 50, 100 }" />
+            <MudTablePager PageSizeOptions="new[] { 10, 25, 50, 100 }" RowsPerPageString="@L["RowsPerPage"]" InfoFormat="@L["PagerInfoFormat"]" AllItemsText="@L["AllItems"]" />
         </PagerContent>
     </MudTable>
 </MudPaper>
 
 @code {
-    private readonly List<BreadcrumbItem> _breadcrumbs =
-    [
-        new("Dashboard", href: "/dashboard"),
-        new("Maintenance", href: null),
-        new("User Flag Management", href: null, disabled: true),
-    ];
+    private List<BreadcrumbItem> _breadcrumbs => new()
+    {
+        new(L["Dashboard"], href: "/dashboard"),
+        new(L["Maintenance"], href: null),
+        new(L["UserFlagManagement"], href: null, disabled: true),
+    };
 
     private MudTable<UserFlagDto>? _table;
     private string? _search;
+
+    protected override void OnInitialized() => L.OnChange += HandleLanguageChanged;
 
     private async Task<TableData<UserFlagDto>> LoadServerData(TableState state, CancellationToken cancellationToken)
     {
@@ -127,12 +131,12 @@
     {
         var parameters = new DialogParameters
         {
-            ["Title"] = "Unlock User",
-            ["Message"] = $"Unlock user {user.UserId}?",
-            ["ConfirmText"] = "Unlock",
+            ["Title"] = L["UnlockUser"],
+            ["Message"] = L.Format("UnlockUserConfirm", user.UserId),
+            ["ConfirmText"] = L["Unlock"],
         };
 
-        var dialog = await DialogService.ShowAsync<ConfirmDialog>("Unlock User", parameters);
+        var dialog = await DialogService.ShowAsync<ConfirmDialog>(L["UnlockUser"], parameters);
         var result = await dialog.Result;
         if (result is not { Canceled: false })
         {
@@ -140,14 +144,14 @@
         }
 
         var response = await SettingApi.UnlockUserAsync(user.UserId);
-        Snackbar.Add(response.Message ?? "Unlock failed.", response.Success ? Severity.Success : Severity.Error);
+        Snackbar.Add(response.Message ?? L["UnlockFailed"], response.Success ? Severity.Success : Severity.Error);
         await ReloadAsync();
     }
 
     private async Task ResetPasswordAsync(UserFlagDto user)
     {
         var parameters = new DialogParameters { ["UserId"] = user.UserId };
-        var dialog = await DialogService.ShowAsync<ResetPasswordDialog>("Reset Password", parameters);
+        var dialog = await DialogService.ShowAsync<ResetPasswordDialog>(L["ResetPasswordTitle"], parameters);
         var result = await dialog.Result;
         if (result is { Canceled: false })
         {
@@ -163,5 +167,9 @@
         }
     }
 
-    private static string ToYesNo(bool? value) => value == true ? "Yes" : "No";
+    private string ToYesNo(bool? value) => value == true ? L["Yes"] : L["No"];
+
+    private void HandleLanguageChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose() => L.OnChange -= HandleLanguageChanged;
 }

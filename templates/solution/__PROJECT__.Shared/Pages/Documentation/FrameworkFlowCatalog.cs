@@ -1,59 +1,60 @@
 using MudBlazor;
+using __PROJECT__.Shared.Services;
 
 namespace __PROJECT__.Shared.Pages.Documentation;
 
 public static class FrameworkFlowCatalog
 {
-    public static IReadOnlyList<Flow> Flows { get; } = new[]
+    public static IReadOnlyList<Flow> GetFlows(LanguageService L) => new[]
     {
         new Flow
         {
             Key = "login",
-            Title = "Login",
-            Tab = "Login",
+            Title = L["FfLogin"],
+            Tab = L["FfLogin"],
             Icon = Icons.Material.Filled.Lock,
-            Summary = "Sign in with an active user that already has an approved role.",
-            Audience = "All users",
-            Approval = "No approval",
+            Summary = L["FfSignInWithAnActiveUser"],
+            Audience = L["FfAllUsers"],
+            Approval = L["FfNoApproval"],
             Prerequisites = new[]
             {
-                "The user exists in um_user_app and is active.",
-                "The user has one active row in um_user_group.",
-                "The account is not locked.",
+                L["FfTheUserExistsInUmuserappAnd"],
+                L["FfTheUserHasOneActiveRow"],
+                L["FfTheAccountIsNotLocked"],
             },
             Steps = new[]
             {
                 new Step
                 {
-                    Title = "Open the login page",
-                    Detail = "Navigate to / and enter the User ID and Password. Remember Me keeps the refresh token in local storage.",
+                    Title = L["FfOpenTheLoginPage"],
+                    Detail = L["FfNavigateToAndEnterTheUser"],
                 },
                 new Step
                 {
-                    Title = "Validate the account",
-                    Detail = "The API checks the user, role, lock flag, and password before issuing a session.",
+                    Title = L["FfValidateTheAccount"],
+                    Detail = L["FfTheApiChecksTheUserRole"],
                 },
                 new Step
                 {
-                    Title = "Complete first-login password change",
-                    Detail = "If is_first_login is true, the API returns no tokens. Complete the inline password change form before continuing.",
+                    Title = L["FfCompleteFirstloginPasswordChange"],
+                    Detail = L["FfIfIsfirstloginIsTrueTheApi"],
                 },
                 new Step
                 {
-                    Title = "Receive the session",
-                    Detail = "A normal login issues an access token and refresh token, records the current session, and revokes previous refresh tokens.",
+                    Title = L["FfReceiveTheSession"],
+                    Detail = L["FfANormalLoginIssuesAnAccess"],
                 },
                 new Step
                 {
-                    Title = "Open the dashboard",
-                    Detail = "The client stores the tokens and opens /dashboard.",
+                    Title = L["FfOpenTheDashboard"],
+                    Detail = L["FfTheClientStoresTheTokensAnd"],
                 },
             },
             Warnings = new[]
             {
-                "A newly approved user cannot log in until Role Maintenance is also approved.",
-                "Five failed attempts lock non-admin accounts. Group 00 is exempt from the automatic lock.",
-                "A new login replaces the previous session for the same user.",
+                L["FfANewlyApprovedUserCannotLog"],
+                L["FfFiveFailedAttemptsLockNonadminAccounts"],
+                L["FfANewLoginReplacesThePrevious"],
             },
             Technical = new[]
             {
@@ -65,50 +66,50 @@ public static class FrameworkFlowCatalog
         new Flow
         {
             Key = "user",
-            Title = "Create User",
-            Tab = "User",
+            Title = L["FfCreateUser"],
+            Tab = L["FfUser"],
             Icon = Icons.Material.Filled.EmojiPeople,
-            Summary = "Create the user identity. Role assignment is a separate approval flow.",
-            Audience = "Administrator (group 00)",
-            Approval = "User Approval",
+            Summary = L["FfCreateTheUserIdentityRoleAssignment"],
+            Audience = L["FfAdministratorGroup00"],
+            Approval = L["FfUserApproval"],
             Prerequisites = new[]
             {
-                "A group exists for the later role assignment.",
-                "No existing user or pending request uses the same User ID.",
+                L["FfAGroupExistsForTheLater"],
+                L["FfNoExistingUserOrPendingRequest"],
             },
             Steps = new[]
             {
                 new Step
                 {
-                    Title = "Open User Maintenance",
-                    Detail = "Go to Setting > User Maintenance > List.",
+                    Title = L["FfOpenUserMaintenance"],
+                    Detail = L["FfGoToSettingUserMaintenanceList"],
                 },
                 new Step
                 {
-                    Title = "Add the user",
-                    Detail = "Select Add User and fill in User ID, Full Name, Gender, Email, Phone Number, Password, and Active.",
+                    Title = L["FfAddTheUser"],
+                    Detail = L["FfSelectAddUserAndFillIn"],
                 },
                 new Step
                 {
-                    Title = "Submit the request",
-                    Detail = "Save stages the user in temp_user_app_pending with approval type A.",
+                    Title = L["FfSubmitTheRequest"],
+                    Detail = L["FfSaveStagesTheUserInTempuserapppending"],
                 },
                 new Step
                 {
-                    Title = "Approve the user",
-                    Detail = "Open User Maintenance > Approval, select Approve, and Submit.",
+                    Title = L["FfApproveTheUser"],
+                    Detail = L["FfOpenUserMaintenanceApprovalSelectApprove"],
                 },
                 new Step
                 {
-                    Title = "Confirm the result",
-                    Detail = "Approval creates um_user_app and um_user_app_flag with is_first_login set to true.",
+                    Title = L["FfConfirmTheResult"],
+                    Detail = L["FfApprovalCreatesUmuserappAndUmuserappflagWith"],
                 },
             },
             Warnings = new[]
             {
-                "Add User has no group picker. The user cannot log in until a role is approved in Role Maintenance.",
-                "A User ID cannot be reused after a soft delete.",
-                "The same administrator can submit and approve the request.",
+                L["FfAddUserHasNoGroupPicker"],
+                L["FfAUserIdCannotBeReused"],
+                L["FfTheSameAdministratorCanSubmitAnd"],
             },
             Technical = new[]
             {
@@ -121,50 +122,50 @@ public static class FrameworkFlowCatalog
         new Flow
         {
             Key = "group",
-            Title = "Create Group",
-            Tab = "Group",
+            Title = L["FfCreateGroup"],
+            Tab = L["FfGroup"],
             Icon = Icons.Material.Filled.Groups,
-            Summary = "Create the group master that is used as a role.",
-            Audience = "Administrator (group 00)",
-            Approval = "Group Approval",
+            Summary = L["FfCreateTheGroupMasterThatIs"],
+            Audience = L["FfAdministratorGroup00"],
+            Approval = L["FfGroupApproval"],
             Prerequisites = new[]
             {
-                "The Group ID is unique.",
-                "No pending group request uses the same Group ID.",
+                L["FfTheGroupIdIsUnique"],
+                L["FfNoPendingGroupRequestUsesThe"],
             },
             Steps = new[]
             {
                 new Step
                 {
-                    Title = "Open Group Maintenance",
-                    Detail = "Go to Setting > Group Maintenance > List.",
+                    Title = L["FfOpenGroupMaintenance"],
+                    Detail = L["FfGoToSettingGroupMaintenanceList"],
                 },
                 new Step
                 {
-                    Title = "Add the group",
-                    Detail = "Select Add Group and fill in Group ID, Group Name, and Active.",
+                    Title = L["FfAddTheGroup"],
+                    Detail = L["FfSelectAddGroupAndFillIn"],
                 },
                 new Step
                 {
-                    Title = "Submit the request",
-                    Detail = "Save stages the group in temp_group_app_pending with approval type A.",
+                    Title = L["FfSubmitTheRequest"],
+                    Detail = L["FfSaveStagesTheGroupInTempgroupapppending"],
                 },
                 new Step
                 {
-                    Title = "Approve the group",
-                    Detail = "Open Group Maintenance > Approval, select Approve, and Submit.",
+                    Title = L["FfApproveTheGroup"],
+                    Detail = L["FfOpenGroupMaintenanceApprovalSelectApprove"],
                 },
                 new Step
                 {
-                    Title = "Confirm the result",
-                    Detail = "Approval creates or updates um_group_app and marks it approved.",
+                    Title = L["FfConfirmTheResult"],
+                    Detail = L["FfApprovalCreatesOrUpdatesUmgroupappAnd"],
                 },
             },
             Warnings = new[]
             {
-                "Group 00 is the administrator group and cannot be deleted.",
-                "A group that is still assigned to users cannot be deleted.",
-                "A Group ID cannot be reused after a soft delete.",
+                L["FfGroup00IsTheAdministratorGroup"],
+                L["FfAGroupThatIsStillAssigned"],
+                L["FfAGroupIdCannotBeReused"],
             },
             Technical = new[]
             {
@@ -177,51 +178,51 @@ public static class FrameworkFlowCatalog
         new Flow
         {
             Key = "role",
-            Title = "Assign Role",
-            Tab = "Role",
+            Title = L["FfAssignRole"],
+            Tab = L["FfRole"],
             Icon = Icons.Material.Filled.AdminPanelSettings,
-            Summary = "Connect one approved user to one approved group and set the permission flags.",
-            Audience = "Administrator (group 00)",
-            Approval = "Role Approval",
+            Summary = L["FfConnectOneApprovedUserToOne"],
+            Audience = L["FfAdministratorGroup00"],
+            Approval = L["FfRoleApproval"],
             Prerequisites = new[]
             {
-                "The user is already approved and active.",
-                "The group is already approved and active.",
-                "The user has no active role and no pending role request.",
+                L["FfTheUserIsAlreadyApprovedAnd"],
+                L["FfTheGroupIsAlreadyApprovedAnd"],
+                L["FfTheUserHasNoActiveRole"],
             },
             Steps = new[]
             {
                 new Step
                 {
-                    Title = "Open Role Maintenance",
-                    Detail = "Go to Setting > Role Maintenance > List.",
+                    Title = L["FfOpenRoleMaintenance"],
+                    Detail = L["FfGoToSettingRoleMaintenanceList"],
                 },
                 new Step
                 {
-                    Title = "Add the role",
-                    Detail = "Select Add Role, choose the User and Group, then set Can Add/Edit, Can Delete, Read Only, and Active.",
+                    Title = L["FfAddTheRole"],
+                    Detail = L["FfSelectAddRoleChooseTheUser"],
                 },
                 new Step
                 {
-                    Title = "Submit the request",
-                    Detail = "Save stages the role in tb_parameter_sytem_temporary with table_name um_user_group.",
+                    Title = L["FfSubmitTheRequest"],
+                    Detail = L["FfSaveStagesTheRoleInTbparametersytemtemporary"],
                 },
                 new Step
                 {
-                    Title = "Approve the role",
-                    Detail = "Open Role Maintenance > Approval, select Approve, and Submit.",
+                    Title = L["FfApproveTheRole"],
+                    Detail = L["FfOpenRoleMaintenanceApprovalSelectApprove"],
                 },
                 new Step
                 {
-                    Title = "Refresh the session",
-                    Detail = "The user must sign in again or refresh the token to receive the new role claim.",
+                    Title = L["FfRefreshTheSession"],
+                    Detail = L["FfTheUserMustSignInAgain"],
                 },
             },
             Warnings = new[]
             {
-                "Role Maintenance rejects a user that still exists only in the pending user table.",
-                "One user has one role. um_user_group.user_id is the primary key.",
-                "Can Add/Edit, Can Delete, and Read Only are displayed but are not enforced by the current server authorization.",
+                L["FfRoleMaintenanceRejectsAUserThat"],
+                L["FfOneUserHasOneRoleUmusergroupuserid"],
+                L["FfCanAddeditCanDeleteAndRead"],
             },
             Technical = new[]
             {
@@ -233,53 +234,53 @@ public static class FrameworkFlowCatalog
         new Flow
         {
             Key = "menus",
-            Title = "Menus and Mapping",
-            Tab = "Menus",
+            Title = L["FfMenusAndMapping"],
+            Tab = L["FfMenus"],
             Icon = Icons.Material.Filled.MenuBook,
-            Summary = "Create menus with approval, then map approved menus to groups immediately.",
-            Audience = "Administrator (group 00)",
-            Approval = "Menu Approval; mapping is immediate",
+            Summary = L["FfCreateMenusWithApprovalThenMap"],
+            Audience = L["FfAdministratorGroup00"],
+            Approval = L["FfMenuApprovalMappingIsImmediate"],
             Prerequisites = new[]
             {
-                "The parent menu exists when a parent is selected.",
-                "The Menu Unique value is not used by another active menu.",
-                "The target group exists for mapping.",
+                L["FfTheParentMenuExistsWhenA"],
+                L["FfTheMenuUniqueValueIsNot"],
+                L["FfTheTargetGroupExistsForMapping"],
             },
             Steps = new[]
             {
                 new Step
                 {
-                    Title = "Open Menu Maintenance",
-                    Detail = "Go to Setting > Menu Maintenance > List and select Add Menu.",
+                    Title = L["FfOpenMenuMaintenance"],
+                    Detail = L["FfGoToSettingMenuMaintenanceList"],
                 },
                 new Step
                 {
-                    Title = "Fill the menu form",
-                    Detail = "Enter Menu Unique, Name, URL, Component Type, Parent Level, Parent Menu, Icon, Order, and Active.",
+                    Title = L["FfFillTheMenuForm"],
+                    Detail = L["FfEnterMenuUniqueNameUrlComponent"],
                 },
                 new Step
                 {
-                    Title = "Approve the menu",
-                    Detail = "Save stages the menu request. Approve it in Menu Maintenance > Approval.",
+                    Title = L["FfApproveTheMenu"],
+                    Detail = L["FfSaveStagesTheMenuRequestApprove"],
                 },
                 new Step
                 {
-                    Title = "Map the menu",
-                    Detail = "Open Menu Maintenance > Mapping Menu, select the group, check the menu and page, then Save.",
+                    Title = L["FfMapTheMenu"],
+                    Detail = L["FfOpenMenuMaintenanceMappingMenuSelect"],
                 },
                 new Step
                 {
-                    Title = "Confirm access",
-                    Detail = "Mapping is applied immediately. Parent menus and all level-A roots are added automatically.",
+                    Title = L["FfConfirmAccess"],
+                    Detail = L["FfMappingIsAppliedImmediatelyParentMenus"],
                 },
             },
             Warnings = new[]
             {
-                "A menu without a group mapping is invisible in the sidebar.",
-                "Component Type controls Web rendering. A menu without one is disabled.",
-                "Mapping has no approval and replaces the complete mapping for that group.",
-                "A menu with child menus cannot be deleted.",
-                "Parent levels: A is a root, B is a group, D is a page.",
+                L["FfAMenuWithoutAGroupMapping"],
+                L["FfComponentTypeControlsWebRenderingA"],
+                L["FfMappingHasNoApprovalAndReplaces"],
+                L["FfAMenuWithChildMenusCannot"],
+                L["FfParentLevelsAIsARoot"],
             },
             Technical = new[]
             {
@@ -293,52 +294,52 @@ public static class FrameworkFlowCatalog
         new Flow
         {
             Key = "parameter",
-            Title = "Add Parameter",
-            Tab = "Parameter",
+            Title = L["FfAddParameter"],
+            Tab = L["FfParameter"],
             Icon = Icons.Material.Filled.Tune,
-            Summary = "Register a new parameter table and its metadata. This is separate from adding parameter data.",
-            Audience = "Administrator (group 00) and developer or DBA",
-            Approval = "Parameter Approval",
+            Summary = L["FfRegisterANewParameterTableAnd"],
+            Audience = L["FfAdministratorGroup00AndDeveloperOr"],
+            Approval = L["FfParameterApproval"],
             Prerequisites = new[]
             {
-                "The physical SQL table exists.",
-                "The table name is added to ParameterEngineService.AllowedTables.",
-                "The card and field metadata will be created through the Parameter System cards.",
+                L["FfThePhysicalSqlTableExists"],
+                L["FfTheTableNameIsAddedTo"],
+                L["FfTheCardAndFieldMetadataWill"],
             },
             Steps = new[]
             {
                 new Step
                 {
-                    Title = "Create and register the table",
-                    Detail = "The developer creates the SQL table and adds its name to AllowedTables. A card alone is not enough.",
+                    Title = L["FfCreateAndRegisterTheTable"],
+                    Detail = L["FfTheDeveloperCreatesTheSqlTable"],
                 },
                 new Step
                 {
-                    Title = "Add the parameter card",
-                    Detail = "Open Parameter Maintenance > Maker > Parameter System, then add the table name, description, maker URL, approval URL, flags, and icon.",
+                    Title = L["FfAddTheParameterCard"],
+                    Detail = L["FfOpenParameterMaintenanceMakerParameterSystem"],
                 },
                 new Step
                 {
-                    Title = "Approve the card",
-                    Detail = "Approve the request from Parameter Maintenance > Approval.",
+                    Title = L["FfApproveTheCard"],
+                    Detail = L["FfApproveTheRequestFromParameterMaintenance"],
                 },
                 new Step
                 {
-                    Title = "Add field metadata",
-                    Detail = "Use the Parameter System Detail card to define field name, order, description, key, type, reference, mandatory, and display flags.",
+                    Title = L["FfAddFieldMetadata"],
+                    Detail = L["FfUseTheParameterSystemDetailCard"],
                 },
                 new Step
                 {
-                    Title = "Approve the metadata",
-                    Detail = "Approve the field metadata before using the Maker form.",
+                    Title = L["FfApproveTheMetadata"],
+                    Detail = L["FfApproveTheFieldMetadataBeforeUsing"],
                 },
             },
             Warnings = new[]
             {
-                "A database card alone does not make a table usable. The name must be in AllowedTables.",
-                "Card and field metadata changes use the same maker and approval engine.",
-                "order_seq is part of the metadata key. Changing it can make an update look like an insert.",
-                "Dynamic screens can write parameter tables with direct SQL and bypass this flow.",
+                L["FfADatabaseCardAloneDoesNot"],
+                L["FfCardAndFieldMetadataChangesUse"],
+                L["FfOrderseqIsPartOfTheMetadata"],
+                L["FfDynamicScreensCanWriteParameterTables"],
             },
             Technical = new[]
             {
@@ -351,52 +352,52 @@ public static class FrameworkFlowCatalog
         new Flow
         {
             Key = "maker",
-            Title = "Parameter Maker and Approval",
-            Tab = "Maker",
+            Title = L["FfParameterMakerAndApproval"],
+            Tab = L["FfMaker"],
             Icon = Icons.Material.Filled.Checklist,
-            Summary = "Add, edit, or delete parameter data through staging and approval.",
-            Audience = "Administrator (group 00)",
-            Approval = "Parameter Approval",
+            Summary = L["FfAddEditOrDeleteParameterData"],
+            Audience = L["FfAdministratorGroup00"],
+            Approval = L["FfParameterApproval"],
             Prerequisites = new[]
             {
-                "The parameter table is registered.",
-                "The card and field metadata are approved.",
+                L["FfTheParameterTableIsRegistered"],
+                L["FfTheCardAndFieldMetadataAre"],
             },
             Steps = new[]
             {
                 new Step
                 {
-                    Title = "Open the Maker",
-                    Detail = "Go to Parameter Maintenance > Maker and select the parameter card.",
+                    Title = L["FfOpenTheMaker"],
+                    Detail = L["FfGoToParameterMaintenanceMakerAnd"],
                 },
                 new Step
                 {
-                    Title = "Add or edit data",
-                    Detail = "The form is generated from field metadata. Use Add, Edit, or Delete on the row.",
+                    Title = L["FfAddOrEditData"],
+                    Detail = L["FfTheFormIsGeneratedFromField"],
                 },
                 new Step
                 {
-                    Title = "Submit to staging",
-                    Detail = "Save validates mandatory fields and duplicate pending keys, then writes the request to staging.",
+                    Title = L["FfSubmitToStaging"],
+                    Detail = L["FfSaveValidatesMandatoryFieldsAndDuplicate"],
                 },
                 new Step
                 {
-                    Title = "Review in Approval",
-                    Detail = "Open Parameter Maintenance > Approval and select the same card.",
+                    Title = L["FfReviewInApproval"],
+                    Detail = L["FfOpenParameterMaintenanceApprovalAndSelect"],
                 },
                 new Step
                 {
-                    Title = "Approve or reject",
-                    Detail = "Select Approve or Reject per row, then Submit. Approval writes to the target table; rejection removes staging only.",
+                    Title = L["FfApproveOrReject"],
+                    Detail = L["FfSelectApproveOrRejectPerRow"],
                 },
             },
             Warnings = new[]
             {
-                "Only one pending request is allowed for the same key.",
-                "Approve All and Reject All affect the loaded page only. Submit calls the API per row.",
-                "There is no batch endpoint and no all-or-nothing transaction across rows.",
-                "Rejection does not store status 5. It writes an audit entry and removes the staging row.",
-                "Sensitive columns are hidden from the approval list.",
+                L["FfOnlyOnePendingRequestIsAllowed"],
+                L["FfApproveAllAndRejectAllAffect"],
+                L["FfThereIsNoBatchEndpointAnd"],
+                L["FfRejectionDoesNotStoreStatus5"],
+                L["FfSensitiveColumnsAreHiddenFromThe"],
             },
             Technical = new[]
             {
@@ -409,51 +410,51 @@ public static class FrameworkFlowCatalog
         new Flow
         {
             Key = "password",
-            Title = "Change Password",
-            Tab = "Password",
+            Title = L["FfChangePassword"],
+            Tab = L["FfPassword"],
             Icon = Icons.Material.Filled.Lock,
-            Summary = "Change a password during first login or from the account screens.",
-            Audience = "All users",
-            Approval = "No approval",
+            Summary = L["FfChangeAPasswordDuringFirstLogin"],
+            Audience = L["FfAllUsers"],
+            Approval = L["FfNoApproval"],
             Prerequisites = new[]
             {
-                "The current password is known.",
-                "The new password meets the password policy.",
+                L["FfTheCurrentPasswordIsKnown"],
+                L["FfTheNewPasswordMeetsThePassword"],
             },
             Steps = new[]
             {
                 new Step
                 {
-                    Title = "First-login change",
-                    Detail = "Use the inline form on the login page. No token is issued until the change succeeds.",
+                    Title = L["FfFirstloginChange"],
+                    Detail = L["FfUseTheInlineFormOnThe"],
                 },
                 new Step
                 {
-                    Title = "Normal change",
-                    Detail = "Open /change-password or Profile > Change Password.",
+                    Title = L["FfNormalChange"],
+                    Detail = L["FfOpenChangepasswordOrProfileChangePassword"],
                 },
                 new Step
                 {
-                    Title = "Enter the passwords",
-                    Detail = "Provide the current password, new password, and confirmation.",
+                    Title = L["FfEnterThePasswords"],
+                    Detail = L["FfProvideTheCurrentPasswordNewPassword"],
                 },
                 new Step
                 {
-                    Title = "Validate and save",
-                    Detail = "The server validates the password policy and updates the stored hash.",
+                    Title = L["FfValidateAndSave"],
+                    Detail = L["FfTheServerValidatesThePasswordPolicy"],
                 },
                 new Step
                 {
-                    Title = "Sign in again",
-                    Detail = "Use the new password on the next login.",
+                    Title = L["FfSignInAgain"],
+                    Detail = L["FfUseTheNewPasswordOnThe"],
                 },
             },
             Warnings = new[]
             {
-                "Policy: at least 8 characters with uppercase, lowercase, number, and special character.",
-                "No approval is required.",
-                "The authenticated change flow does not revoke other sessions or refresh tokens.",
-                "An administrator reset sets is_first_login to true, so the user must change the password at the next login.",
+                L["FfPolicyAtLeast8CharactersWith"],
+                L["FfNoApprovalIsRequired"],
+                L["FfTheAuthenticatedChangeFlowDoesNot"],
+                L["FfAnAdministratorResetSetsIsfirstloginTo"],
             },
             Technical = new[]
             {

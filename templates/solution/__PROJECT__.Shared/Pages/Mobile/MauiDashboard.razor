@@ -1,6 +1,7 @@
 @page "/maui/dashboard"
 @layout MauiAuthenticatedLayout
 @attribute [Authorize]
+@implements IDisposable
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject MenuService MenuService
 @inject DashboardApiService DashboardApi
@@ -11,16 +12,25 @@
 @inject NavigationManager Navigation
 @inject ISnackbar Snackbar
 @inject MotionService Motion
+@inject LanguageService L
 
 <div class="maui-dashboard-page">
     <div class="maui-topbar">
-        <div class="maui-logo" aria-label="Brand logo">
+        <div class="maui-logo" aria-label="@L["BrandLogo"]">
             <MudIcon Icon="@Icons.Material.Filled.AccountBalance" Size="Size.Medium" />
         </div>
-        <MudIconButton Icon="@Icons.Material.Outlined.Logout"
+        <div class="maui-header-actions">
+            <MudButton Variant="Variant.Outlined"
                        Color="Color.Default"
-                       aria-label="Logout"
-                       OnClick="LogoutAsync" />
+                       Class="app-language-toggle maui-language-toggle"
+                       aria-label="@L.ToggleAriaLabel"
+                       title="@L.ToggleTitle"
+                       OnClick="@(_ => ToggleLanguageAsync())">@L.ToggleLabel</MudButton>
+            <MudIconButton Icon="@Icons.Material.Outlined.Logout"
+                           Color="Color.Default"
+                           aria-label="@L["Logout"]"
+                           OnClick="LogoutAsync" />
+        </div>
     </div>
 
     <div class="maui-greeting-row">
@@ -29,8 +39,8 @@
                 <MudIcon Icon="@Icons.Material.Outlined.Person" Size="Size.Medium" />
             </span>
             <span class="maui-greeting-copy">
-                <span class="maui-greeting-title">Hi, @_displayName</span>
-                <span class="maui-greeting-subtitle">Lihat profil Anda</span>
+                <span class="maui-greeting-title">@L.Format("HiName", _displayName)</span>
+                <span class="maui-greeting-subtitle">@L["ViewYourProfile"]</span>
             </span>
         </button>
 
@@ -41,7 +51,7 @@
                       Overlap="true">
                 <MudIconButton Icon="@Icons.Material.Outlined.Notifications"
                                Color="Color.Default"
-                               aria-label="Notifikasi"
+                               aria-label="@L["Notifications"]"
                                OnClick="OpenNotifications" />
             </MudBadge>
 
@@ -49,22 +59,22 @@
             {
                 <MudIconButton Icon="@Icons.Material.Outlined.Settings"
                                Color="Color.Default"
-                               aria-label="Setting"
+                               aria-label="@L["Settings"]"
                                OnClick="OpenSettings" />
             }
         </div>
     </div>
 
     <div class="maui-section-heading">
-        <h2>Dashboard</h2>
-        <button type="button" class="maui-text-link" @onclick="OpenAllFeatures">Lihat Semua</button>
+        <h2>@L["Dashboard"]</h2>
+        <button type="button" class="maui-text-link" @onclick="OpenAllFeatures">@L["ViewAll"]</button>
     </div>
 
     <MauiWidgetCarousel Widgets="_widgets" OnSelected="OpenWidgetAsync" />
 
     <div class="maui-section-heading maui-menu-heading">
-        <h2>Menu</h2>
-        <button type="button" class="maui-text-link" @onclick="OpenAllFeatures">Atur</button>
+        <h2>@L["Menu"]</h2>
+        <button type="button" class="maui-text-link" @onclick="OpenAllFeatures">@L["Manage"]</button>
     </div>
 
     <div class="maui-menu-grid">
@@ -79,7 +89,7 @@
             <span class="maui-menu-icon">
                 <MudIcon Icon="@Icons.Material.Filled.GridView" Size="Size.Medium" />
             </span>
-            <span class="maui-menu-label">Lihat Semua</span>
+            <span class="maui-menu-label">@L["ViewAll"]</span>
         </button>
     </div>
 </div>
@@ -98,8 +108,12 @@
     private bool _hasSettingAccess;
     private bool _motionPlayed;
 
+    protected override void OnInitialized() => L.OnChange += HandleLanguageChanged;
+
     protected override async Task OnInitializedAsync()
     {
+        await L.InitializeAsync();
+
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         _displayName = authState.User.Identity?.Name ?? "User";
 
@@ -200,6 +214,12 @@
     private void OpenNotifications() => Navigation.NavigateTo("/maui/notifications");
     private void OpenSettings() => Navigation.NavigateTo("/maui/settings");
     private void OpenAllFeatures() => Navigation.NavigateTo("/maui/menu");
+
+    private async Task ToggleLanguageAsync() => await L.ToggleAsync();
+
+    private void HandleLanguageChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose() => L.OnChange -= HandleLanguageChanged;
 
     private async Task LogoutAsync()
     {

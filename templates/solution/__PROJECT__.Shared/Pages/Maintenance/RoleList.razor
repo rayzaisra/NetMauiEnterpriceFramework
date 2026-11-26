@@ -1,25 +1,27 @@
 @page "/dashboard/maintenance/role-list"
 @layout AuthenticatedLayout
 @attribute [Authorize]
+@implements IDisposable
 @inject SettingApiService SettingApi
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
 @inject ExportApiService ExportApi
 @inject NavigationManager Navigation
+@inject LanguageService L
 
 <MudBreadcrumbs Items="_breadcrumbs" Separator=">" Class="mb-3" />
 
 <div class="page-heading">
     <div>
-        <div class="dashboard-kicker">Maintenance</div>
-        <h1>Role Maintenance</h1>
-        <p>Manage user-role assignments and access flags.</p>
+        <div class="dashboard-kicker">@L["Maintenance"]</div>
+        <h1>@L["RoleMaintenance"]</h1>
+        <p>@L["ManageRolesAndAccess"]</p>
     </div>
     <PermissionGate Action="PermissionAction.AddEdit">
         <div class="d-flex gap-2">
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="@(_ => OpenAddAsync())">Add Role</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="@(_ => OpenAddAsync())">@L["AddRole"]</MudButton>
             <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.FileDownload" Class="@("ryz-busy-button" + (_isExporting ? " is-busy" : string.Empty))" Disabled="@_isExporting" OnClick="ExportExcelAsync">
-                @(_isExporting ? "Exporting..." : "Export Excel")
+                @(_isExporting ? L["Exporting"] : L["ExportExcel"])
             </MudButton>
         </div>
     </PermissionGate>
@@ -38,8 +40,8 @@
             <MudSpacer />
             <MudTextField @bind-Value="_search"
                           @bind-Value:after="OnSearchChanged"
-                          Label="Search"
-                          Placeholder="Search role..."
+                          Label="@L["Search"]"
+                          Placeholder="@L["SearchRole"]"
                           Variant="Variant.Outlined"
                           Margin="Margin.Dense"
                           Adornment="Adornment.End"
@@ -49,19 +51,19 @@
         </ToolBarContent>
         <HeaderContent>
             <PermissionGate AnyOf="PermissionSets.EditDelete">
-                <MudTh Style="text-align:center;">Actions</MudTh>
+                <MudTh Style="text-align:center;">@L["Action"]</MudTh>
             </PermissionGate>
-            <MudTh><MudTableSortLabel T="RoleListItemDto" SortLabel="userid">User ID</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel T="RoleListItemDto" SortLabel="fullname">Full Name</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel T="RoleListItemDto" SortLabel="groupname">Group</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel T="RoleListItemDto" SortLabel="canadded">Add/Edit</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel T="RoleListItemDto" SortLabel="candelete">Delete</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel T="RoleListItemDto" SortLabel="canreadonly">Read Only</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel T="RoleListItemDto" SortLabel="isactive">Status</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="RoleListItemDto" SortLabel="userid">@L["UserIdColumn"]</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="RoleListItemDto" SortLabel="fullname">@L["FullName"]</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="RoleListItemDto" SortLabel="groupname">@L["Group"]</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="RoleListItemDto" SortLabel="canadded">@L["AddEditColumn"]</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="RoleListItemDto" SortLabel="candelete">@L["DeleteColumn"]</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="RoleListItemDto" SortLabel="canreadonly">@L["ReadOnlyColumn"]</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="RoleListItemDto" SortLabel="isactive">@L["Status"]</MudTableSortLabel></MudTh>
         </HeaderContent>
         <RowTemplate>
             <PermissionGate AnyOf="PermissionSets.EditDelete">
-                <MudTd DataLabel="Actions" Style="text-align:center; white-space:nowrap;">
+                <MudTd DataLabel="@L["Action"]" Style="text-align:center; white-space:nowrap;">
                     <PermissionGate Action="PermissionAction.Edit">
                         <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Color="Color.Primary" OnClick="@(_ => OpenEditAsync(context))" />
                     </PermissionGate>
@@ -70,52 +72,54 @@
                     </PermissionGate>
                 </MudTd>
             </PermissionGate>
-            <MudTd DataLabel="User ID">@context.UserId</MudTd>
-            <MudTd DataLabel="Full Name">@context.FullName</MudTd>
-            <MudTd DataLabel="Group">@context.GroupName</MudTd>
-            <MudTd DataLabel="Add/Edit">
-                <MudChip T="string" Size="Size.Small" Color="@(context.CanAddEdit ? Color.Success : Color.Default)">@(context.CanAddEdit ? "Yes" : "No")</MudChip>
+            <MudTd DataLabel="@L["UserIdColumn"]">@context.UserId</MudTd>
+            <MudTd DataLabel="@L["FullName"]">@context.FullName</MudTd>
+            <MudTd DataLabel="@L["Group"]">@context.GroupName</MudTd>
+            <MudTd DataLabel="@L["AddEditColumn"]">
+                <MudChip T="string" Size="Size.Small" Color="@(context.CanAddEdit ? Color.Success : Color.Default)">@(context.CanAddEdit ? L["Yes"] : L["No"])</MudChip>
             </MudTd>
-            <MudTd DataLabel="Delete">
-                <MudChip T="string" Size="Size.Small" Color="@(context.CanDelete ? Color.Success : Color.Default)">@(context.CanDelete ? "Yes" : "No")</MudChip>
+            <MudTd DataLabel="@L["DeleteColumn"]">
+                <MudChip T="string" Size="Size.Small" Color="@(context.CanDelete ? Color.Success : Color.Default)">@(context.CanDelete ? L["Yes"] : L["No"])</MudChip>
             </MudTd>
-            <MudTd DataLabel="Read Only">
-                <MudChip T="string" Size="Size.Small" Color="@(context.CanReadOnly ? Color.Warning : Color.Default)">@(context.CanReadOnly ? "Yes" : "No")</MudChip>
+            <MudTd DataLabel="@L["ReadOnlyColumn"]">
+                <MudChip T="string" Size="Size.Small" Color="@(context.CanReadOnly ? Color.Warning : Color.Default)">@(context.CanReadOnly ? L["Yes"] : L["No"])</MudChip>
             </MudTd>
-            <MudTd DataLabel="Status">
+            <MudTd DataLabel="@L["Status"]">
                 @if (context.IsActive)
                 {
-                    <MudChip T="string" Size="Size.Small" Color="Color.Success">Active</MudChip>
+                    <MudChip T="string" Size="Size.Small" Color="Color.Success">@L["Active"]</MudChip>
                 }
                 else
                 {
-                    <MudChip T="string" Size="Size.Small" Color="Color.Default">Inactive</MudChip>
+                    <MudChip T="string" Size="Size.Small" Color="Color.Default">@L["Inactive"]</MudChip>
                 }
             </MudTd>
         </RowTemplate>
         <NoRecordsContent>
-            <MudText>No roles found.</MudText>
+            <MudText>@L["NoRolesFound"]</MudText>
         </NoRecordsContent>
         <LoadingContent>
             <MudProgressLinear Indeterminate="true" />
         </LoadingContent>
         <PagerContent>
-            <MudTablePager PageSizeOptions="new[] { 10, 25, 50, 100 }" />
+            <MudTablePager PageSizeOptions="new[] { 10, 25, 50, 100 }" RowsPerPageString="@L["RowsPerPage"]" InfoFormat="@L["PagerInfoFormat"]" AllItemsText="@L["AllItems"]" />
         </PagerContent>
     </MudTable>
 </MudPaper>
 
 @code {
-    private readonly List<BreadcrumbItem> _breadcrumbs =
-    [
-        new("Dashboard", href: "/dashboard"),
-        new("Maintenance", href: null),
-        new("Role Maintenance", href: null, disabled: true),
-    ];
+    private List<BreadcrumbItem> _breadcrumbs => new()
+    {
+        new(L["Dashboard"], href: "/dashboard"),
+        new(L["Maintenance"], href: null),
+        new(L["RoleMaintenance"], href: null, disabled: true),
+    };
 
     private MudTable<RoleListItemDto>? _table;
     private string? _search;
     private bool _isExporting;
+
+    protected override void OnInitialized() => L.OnChange += HandleLanguageChanged;
 
     private async Task<TableData<RoleListItemDto>> LoadServerData(TableState state, CancellationToken cancellationToken)
     {
@@ -154,7 +158,7 @@
 
     private async Task OpenAddAsync()
     {
-        var dialog = await DialogService.ShowAsync<AddEditRoleDialog>("Add Role");
+        var dialog = await DialogService.ShowAsync<AddEditRoleDialog>(L["AddRole"]);
         var result = await dialog.Result;
         if (result is { Canceled: false })
         {
@@ -177,7 +181,7 @@
             },
         };
 
-        var dialog = await DialogService.ShowAsync<AddEditRoleDialog>("Edit Role", parameters);
+        var dialog = await DialogService.ShowAsync<AddEditRoleDialog>(L["EditRole"], parameters);
         var result = await dialog.Result;
         if (result is { Canceled: false })
         {
@@ -198,7 +202,7 @@
             var url = await ExportApi.ExportManagementAsync("api/export/roles", _search);
             if (string.IsNullOrWhiteSpace(url))
             {
-                Snackbar.Add("Export failed. Please try again.", Severity.Error);
+                Snackbar.Add(L["ExportFailed"], Severity.Error);
                 return;
             }
 
@@ -218,12 +222,12 @@
     {
         var parameters = new DialogParameters
         {
-            ["Title"] = "Delete Role",
-            ["Message"] = $"Delete role for {role.UserId}?",
-            ["ConfirmText"] = "Delete",
+            ["Title"] = L["DeleteRole"],
+            ["Message"] = L.Format("DeleteRoleConfirm", role.UserId),
+            ["ConfirmText"] = L["Delete"],
         };
 
-        var dialog = await DialogService.ShowAsync<ConfirmDialog>("Delete Role", parameters);
+        var dialog = await DialogService.ShowAsync<ConfirmDialog>(L["DeleteRole"], parameters);
         var result = await dialog.Result;
         if (result is not { Canceled: false })
         {
@@ -231,7 +235,11 @@
         }
 
         var response = await SettingApi.DeleteRoleAsync(role.UserId);
-        Snackbar.Add(response.Message ?? "Delete failed.", response.Success ? Severity.Success : Severity.Error);
+        Snackbar.Add(response.Message ?? L["DeleteFailed"], response.Success ? Severity.Success : Severity.Error);
         await ReloadAsync();
     }
+
+    private void HandleLanguageChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose() => L.OnChange -= HandleLanguageChanged;
 }
