@@ -4,6 +4,9 @@
 
 - Complete the gate in `change-workflow.md`: analyze, map the end-to-end flow,
   inspect the code, present the impact analysis, and wait for user approval.
+- Apply the four principles in `engineering-discipline.md`: think before
+  coding, simplicity first, surgical changes, goal-driven execution.
+- State the verifiable success criterion for the task before writing code.
 - Search for the existing implementation and mirror its conventions.
 - Identify whether the task is Domain, Application, Infrastructure, API,
   Shared, Web, or MAUI; do not move logic across boundaries casually.
@@ -15,6 +18,13 @@
 
 - start editing an implementation request before presenting the flow, impact
   analysis, and proposed changes and receiving user approval;
+- pick one interpretation of an ambiguous request without naming the
+  alternatives and asking;
+- add abstractions, options, caches, or layers for a requirement that does not
+  exist yet (no strategy pattern for one calculation, no generic repository,
+  no unused configuration keys);
+- reformat, rename, or restructure code outside the lines the request requires;
+- add validation, guards, or "improvements" nobody asked for while fixing a bug;
 - invent tables, columns, endpoints, DTO fields, or service methods;
 - change response JSON or public routes without an explicit requirement;
 - call `SaveChanges` from a repository;

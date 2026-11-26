@@ -40,6 +40,25 @@ code first. Run this gate and wait for user approval:
 designs. Ask first when the request would change public behavior, schema, or
 approval semantics.
 
+### Four principles that govern the work
+
+1. **Think before coding** - surface assumptions and multiple interpretations
+   instead of silently picking one. Name what you would have to guess (scope,
+   fields, delivery, table) and ask.
+2. **Simplicity first** - write the minimum that satisfies the request. No
+   speculative abstractions, options, caches, or extra layers. Add complexity
+   only when a second real case exists.
+3. **Surgical changes** - touch only the lines the request requires. Never
+   reformat, rename, add validation, or "improve" adjacent code while fixing
+   something else.
+4. **Goal-driven execution** - state a verifiable success criterion before
+   coding, reproduce the problem where possible, then verify with a build/test
+   and report honestly what was and was not checked.
+
+Read `references/engineering-discipline.md` for worked examples of each
+principle, including the RyzCore-specific variants (envelope, paging,
+`rf_*` tables, entity naming, canonical UI shell).
+
 ## Solution map
 
 ```text
@@ -212,6 +231,9 @@ Read only what the task needs:
 
 - `references/change-workflow.md` - mandatory analyze/impact/proposal/approval
   gate before any implementation.
+- `references/engineering-discipline.md` - four working principles with
+  worked examples: think before coding, simplicity first, surgical changes,
+  goal-driven execution.
 - `references/coding-rules.md` - non-negotiable rules and C#/Razor conventions.
 - `references/backend-api-style.md` - interface/implementation placement,
   repository vs service vs query-service code style, controller style, and the

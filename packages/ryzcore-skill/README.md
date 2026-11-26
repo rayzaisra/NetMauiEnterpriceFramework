@@ -24,6 +24,7 @@ ryzcore-skill/
     ├── SKILL.md
     └── references/
         ├── change-workflow.md
+        ├── engineering-discipline.md
         ├── coding-rules.md
         ├── backend-api-style.md
         ├── database.md
@@ -39,6 +40,11 @@ Yang diajarkan skill ini:
 - **Alur kerja wajib** — analisa, petakan flow UI → API → database, periksa
   kode/tabel/stored procedure terdampak, ajukan impact analysis, tunggu
   persetujuan, baru implementasi (`change-workflow.md`).
+- **Disiplin engineering** — empat prinsip dengan contoh nyata:
+  *think before coding* (ungkap asumsi, jangan pilih satu tafsiran diam-diam),
+  *simplicity first* (tidak ada abstraksi spekulatif), *surgical changes*
+  (hanya baris yang diminta), *goal-driven* (kriteria sukses yang bisa
+  diverifikasi sebelum menulis kode) — `engineering-discipline.md`.
 - **Lapisan backend** — controller tipis, service untuk logic,
   query service untuk paging/proyeksi, repository hanya akses database dan
   tidak pernah `SaveChanges`.

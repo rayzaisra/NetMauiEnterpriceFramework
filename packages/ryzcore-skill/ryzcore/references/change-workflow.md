@@ -13,8 +13,14 @@ the user has reviewed the proposal and approved it.
 - Restate the goal, scope, and acceptance criteria in one short block.
 - Identify the touchpoint: domain/data, application contract, infrastructure,
   API, Shared UI, Web host, MAUI host, database, menu/metadata.
+- Surface every assumption you would otherwise have to guess (scope, fields,
+  delivery format, target table, volume) and, when the request has more than
+  one reasonable reading, list the readings instead of picking one.
 - If the requirement is ambiguous or would change public behavior/schema,
   stop and ask before designing.
+
+Apply the four principles from `engineering-discipline.md` throughout:
+think before coding, simplicity first, surgical changes, goal-driven execution.
 
 ## Step 2 - Map the flow end to end
 

@@ -1,6 +1,6 @@
 {
   "name": "ryzcore-skill",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Agent skill for RyzCore: teaches AI agents the framework's coding style, database, backend layering, UI conventions, menus, and parameter maintenance.",
   "license": "MIT",
   "repository": {
