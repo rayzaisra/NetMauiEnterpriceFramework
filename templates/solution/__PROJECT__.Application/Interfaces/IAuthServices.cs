@@ -14,6 +14,7 @@ public interface IAuthService
     Task<UserResponseDto?> UpdateProfileAsync(string userId, UpdateProfileDto request);
     Task ChangeFirstLoginPasswordAsync(FirstLoginPasswordDto request);
     Task ChangePasswordAsync(string userId, ChangePasswordDto request);
+    Task<SessionTimeResponseDto> GetSessionTimeRemainingAsync(string userId);
 }
 
 public interface IJWTService

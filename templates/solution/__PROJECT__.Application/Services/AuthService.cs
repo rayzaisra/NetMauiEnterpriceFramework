@@ -187,6 +187,28 @@ public class AuthService : IAuthService
             throw new AuthenticationException("Account is deactivated.");
         }
 
+        var flag = await _unitOfWork.UmUserAppFlag.GetByUserIdAsync(user.user_id);
+        var sessionId = flag?.session_id;
+        if (flag == null
+            || flag.is_login != true
+            || string.IsNullOrWhiteSpace(sessionId))
+        {
+            await RevokeStoredRefreshTokenAsync(storedToken);
+            await _unitOfWork.SaveChangesAsync();
+            throw new AuthenticationException("Session is no longer active.");
+        }
+
+        var session = await _unitOfWork.UmUserAppSession.GetByUserIdAsync(user.user_id);
+        var idleTimeout = GetIdleTimeout();
+        var lastActivityUtc = NormalizeUtc(session?.last_activity);
+        if (!lastActivityUtc.HasValue || DateTime.UtcNow - lastActivityUtc.Value > idleTimeout)
+        {
+            await RevokeStoredRefreshTokenAsync(storedToken);
+            await ExpireIdleSessionAsync(user.user_id, flag, sessionId);
+            await _unitOfWork.SaveChangesAsync();
+            throw new AuthenticationException("Session expired due to inactivity.");
+        }
+
         var userGroup = await _unitOfWork.UmUserGroup.GetByIdAsync(user.user_id);
         var roles = string.IsNullOrWhiteSpace(userGroup?.group_id)
             ? Array.Empty<string>()
@@ -196,8 +218,6 @@ public class AuthService : IAuthService
         storedToken.modifiedDate = DateTime.Now;
         await _unitOfWork.RefreshTokens.UpdateAsync(storedToken);
 
-        var flag = await _unitOfWork.UmUserAppFlag.GetByUserIdAsync(user.user_id);
-        var sessionId = flag?.session_id ?? Guid.NewGuid().ToString("N");
         await _unitOfWork.UmUserAppSession.UpsertAsync(user.user_id, sessionId);
         var accessToken = _jwtService.GenerateAccessToken(user, roles, sessionId);
         var newRawRefreshToken = _jwtService.GenerateRefreshToken();
@@ -249,6 +269,28 @@ public class AuthService : IAuthService
     {
         var user = await _unitOfWork.UmUserApp.GetByIdAsync(userId);
         return user == null ? null : await MapToUserDto(user);
+    }
+
+    public async Task<SessionTimeResponseDto> GetSessionTimeRemainingAsync(string userId)
+    {
+        var session = await _unitOfWork.UmUserAppSession.GetByUserIdAsync(userId);
+        var idleTimeoutMinutes = GetConfigInt("Jwt:IdleTimeoutMinutes", 15);
+        var idleTimeout = TimeSpan.FromMinutes(idleTimeoutMinutes);
+        var lastActivityUtc = NormalizeUtc(session?.last_activity);
+
+        var idleRemainingSeconds = 0;
+        if (lastActivityUtc.HasValue)
+        {
+            var remaining = idleTimeout - (DateTime.UtcNow - lastActivityUtc.Value);
+            idleRemainingSeconds = Math.Max(0, (int)Math.Floor(remaining.TotalSeconds));
+        }
+
+        return new SessionTimeResponseDto
+        {
+            RemainingSeconds = idleRemainingSeconds,
+            IdleRemainingSeconds = idleRemainingSeconds,
+            IdleTimeoutMinutes = idleTimeoutMinutes,
+        };
     }
 
     public async Task<UserResponseDto?> UpdateProfileAsync(string userId, UpdateProfileDto request)
@@ -427,6 +469,41 @@ public class AuthService : IAuthService
             response.UrlDestination = "changepassword";
             response.PasswordWarning = "Please change your password on first login.";
         }
+    }
+
+    private async Task RevokeStoredRefreshTokenAsync(um_user_refresh_token storedToken)
+    {
+        storedToken.is_revoked = true;
+        storedToken.modifiedDate = DateTime.Now;
+        await _unitOfWork.RefreshTokens.UpdateAsync(storedToken);
+    }
+
+    private async Task ExpireIdleSessionAsync(string userId, um_user_app_flag flag, string sessionId)
+    {
+        await _unitOfWork.RefreshTokens.RevokeAllUserTokensAsync(userId);
+        flag.is_login = false;
+        flag.session_id = null;
+        await _unitOfWork.UmUserAppFlag.UpdateAsync(flag);
+        await _unitOfWork.UmUserAppSession.RemoveAsync(userId);
+        await _sessionNotifier.NotifySessionIdleExpiredAsync(userId, sessionId);
+    }
+
+    private TimeSpan GetIdleTimeout()
+        => TimeSpan.FromMinutes(GetConfigInt("Jwt:IdleTimeoutMinutes", 15));
+
+    private static DateTime? NormalizeUtc(DateTime? value)
+    {
+        if (!value.HasValue)
+        {
+            return null;
+        }
+
+        return value.Value.Kind switch
+        {
+            DateTimeKind.Utc => value.Value,
+            DateTimeKind.Local => value.Value.ToUniversalTime(),
+            _ => DateTime.SpecifyKind(value.Value, DateTimeKind.Utc),
+        };
     }
 
     private int GetConfigInt(string key, int defaultValue)

@@ -103,6 +103,9 @@ public class UmUserAppSessionRepository : IUmUserAppSessionRepository
 
     public UmUserAppSessionRepository(__PROJECT__DbContext context) => _context = context;
 
+    public Task<um_user_app_session?> GetByUserIdAsync(string userId)
+        => _context.um_user_app_session.FirstOrDefaultAsync(e => e.user_id == userId);
+
     public async Task UpsertAsync(string userId, string? sessionId)
     {
         var session = await _context.um_user_app_session.FirstOrDefaultAsync(e => e.user_id == userId);
@@ -112,13 +115,13 @@ public class UmUserAppSessionRepository : IUmUserAppSessionRepository
             {
                 user_id = userId,
                 session_id = sessionId,
-                last_activity = DateTime.Now,
+                last_activity = DateTime.UtcNow,
             });
             return;
         }
 
         session.session_id = sessionId;
-        session.last_activity = DateTime.Now;
+        session.last_activity = DateTime.UtcNow;
     }
 
     public async Task RemoveAsync(string userId)

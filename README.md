@@ -7,7 +7,7 @@ RyzCore adalah generator framework enterprise **.NET 10** untuk menghasilkan apl
 - .NET MAUI Blazor Hybrid (Windows/Android/iOS/MacCatalyst)
 - MudBlazor UI
 - SQL Server + EF Core
-- JWT access/refresh token + session validation
+- JWT access/refresh token + session validation + server-enforced idle timeout
 - Dynamic menu, screen, report, dan parameter engine
 - Maker-checker approval
 - SignalR notification + Hangfire background job

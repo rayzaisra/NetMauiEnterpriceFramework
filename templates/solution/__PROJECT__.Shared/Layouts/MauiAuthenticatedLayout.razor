@@ -1,8 +1,19 @@
 @inherits LayoutComponentBase
 @implements IDisposable
+@implements IAsyncDisposable
+@using Microsoft.AspNetCore.SignalR.Client
 @inject ThemePreferenceService ThemeService
 @inject LanguageService L
 @inject MotionService Motion
+@inject AuthService AuthService
+@inject ITokenStorage TokenStorage
+@inject INotifyAuthenticationState AuthStateNotifier
+@inject NavigationManager Navigation
+@inject ApiService ApiService
+@inject IHttpMessageHandlerFactory HttpMessageHandlerFactory
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+@inject ILogger<MauiAuthenticatedLayout> Logger
 
 @if (ThemeService.Palette == "default")
 {
@@ -20,7 +31,23 @@ else
 </div>
 
 @code {
-    protected override void OnInitialized() => L.OnChange += HandleLanguageChanged;
+    private static readonly TimeSpan IdleWarningThreshold = TimeSpan.FromMinutes(2);
+    private static readonly TimeSpan IdleCheckInterval = TimeSpan.FromSeconds(30);
+    private readonly CancellationTokenSource _idleCts = new();
+    private HubConnection? _hub;
+    private PeriodicTimer? _idleTimer;
+    private Task? _idleTimerTask;
+    private bool _idleWarningVisible;
+    private bool _idleLogoutInProgress;
+    private bool _idleMonitoringStarted;
+    private int _idleRemainingSeconds;
+    private int _idleTimeoutMinutes = 15;
+
+    protected override async Task OnInitializedAsync()
+    {
+        L.OnChange += HandleLanguageChanged;
+        _ = StartHubAsync();
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -32,10 +59,197 @@ else
         await ThemeService.InitializeAsync();
         await L.InitializeAsync();
         await Motion.InitBusyIndicatorsAsync();
+        await StartIdleMonitoringAsync();
         StateHasChanged();
+    }
+
+    private async Task StartHubAsync()
+    {
+        if (string.IsNullOrWhiteSpace(ApiService.ApiBaseAddress))
+        {
+            return;
+        }
+
+        _hub = new HubConnectionBuilder()
+            .WithUrl($"{ApiService.ApiBaseAddress}/userHub", options =>
+            {
+                options.AccessTokenProvider = async () => await TokenStorage.GetAccessTokenAsync();
+                options.HttpMessageHandlerFactory = _ => HttpMessageHandlerFactory.CreateHandler("SignalR");
+            })
+            .WithAutomaticReconnect()
+            .Build();
+
+        _hub.On<string>("SessionRevoked", async _ =>
+            await InvokeAsync(() => ForceIdleLogoutAsync("Your session ended because this account signed in from another browser.")));
+        _hub.On<string>("SessionIdleExpired", async message =>
+            await InvokeAsync(() => ForceIdleLogoutAsync(message)));
+
+        try
+        {
+            await _hub.StartAsync();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogWarning(ex, "MAUI SignalR connection failed. Idle timeout still enforces on API calls.");
+        }
+    }
+
+    private async Task StartIdleMonitoringAsync()
+    {
+        if (_idleMonitoringStarted)
+        {
+            return;
+        }
+
+        _idleMonitoringStarted = true;
+        await RefreshIdleStateAsync(showWarning: true);
+        _idleTimer = new PeriodicTimer(IdleCheckInterval);
+        _idleTimerTask = RunIdleTimerAsync();
+    }
+
+    private async Task RunIdleTimerAsync()
+    {
+        if (_idleTimer == null)
+        {
+            return;
+        }
+
+        try
+        {
+            while (await _idleTimer.WaitForNextTickAsync(_idleCts.Token))
+            {
+                await RefreshIdleStateAsync(showWarning: true);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            // Normal disposal.
+        }
+    }
+
+    private async Task RefreshIdleStateAsync(bool showWarning)
+    {
+        if (_idleLogoutInProgress)
+        {
+            return;
+        }
+
+        var sessionTime = await AuthService.GetSessionTimeRemainingAsync();
+        if (sessionTime == null)
+        {
+            return;
+        }
+
+        _idleTimeoutMinutes = sessionTime.IdleTimeoutMinutes > 0 ? sessionTime.IdleTimeoutMinutes : _idleTimeoutMinutes;
+        _idleRemainingSeconds = Math.Max(0, sessionTime.IdleRemainingSeconds);
+
+        if (_idleRemainingSeconds <= 0)
+        {
+            await ForceIdleLogoutAsync("Your session ended because there was no activity.");
+            return;
+        }
+
+        if (showWarning
+            && !_idleWarningVisible
+            && _idleRemainingSeconds <= (int)IdleWarningThreshold.TotalSeconds)
+        {
+            _idleWarningVisible = true;
+            var parameters = new DialogParameters<SessionIdleWarningDialog>
+            {
+                { x => x.RemainingSeconds, _idleRemainingSeconds }
+            };
+            var options = new DialogOptions
+            {
+                CloseOnEscapeKey = false,
+                BackdropClick = false,
+            };
+
+            var dialog = await DialogService.ShowAsync<SessionIdleWarningDialog>(string.Empty, parameters, options);
+            var result = await dialog.Result;
+            _idleWarningVisible = false;
+
+            if (result?.Canceled == true)
+            {
+                await RefreshIdleStateAsync(showWarning: true);
+                return;
+            }
+
+            if (result?.Data is true)
+            {
+                await KeepSessionAliveAsync();
+            }
+            else if (result?.Data is false)
+            {
+                await LogoutAsync();
+            }
+        }
+    }
+
+    private async Task KeepSessionAliveAsync()
+    {
+        try
+        {
+            await AuthService.GetCurrentUserAsync();
+            await RefreshIdleStateAsync(showWarning: false);
+        }
+        catch
+        {
+            // Server-side middleware enforces idle timeout even if this keep-alive call fails.
+        }
+    }
+
+    private async Task LogoutAsync()
+    {
+        var refreshToken = await TokenStorage.GetRefreshTokenAsync();
+        await AuthService.LogoutAsync(refreshToken);
+        AuthStateNotifier.NotifyUserLogout();
+        Navigation.NavigateTo("/", true);
+    }
+
+    private async Task ForceIdleLogoutAsync(string? message)
+    {
+        if (_idleLogoutInProgress)
+        {
+            return;
+        }
+
+        _idleLogoutInProgress = true;
+        await TokenStorage.RemoveTokensAsync();
+        AuthStateNotifier.NotifyUserLogout();
+        Snackbar.Add(string.IsNullOrWhiteSpace(message)
+            ? "Your session ended because there was no activity."
+            : message, Severity.Warning);
+        Navigation.NavigateTo("/", true);
     }
 
     private void HandleLanguageChanged() => InvokeAsync(StateHasChanged);
 
-    public void Dispose() => L.OnChange -= HandleLanguageChanged;
+    public void Dispose()
+    {
+        L.OnChange -= HandleLanguageChanged;
+        _idleCts.Cancel();
+        _idleTimer?.Dispose();
+        if (_hub != null)
+        {
+            _ = _hub.DisposeAsync();
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        _idleCts.Cancel();
+        if (_idleTimerTask != null)
+        {
+            try
+            {
+                await _idleTimerTask;
+            }
+            catch
+            {
+                // Ignore cancellation/disposal races.
+            }
+        }
+
+        Dispose();
+    }
 }

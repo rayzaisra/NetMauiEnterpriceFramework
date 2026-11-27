@@ -911,6 +911,14 @@ hardcode widget data in the MAUI page.
 ## 10. Authentication and authorization
 
 - JWT access + refresh tokens; active sessions are checked by middleware.
+- Idle timeout is server-enforced through `Jwt:IdleTimeoutMinutes` (default
+  `15`). Authenticated API requests refresh `um_user_app_session.last_activity`
+  (throttled writes); when idle time exceeds the configured limit, the session
+  and refresh tokens are revoked and the next authenticated request or refresh
+  returns `401`. Client-side timers/dialogs are UX only.
+- `GET /api/auth/session-time` returns idle remaining seconds
+  (`remainingSeconds` for compatibility, plus `idleRemainingSeconds` and
+  `idleTimeoutMinutes`). It is not treated as user activity for idle reset.
 - Login, refresh, forgot-password, reset-password validation/reset, and
   first-login password change are anonymous endpoints.
 - All other API endpoints require authentication unless explicitly reviewed.

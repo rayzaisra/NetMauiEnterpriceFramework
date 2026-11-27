@@ -1,0 +1,77 @@
+@using MudBlazor
+@implements IDisposable
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">Session expiring</MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudText>
+            You have been inactive. Your session will expire in about
+            <strong>@_remainingSeconds</strong> seconds. Continue working?
+        </MudText>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Text" Color="Color.Default" OnClick="@(_ => MudDialog.Close(DialogResult.Ok(false)))">Log out</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(_ => MudDialog.Close(DialogResult.Ok(true)))">Continue</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = default!;
+
+    [Parameter] public int RemainingSeconds { get; set; }
+
+    private int _remainingSeconds;
+    private PeriodicTimer? _timer;
+    private CancellationTokenSource? _cts;
+    private Task? _countdownTask;
+
+    protected override void OnInitialized()
+    {
+        _remainingSeconds = Math.Max(0, RemainingSeconds);
+        _cts = new CancellationTokenSource();
+        _timer = new PeriodicTimer(TimeSpan.FromSeconds(1));
+        _countdownTask = RunCountdownAsync();
+    }
+
+    private async Task RunCountdownAsync()
+    {
+        if (_timer == null || _cts == null)
+        {
+            return;
+        }
+
+        try
+        {
+            while (await _timer.WaitForNextTickAsync(_cts.Token))
+            {
+                if (_remainingSeconds <= 0)
+                {
+                    MudDialog.Close(DialogResult.Cancel());
+                    return;
+                }
+
+                _remainingSeconds--;
+                await InvokeAsync(StateHasChanged);
+
+                if (_remainingSeconds <= 0)
+                {
+                    MudDialog.Close(DialogResult.Cancel());
+                    return;
+                }
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            // Dialog closed.
+        }
+    }
+
+    public void Dispose()
+    {
+        _cts?.Cancel();
+        _timer?.Dispose();
+        _cts?.Dispose();
+    }
+}

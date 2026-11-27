@@ -60,6 +60,9 @@
     <script src="_content/MudBlazor/MudBlazor.min.js"></script>
     <script src="_framework/blazor.webview.js" autostart="false"></script>
     <script>
+        window.ryzSessionIdleModule = (window.ryzSessionIdleModule
+            || import("./_content/__PROJECT__.Shared/js/ryzcore-session-idle.js"))
+            .catch(function () { return null; });
         window.ryzMotionModule = (window.ryzMotionModule
             || import("./_content/__PROJECT__.Shared/js/ryzcore-motion.js"))
             .catch(function () { return null; });

@@ -218,6 +218,311 @@ public class PasswordHasherTests
     'utf8'
   );
 
+  await fs.writeFile(
+    path.join(testsDir, 'AuthIdleTimeoutTests.cs'),
+    `using System.Security.Claims;
+
+using Microsoft.Extensions.Configuration;
+
+using __PROJECT__.Application.DTOs.Auth;
+using __PROJECT__.Application.Exceptions;
+using __PROJECT__.Application.Interfaces;
+using __PROJECT__.Application.Interfaces.Repositories;
+using __PROJECT__.Application.Services;
+using __PROJECT__.Domain.Entities;
+
+namespace __PROJECT__.Tests;
+
+public class AuthIdleTimeoutTests
+{
+    [Fact]
+    public async Task GetSessionTimeRemainingAsync_ReturnsIdleRemaining()
+    {
+        var sessionRepo = new FakeSessionRepository(new um_user_app_session
+        {
+            user_id = "user-1",
+            session_id = "session-1",
+            last_activity = DateTime.UtcNow.AddMinutes(-5),
+        });
+        var service = CreateService(sessionRepo: sessionRepo, idleTimeoutMinutes: 15);
+
+        var result = await service.GetSessionTimeRemainingAsync("user-1");
+
+        Assert.InRange(result.IdleRemainingSeconds, 9 * 60, 10 * 60 + 1);
+        Assert.Equal(result.IdleRemainingSeconds, result.RemainingSeconds);
+        Assert.Equal(15, result.IdleTimeoutMinutes);
+    }
+
+    [Fact]
+    public async Task RefreshTokenAsync_Throws_WhenIdleExpired()
+    {
+        var refreshRepo = new FakeRefreshTokenRepository(new um_user_refresh_token
+        {
+            id = 1,
+            user_id = "user-1",
+            refresh_token = Hash("refresh-token"),
+            expiry_date = DateTime.UtcNow.AddHours(1),
+            is_revoked = false,
+            remember_me = false,
+        });
+        var userRepo = new FakeUserRepository(new um_user_app
+        {
+            user_id = "user-1",
+            isActive = true,
+            isDeleted = false,
+        });
+        var flagRepo = new FakeUserFlagRepository(new um_user_app_flag
+        {
+            user_id = "user-1",
+            is_login = true,
+            session_id = "session-1",
+        });
+        var sessionRepo = new FakeSessionRepository(new um_user_app_session
+        {
+            user_id = "user-1",
+            session_id = "session-1",
+            last_activity = DateTime.UtcNow.AddMinutes(-30),
+        });
+        var service = CreateService(
+            refreshRepo: refreshRepo,
+            userRepo: userRepo,
+            flagRepo: flagRepo,
+            sessionRepo: sessionRepo,
+            idleTimeoutMinutes: 15);
+
+        var ex = await Assert.ThrowsAsync<AuthenticationException>(() => service.RefreshTokenAsync("refresh-token"));
+
+        Assert.Contains("inactivity", ex.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.True(refreshRepo.StoredToken!.is_revoked);
+        Assert.False(flagRepo.Flag!.is_login);
+        Assert.Null(flagRepo.Flag.session_id);
+        Assert.True(sessionRepo.RemovedUserId == "user-1");
+    }
+
+    [Fact]
+    public async Task RefreshTokenAsync_Succeeds_WhenIdleActive()
+    {
+        var refreshRepo = new FakeRefreshTokenRepository(new um_user_refresh_token
+        {
+            id = 1,
+            user_id = "user-1",
+            refresh_token = Hash("refresh-token"),
+            expiry_date = DateTime.UtcNow.AddHours(1),
+            is_revoked = false,
+            remember_me = true,
+        });
+        var userRepo = new FakeUserRepository(new um_user_app
+        {
+            user_id = "user-1",
+            full_name = "Test User",
+            isActive = true,
+            isDeleted = false,
+        });
+        var flagRepo = new FakeUserFlagRepository(new um_user_app_flag
+        {
+            user_id = "user-1",
+            is_login = true,
+            session_id = "session-1",
+        });
+        var sessionRepo = new FakeSessionRepository(new um_user_app_session
+        {
+            user_id = "user-1",
+            session_id = "session-1",
+            last_activity = DateTime.UtcNow.AddMinutes(-1),
+        });
+        var groupRepo = new FakeUserGroupRepository(new um_user_group
+        {
+            user_id = "user-1",
+            group_id = "ADMIN",
+        });
+        var service = CreateService(
+            refreshRepo: refreshRepo,
+            userRepo: userRepo,
+            flagRepo: flagRepo,
+            sessionRepo: sessionRepo,
+            userGroupRepo: groupRepo,
+            idleTimeoutMinutes: 15);
+
+        var result = await service.RefreshTokenAsync("refresh-token");
+
+        Assert.Equal("access-token", result.AccessToken);
+        Assert.Equal("new-refresh-token", result.RefreshToken);
+        Assert.True(refreshRepo.StoredToken!.is_revoked);
+        Assert.NotNull(refreshRepo.AddedToken);
+        Assert.Equal("user-1", sessionRepo.LastUpsertUserId);
+    }
+
+    private static AuthService CreateService(
+        FakeRefreshTokenRepository? refreshRepo = null,
+        FakeUserRepository? userRepo = null,
+        FakeUserFlagRepository? flagRepo = null,
+        FakeSessionRepository? sessionRepo = null,
+        FakeUserGroupRepository? userGroupRepo = null,
+        int idleTimeoutMinutes = 15)
+    {
+        var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                ["Jwt:IdleTimeoutMinutes"] = idleTimeoutMinutes.ToString(),
+                ["Jwt:AccessTokenExpirationMinutes"] = "15",
+                ["Jwt:RememberMeExpirationDays"] = "30",
+                ["Jwt:SessionRefreshTokenHours"] = "12",
+            })
+            .Build();
+
+        var uow = new FakeUnitOfWork(
+            refreshRepo ?? new FakeRefreshTokenRepository(null),
+            userRepo ?? new FakeUserRepository(null),
+            flagRepo ?? new FakeUserFlagRepository(null),
+            sessionRepo ?? new FakeSessionRepository(null),
+            userGroupRepo ?? new FakeUserGroupRepository(null));
+
+        return new AuthService(
+            uow,
+            new FakeJwtService(),
+            new FakePasswordHasher(),
+            new FakeCurrentUserService(),
+            configuration,
+            new FakeSessionNotifier());
+    }
+
+    private static string Hash(string value)
+    {
+        var bytes = System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(value));
+        return Convert.ToBase64String(bytes);
+    }
+
+    private sealed class FakeUnitOfWork : IUnitOfWork
+    {
+        public FakeUnitOfWork(
+            FakeRefreshTokenRepository refreshTokens,
+            FakeUserRepository users,
+            FakeUserFlagRepository flags,
+            FakeSessionRepository sessions,
+            FakeUserGroupRepository groups)
+        {
+            RefreshTokens = refreshTokens;
+            UmUserApp = users;
+            UmUserAppFlag = flags;
+            UmUserAppSession = sessions;
+            UmUserGroup = groups;
+        }
+
+        public IUmUserAppRepository UmUserApp { get; }
+        public IUmUserGroupRepository UmUserGroup { get; }
+        public IUmUserAppFlagRepository UmUserAppFlag { get; }
+        public IUmUserAppSessionRepository UmUserAppSession { get; }
+        public IRefreshTokenRepository RefreshTokens { get; }
+        public IUmGroupAppRepository UmGroupApp => throw new NotImplementedException();
+        public ITempGroupAppPendingRepository TempGroupAppPending => throw new NotImplementedException();
+        public ITempUserAppPendingRepository TempUserAppPending => throw new NotImplementedException();
+        public IUmMenuRepository Menus => throw new NotImplementedException();
+        public IUmGroupMenuRepository GroupMenus => throw new NotImplementedException();
+        public IParameterStagingRepository ParameterStaging => throw new NotImplementedException();
+        public IScreenMenuRepository ScreenMenus => throw new NotImplementedException();
+        public IPasswordResetTokenRepository PasswordResetTokens => throw new NotImplementedException();
+        public IEmailTemplateRepository EmailTemplates => throw new NotImplementedException();
+        public IEmailOutboxRepository EmailOutbox => throw new NotImplementedException();
+        public ITbNotificationRepository Notifications => throw new NotImplementedException();
+        public IRfNotificationTypeRepository NotificationTypes => throw new NotImplementedException();
+        public IEmailProviderRepository EmailProviders => throw new NotImplementedException();
+        public IRfDefaultValueRepository DefaultValues => throw new NotImplementedException();
+        public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) => Task.FromResult(1);
+        public Task<IUnitOfWorkTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default) => throw new NotImplementedException();
+    }
+
+    private sealed class FakeRefreshTokenRepository : IRefreshTokenRepository
+    {
+        public FakeRefreshTokenRepository(um_user_refresh_token? token) => StoredToken = token;
+        public um_user_refresh_token? StoredToken { get; }
+        public um_user_refresh_token? AddedToken { get; private set; }
+        public Task<um_user_refresh_token?> GetByTokenHashAsync(string tokenHash)
+            => Task.FromResult(StoredToken?.refresh_token == tokenHash ? StoredToken : null);
+        public Task AddAsync(um_user_refresh_token entity) { AddedToken = entity; return Task.CompletedTask; }
+        public Task UpdateAsync(um_user_refresh_token entity) => Task.CompletedTask;
+        public Task RevokeAllUserTokensAsync(string userId) => Task.CompletedTask;
+    }
+
+    private sealed class FakeUserRepository : IUmUserAppRepository
+    {
+        private readonly um_user_app? _user;
+        public FakeUserRepository(um_user_app? user) => _user = user;
+        public Task<um_user_app?> GetByIdAsync(string userId) => Task.FromResult(_user?.user_id == userId ? _user : null);
+        public Task<um_user_app?> FindByIdOrEmailAsync(string identifier, CancellationToken cancellationToken = default) => Task.FromResult<um_user_app?>(null);
+        public Task<um_user_app?> GetActiveByIdAsync(string userId, CancellationToken cancellationToken = default) => Task.FromResult<um_user_app?>(null);
+        public Task<bool> ExistsAnyAsync(string userId, CancellationToken cancellationToken = default) => Task.FromResult(false);
+        public Task<bool> ExistsActiveAsync(string userId, CancellationToken cancellationToken = default) => Task.FromResult(false);
+        public Task AddAsync(um_user_app entity) => Task.CompletedTask;
+        public Task UpdateAsync(um_user_app entity) => Task.CompletedTask;
+    }
+
+    private sealed class FakeUserFlagRepository : IUmUserAppFlagRepository
+    {
+        public FakeUserFlagRepository(um_user_app_flag? flag) => Flag = flag;
+        public um_user_app_flag? Flag { get; }
+        public Task<um_user_app_flag?> GetByUserIdAsync(string userId) => Task.FromResult(Flag?.user_id == userId ? Flag : null);
+        public Task AddAsync(um_user_app_flag entity) => Task.CompletedTask;
+        public Task UpdateAsync(um_user_app_flag entity) => Task.CompletedTask;
+    }
+
+    private sealed class FakeSessionRepository : IUmUserAppSessionRepository
+    {
+        public FakeSessionRepository(um_user_app_session? session) => Session = session;
+        public um_user_app_session? Session { get; }
+        public string? RemovedUserId { get; private set; }
+        public string? LastUpsertUserId { get; private set; }
+        public Task<um_user_app_session?> GetByUserIdAsync(string userId) => Task.FromResult(Session?.user_id == userId ? Session : null);
+        public Task UpsertAsync(string userId, string? sessionId) { LastUpsertUserId = userId; return Task.CompletedTask; }
+        public Task RemoveAsync(string userId) { RemovedUserId = userId; return Task.CompletedTask; }
+    }
+
+    private sealed class FakeUserGroupRepository : IUmUserGroupRepository
+    {
+        private readonly um_user_group? _group;
+        public FakeUserGroupRepository(um_user_group? group) => _group = group;
+        public Task<um_user_group?> GetByIdAsync(string userId) => Task.FromResult(_group?.user_id == userId ? _group : null);
+        public Task<um_user_group?> GetActiveByIdAsync(string userId, CancellationToken cancellationToken = default) => Task.FromResult<um_user_group?>(null);
+        public Task<bool> ExistsActiveByUserAsync(string userId, CancellationToken cancellationToken = default) => Task.FromResult(false);
+        public Task<bool> ExistsActiveByGroupAsync(string groupId, CancellationToken cancellationToken = default) => Task.FromResult(false);
+        public Task<List<string>> GetActiveAdministratorUserIdsAsync(CancellationToken cancellationToken = default) => Task.FromResult(new List<string>());
+        public Task<string?> GetGroupNameAsync(string groupId) => Task.FromResult<string?>(groupId);
+        public Task AddAsync(um_user_group entity, CancellationToken cancellationToken = default) => Task.CompletedTask;
+        public Task UpdateAsync(um_user_group entity) => Task.CompletedTask;
+    }
+
+    private sealed class FakeJwtService : IJWTService
+    {
+        public string GenerateAccessToken(um_user_app user, IEnumerable<string> roles, string sessionId) => "access-token";
+        public string GenerateRefreshToken() => "new-refresh-token";
+        public ClaimsPrincipal? ValidateToken(string token) => null;
+        public string? GetUserIdFromToken(string token) => null;
+    }
+
+    private sealed class FakePasswordHasher : IPasswordHasherService
+    {
+        public string HashPassword(string password) => password;
+        public bool ValidatePassword(string enteredPassword, string storedHash) => true;
+    }
+
+    private sealed class FakeCurrentUserService : ICurrentUserService
+    {
+        public string? UserId => "user-1";
+        public string? UserName => "user-1";
+        public string? Email => null;
+        public string? IpAddress => "127.0.0.1";
+        public bool IsAuthenticated => true;
+    }
+
+    private sealed class FakeSessionNotifier : IUserSessionNotifier
+    {
+        public Task NotifySessionRevokedAsync(string userId, string? sessionId) => Task.CompletedTask;
+        public Task NotifySessionIdleExpiredAsync(string userId, string? sessionId) => Task.CompletedTask;
+    }
+}
+`.split('__PROJECT__').join(spec.projectName),
+    'utf8'
+  );
+
   const solutionFile = path.join(outputDir, `${spec.projectName}.sln`);
   await runDotnet(
     ['sln', solutionFile, 'add', path.join(testsName, `${testsName}.csproj`)],

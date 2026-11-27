@@ -103,6 +103,9 @@
                 window.ryzBootReady();
             }
         }, 12000);
+        window.ryzSessionIdleModule = (window.ryzSessionIdleModule
+            || import("./_content/__PROJECT__.Shared/js/ryzcore-session-idle.js"))
+            .catch(function () { return null; });
         window.ryzMotionModule = (window.ryzMotionModule
             || import("./_content/__PROJECT__.Shared/js/ryzcore-motion.js"))
             .catch(function () { return null; });

@@ -71,3 +71,10 @@ public class UserResponseDto
     public bool CanReadOnly { get; set; }
     public bool IsActive { get; set; }
 }
+
+public class SessionTimeResponseDto
+{
+    public int RemainingSeconds { get; set; }
+    public int IdleRemainingSeconds { get; set; }
+    public int IdleTimeoutMinutes { get; set; }
+}

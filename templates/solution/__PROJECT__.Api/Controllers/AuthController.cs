@@ -259,16 +259,15 @@ public class AuthController : ControllerBase
 
     [HttpGet("session-time")]
     [Authorize]
-    public IActionResult GetSessionTimeRemaining()
+    public async Task<IActionResult> GetSessionTimeRemaining()
     {
-        var expiryClaim = User.FindFirst("exp")?.Value;
-        if (expiryClaim != null && long.TryParse(expiryClaim, out var exp))
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userId))
         {
-            var expiryTime = DateTimeOffset.FromUnixTimeSeconds(exp).UtcDateTime;
-            var remaining = expiryTime - DateTime.UtcNow;
-            return Ok(new { remainingSeconds = Math.Max(0, (int)remaining.TotalSeconds) });
+            return Unauthorized();
         }
 
-        return Ok(new { remainingSeconds = 0 });
+        var sessionTime = await _authService.GetSessionTimeRemainingAsync(userId);
+        return Ok(sessionTime);
     }
 }

@@ -131,6 +131,20 @@ public class AuthService
         }
     }
 
+    public async Task<SessionTimeResponseDto?> GetSessionTimeRemainingAsync()
+    {
+        using var request = new HttpRequestMessage(HttpMethod.Get, "api/auth/session-time");
+        await AttachTokenAsync(request);
+
+        var response = await _httpClient.SendAsync(request);
+        if (!response.IsSuccessStatusCode)
+        {
+            return null;
+        }
+
+        return await response.Content.ReadFromJsonAsync<SessionTimeResponseDto>();
+    }
+
     public async Task LogClientErrorAsync(string source, Exception exception, string? userId = null)
     {
         try

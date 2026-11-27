@@ -20,6 +20,7 @@
 @inject ILogger<AuthenticatedLayout> Logger
 @inject IJSRuntime JS
 @inject IBrowserViewportService ViewportService
+@inject IDialogService DialogService
 
 <MudThemeProvider Theme="ThemeService.GetTheme(_isDarkMode)" @bind-IsDarkMode="_isDarkMode" />
 
@@ -386,6 +387,19 @@
     private bool _pendingNotificationAnimation;
     private string? ActiveUrl => TabService.ActiveTab?.Url;
 
+    private static readonly TimeSpan IdleWarningThreshold = TimeSpan.FromMinutes(2);
+    private static readonly TimeSpan IdleCheckInterval = TimeSpan.FromSeconds(30);
+    private readonly CancellationTokenSource _idleCts = new();
+    private DotNetObjectReference<AuthenticatedLayout>? _idleDotNetRef;
+    private PeriodicTimer? _idleTimer;
+    private Task? _idleTimerTask;
+    private bool _idleWarningVisible;
+    private bool _idleLogoutInProgress;
+    private bool _idleMonitoringStarted;
+    private DateTime _lastBrowserActivityUtc = DateTime.UtcNow;
+    private int _idleRemainingSeconds;
+    private int _idleTimeoutMinutes = 15;
+
     protected override async Task OnInitializedAsync()
     {
         L.OnChange += HandleLanguageChanged;
@@ -489,6 +503,14 @@
                 await TokenStorage.RemoveTokensAsync();
                 AuthStateNotifier.NotifyUserLogout();
                 Navigation.NavigateTo("/", true);
+            });
+        });
+
+        _hub.On<string>("SessionIdleExpired", message =>
+        {
+            _ = InvokeAsync(async () =>
+            {
+                await ForceIdleLogoutAsync(message);
             });
         });
 
@@ -679,6 +701,8 @@
             {
                 // Keep desktop behavior when the viewport listener is unavailable.
             }
+
+            await StartIdleMonitoringAsync();
         }
 
         if (_pendingTabAnimation)
@@ -862,11 +886,179 @@
 
     private sealed record MenuSearchResult(MenuItemDto Item, string Path);
 
+    private async Task StartIdleMonitoringAsync()
+    {
+        if (_idleMonitoringStarted)
+        {
+            return;
+        }
+
+        _idleMonitoringStarted = true;
+        _idleDotNetRef = DotNetObjectReference.Create(this);
+
+        try
+        {
+            await JS.InvokeVoidAsync("ryzcoreSessionIdle.start", _idleDotNetRef);
+        }
+        catch
+        {
+            // Browser idle hooks are best-effort; server-side idle enforcement remains authoritative.
+        }
+
+        await RefreshIdleStateAsync(showWarning: true);
+        _idleTimer = new PeriodicTimer(IdleCheckInterval);
+        _idleTimerTask = RunIdleTimerAsync();
+    }
+
+    private async Task RunIdleTimerAsync()
+    {
+        if (_idleTimer == null)
+        {
+            return;
+        }
+
+        try
+        {
+            while (await _idleTimer.WaitForNextTickAsync(_idleCts.Token))
+            {
+                await RefreshIdleStateAsync(showWarning: true);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            // Normal disposal.
+        }
+    }
+
+    [JSInvokable]
+    public async Task NotifyBrowserActivity()
+    {
+        if (_idleLogoutInProgress)
+        {
+            return;
+        }
+
+        var now = DateTime.UtcNow;
+        if (now - _lastBrowserActivityUtc < TimeSpan.FromSeconds(10))
+        {
+            return;
+        }
+
+        _lastBrowserActivityUtc = now;
+        if (_idleWarningVisible)
+        {
+            await RefreshIdleStateAsync(showWarning: true);
+        }
+    }
+
+    [JSInvokable]
+    public async Task NotifyBrowserVisible()
+    {
+        if (_idleLogoutInProgress)
+        {
+            return;
+        }
+
+        await RefreshIdleStateAsync(showWarning: true);
+    }
+
+    private async Task RefreshIdleStateAsync(bool showWarning)
+    {
+        if (_idleLogoutInProgress)
+        {
+            return;
+        }
+
+        var sessionTime = await AuthService.GetSessionTimeRemainingAsync();
+        if (sessionTime == null)
+        {
+            return;
+        }
+
+        _idleTimeoutMinutes = sessionTime.IdleTimeoutMinutes > 0 ? sessionTime.IdleTimeoutMinutes : _idleTimeoutMinutes;
+        _idleRemainingSeconds = Math.Max(0, sessionTime.IdleRemainingSeconds);
+
+        if (_idleRemainingSeconds <= 0)
+        {
+            await ForceIdleLogoutAsync("Your session ended because there was no activity.");
+            return;
+        }
+
+        if (showWarning
+            && !_idleWarningVisible
+            && _idleRemainingSeconds <= (int)IdleWarningThreshold.TotalSeconds)
+        {
+            _idleWarningVisible = true;
+            StateHasChanged();
+
+            var parameters = new DialogParameters<SessionIdleWarningDialog>
+            {
+                { x => x.RemainingSeconds, _idleRemainingSeconds }
+            };
+            var options = new DialogOptions
+            {
+                CloseOnEscapeKey = false,
+                BackdropClick = false,
+            };
+
+            var dialog = await DialogService.ShowAsync<SessionIdleWarningDialog>(string.Empty, parameters, options);
+            var result = await dialog.Result;
+            _idleWarningVisible = false;
+
+            if (result?.Canceled == true)
+            {
+                await RefreshIdleStateAsync(showWarning: true);
+                return;
+            }
+
+            if (result?.Data is true)
+            {
+                await KeepSessionAliveAsync();
+            }
+            else if (result?.Data is false)
+            {
+                await LogoutAsync();
+            }
+        }
+    }
+
+    private async Task KeepSessionAliveAsync()
+    {
+        try
+        {
+            await AuthService.GetCurrentUserAsync();
+            await RefreshIdleStateAsync(showWarning: false);
+        }
+        catch
+        {
+            // Server-side middleware enforces idle timeout even if this keep-alive call fails.
+        }
+    }
+
+    private async Task ForceIdleLogoutAsync(string? message)
+    {
+        if (_idleLogoutInProgress)
+        {
+            return;
+        }
+
+        _idleLogoutInProgress = true;
+        await TokenStorage.RemoveTokensAsync();
+        AuthStateNotifier.NotifyUserLogout();
+        Snackbar.Add(string.IsNullOrWhiteSpace(message)
+            ? "Your session ended because there was no activity."
+            : message, Severity.Warning);
+        Navigation.NavigateTo("/", true);
+    }
+
     public void Dispose()
     {
         _ = ViewportService.UnsubscribeAsync(_viewportObserverId);
         L.OnChange -= HandleLanguageChanged;
         TabService.OnTabsChanged -= OnTabsChanged;
+        _idleCts.Cancel();
+        _idleTimer?.Dispose();
+        _idleDotNetRef?.Dispose();
         if (_hub != null)
         {
             _ = _hub.DisposeAsync();
@@ -875,6 +1067,31 @@
 
     public async ValueTask DisposeAsync()
     {
+        try
+        {
+            if (_idleDotNetRef != null)
+            {
+                await JS.InvokeVoidAsync("ryzcoreSessionIdle.stop", _idleDotNetRef);
+            }
+        }
+        catch
+        {
+            // Ignore JS teardown failures during disposal.
+        }
+
+        _idleCts.Cancel();
+        if (_idleTimerTask != null)
+        {
+            try
+            {
+                await _idleTimerTask;
+            }
+            catch
+            {
+                // Ignore cancellation/disposal races.
+            }
+        }
+
         await Motion.DisposeAsync();
         Dispose();
     }
